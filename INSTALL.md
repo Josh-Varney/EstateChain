@@ -1,0 +1,3 @@
+-- Installation Documentation -- 
+    - npm install 
+    - npm start
