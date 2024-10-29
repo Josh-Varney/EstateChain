@@ -5,12 +5,12 @@ import { doCreateUserWithEmailAndPassword, doSendEmailVerification } from "../..
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-const CreateAccountScreen = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [error, setError] = useState(""); // Error state
-    const [success, setSuccess] = useState(""); // Success message state
+const CreateAccountScreen: React.FC = () => {
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const [error, setError] = useState<string>(""); // Error state
+    const [success, setSuccess] = useState<string>(""); // Success message state
 
     // Initialize navigate hook
     const navigate = useNavigate();
@@ -33,10 +33,9 @@ const CreateAccountScreen = () => {
         checkAuthStatus();
     }, [navigate]);
 
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const auth = getAuth();
+        // const auth = getAuth();
     
         if (password !== confirmPassword) {
             setError("Passwords do not match");
@@ -46,8 +45,8 @@ const CreateAccountScreen = () => {
         try {
             setError(""); // Clear previous errors
             setSuccess(""); // Clear previous success message
-            // console.log("Attempting to create an account with:", { email, password });
-            const userCredentials = await doCreateUserWithEmailAndPassword(auth, email, password);
+
+            const userCredentials = await doCreateUserWithEmailAndPassword(email, password);
             const user = userCredentials.user;
 
             await doSendEmailVerification();
@@ -61,8 +60,7 @@ const CreateAccountScreen = () => {
                 navigate('/'); // Redirect after a delay
             }, 2000); // Delay in milliseconds
 
-        } catch (error) {
-            // console.error("Sign-up error:", error);
+        } catch (error: any) { // Explicitly typing error as 'any'
             setError("Sign-up error: " + error.message); // Set error message for UI
         }
     };
