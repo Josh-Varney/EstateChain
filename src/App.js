@@ -4,6 +4,8 @@ import './App.css';
 import InitialiseScreen from './components/form/Initialise.tsx';
 import CreateAccountScreen from './components/form/Create.tsx';
 import ForgotPasswordScreen from './components/form/Forgot.tsx';
+import HomeScreen from './components/portal/Home.tsx'
+import ProtectedRoute from './contexts/authContext/route_context.tsx'
 
 function App() {
   return (
@@ -12,14 +14,14 @@ function App() {
         <Route path="/" element={<InitialiseScreen />} />
         <Route path="/register" element={<CreateAccountScreen />} />
         <Route path="/forgot" element={<ForgotPasswordScreen />} />
-        {/* <Route
+        <Route
           path="/home"
           element={
             <ProtectedRoute>
               <HomeScreen />
             </ProtectedRoute>
           }
-        /> */}
+        />
       </Routes>
     </Router>
   );
