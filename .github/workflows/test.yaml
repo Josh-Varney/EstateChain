@@ -19,11 +19,12 @@ jobs:
       - name: Run Tests
         run: npm test
 
-      - name: Run Development Server
+      - name: Start Server and Verify
         run: |
           nohup npm start > server.log 2>&1 & # start the server and log output
+          # Retry to check if the server is live
           for i in {1..5}; do
-            if curl --fail http://localhost:3000/; then
+            if curl --fail http://localhost:3000; then
               echo "Server is live!"
               break
             else
@@ -31,11 +32,13 @@ jobs:
               sleep 5
             fi
           done
-          if ! curl --fail http://localhost:3000/; then
+      
+          # If the server is still not up after retries, show logs and exit
+          if ! curl --fail http://localhost:3000; then
             echo "Server failed to start. Logs:"
             cat server.log
             exit 1
-          fi |
+          fi
       
       - name: Run Builds
         run: npm run build
