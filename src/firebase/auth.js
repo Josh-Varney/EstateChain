@@ -8,7 +8,7 @@ import {
     signInWithPopup,
     signOut,
 } from "firebase/auth";
-import { auth } from "./firebase.js"; // Ensure the correct path to your firebase.js file
+import { auth } from "./firebase"; // Ensure the correct path to your firebase.js file
 
 export const doCreateUserWithEmailAndPassword = async (email, password) => {
     try {
