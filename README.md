@@ -72,5 +72,3 @@
     - Consumer Protection Laws
     - Custody of Assets, Stablecoin and Fiat Conversions
     - Intellectual Property Rights and Licensing for Software# EstateChain
-
-ryterweiureghbw
