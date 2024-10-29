@@ -5,7 +5,7 @@ import { getAuth } from 'firebase/auth';
 
 const GoogleProvider = () => {
 
-    const auth = getAuth();
+    // const auth = getAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
