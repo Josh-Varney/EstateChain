@@ -7,12 +7,12 @@ import { getAuth, signOut } from "firebase/auth";
 import GoogleProvider from "../provider/google/googleProvider";
 import FacebookProvider from "../provider/google/facebookProvider";
 
-const InitialiseScreen = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState(""); // Error state
-    const [success, setSuccess] = useState(""); // Success message state
-    const [showResendLink, setShowResendLink] = useState(false); // State to control resend link visibility
+const InitialiseScreen: React.FC = () => {
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [error, setError] = useState<string>(""); // Error state
+    const [success, setSuccess] = useState<string>(""); // Success message state
+    const [showResendLink, setShowResendLink] = useState<boolean>(false); // State to control resend link visibility
 
     // Initialize navigate hook
     const navigate = useNavigate();
@@ -44,17 +44,18 @@ const InitialiseScreen = () => {
         }
 
         try {
-            setError(""); setShowResendLink(false);
+            setError(""); 
+            setShowResendLink(false);
             await doSendEmailVerification(); // Send verification email
             setSuccess("Verification email sent. Please check your inbox.");
-        } catch (error) {
-            console.log("Error sending email verification " + error.message);
+        } catch (error: any) {
+            console.log("Error sending email verification: " + error.message);
         }
     }
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const auth = getAuth();
+        // const auth = getAuth();
 
         try {
             setError(""); // Clear previous errors
@@ -63,7 +64,7 @@ const InitialiseScreen = () => {
             await new Promise((resolve) => setTimeout(resolve, 700));
 
             // Attempt to sign in with email and password
-            const userCredentials = await doSignInWithEmailAndPassword(auth, username, password);
+            const userCredentials = await doSignInWithEmailAndPassword(username, password);
 
             if (userCredentials.emailVerified) {
                 console.log("Verified");
@@ -71,16 +72,16 @@ const InitialiseScreen = () => {
                     navigate('/home'); // Redirect after a delay
                 }, 2000); // Delay in milliseconds    
             } else {
-                setError("Please verify your email. ");
+                setError("Please verify your email.");
                 setShowResendLink(true); // Show the resend link
             }
-        } catch (error) {
+        } catch (error: any) {
             let errorMessage = "Sign-in error: An unexpected error occurred.";
         
             if (error.code === 'auth/invalid-credential') {
                 errorMessage = "Invalid credentials. Please check your email and password.";
             } else if (error.code === 'auth/invalid-email') {
-                errorMessage = "Invalid email. Please enter a correct email and password";
+                errorMessage = "Invalid email. Please enter a correct email and password.";
             } else {
                 errorMessage = "Unknown Error";
             }

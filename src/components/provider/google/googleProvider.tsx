@@ -1,23 +1,21 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doSignInWithGoogle } from '../../../firebase/auth';
-import { getAuth } from 'firebase/auth';
+// import { getAuth } from 'firebase/auth';
 
-const GoogleProvider = () => {
-
-    // const auth = getAuth();
+const GoogleProvider: React.FC = () => {
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        const auth = getAuth();
-        
+        // const auth = getAuth();
+
         try {
-            await doSignInWithGoogle(auth);
+            await doSignInWithGoogle();
             await new Promise((resolve) => setTimeout(resolve, 1000));
             navigate("/home");
         } catch (error) {
-            console.log("Sign-in error:", error);
+            console.error("Sign-in error:", error);
         }
     };
 

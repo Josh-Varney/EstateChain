@@ -5,10 +5,10 @@ import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { doPasswordReset } from "../../firebase/auth";
 
-const ForgotPasswordScreen = () => {
-    const [email, setEmail] = useState("");
-    const [error, setError] = useState(""); // Error state
-    const [success, setSuccess] = useState(""); // Success message state
+const ForgotPasswordScreen: React.FC = () => {
+    const [email, setEmail] = useState<string>("");
+    const [error, setError] = useState<string>(""); // Error state
+    const [success, setSuccess] = useState<string>(""); // Success message state
 
     // Initialize navigate hook
     const navigate = useNavigate();
@@ -31,24 +31,23 @@ const ForgotPasswordScreen = () => {
         checkAuthStatus();
     }, [navigate]);
 
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const auth = getAuth();
+        // const auth = getAuth();
     
         try {
             setError(""); // Clear previous errors
             setSuccess(""); // Clear previous success message
             
             // Send password reset email
-            await doPasswordReset(auth, email);
+            await doPasswordReset(email);
             setSuccess("Password reset email sent successfully. Please check your inbox.");
 
             setTimeout(() => {
                 navigate('/'); // Redirect after a delay
             }, 400); // Delay in milliseconds
 
-        } catch (error) {
+        } catch (error: any) { // Explicitly typing error as 'any'
             setError("Error sending password reset email: " + error.message); // Set error message for UI
         }
     };
