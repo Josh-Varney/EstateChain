@@ -1,7 +1,6 @@
 // Sidebar.tsx
 import React from "react";
 import { FaHome, FaChartBar, FaUsers, FaCog, FaFileAlt, FaSignOutAlt } from "react-icons/fa";
-import Logo from "./Logo";
 
 const Sidebar: React.FC = () => {
   return (
