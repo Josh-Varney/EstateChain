@@ -4,7 +4,7 @@ import './App.css';
 import InitialiseScreen from './components/form/Initialise.tsx';
 import CreateAccountScreen from './components/form/Create.tsx';
 import ForgotPasswordScreen from './components/form/Forgot.tsx';
-import HomeScreen from './components/portal/Home.tsx'
+import HomeScreen from './components/dummy-portal/DummyHub.tsx'
 import ProtectedRoute from './contexts/authContext/route_context.tsx'
 
 function App() {
