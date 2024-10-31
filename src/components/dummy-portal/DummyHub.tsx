@@ -1,13 +1,18 @@
 // HomeScreen.tsx
 import React, { useState, useEffect } from 'react';
-import { FaSun, FaMoon } from 'react-icons/fa';
+import { FaSun, FaMoon, FaWallet, FaIcons } from 'react-icons/fa';
 import { CoinBaseConnect, MetaMaskConnect } from '../../wallet-connect/web3';
 import Sidebar from './components/Sidebar';
 import Card from './components/HomeCard';
-import WalletCard from './components/WalletConnectCard';
+import WalletPrompt from './components/WalletWarningPrompt';
 
 const HomeScreen: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [walletConnectPrompt, setWalletConnectPrompt] = useState(false)
+
+  const toggleWalletPrompt = () => {
+    setWalletConnectPrompt(prev => !prev);
+  };
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -31,7 +36,14 @@ const HomeScreen: React.FC = () => {
       <div className="flex flex-col w-full h-full ml-20">
         
         {/* Header Bar */}
-        <div className={`flex justify-end items-center h-16 px-4 ${darkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
+        <div className={`flex flex-row justify-end space-x-4 items-center h-16 px-4 ${darkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
+
+        <div className=''>
+            <FaIcons />
+          </div>
+          <div className=''>
+            <FaWallet onClick={toggleWalletPrompt}/>
+          </div>
           <div
             onClick={toggleDarkMode}
             className="rounded-full cursor-pointer p-2 transition-colors duration-300"
@@ -50,7 +62,6 @@ const HomeScreen: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
             {/* Large and Small Cards */}
             <Card title="Large Card 1" description="This is a large card." darkMode={darkMode} className="col-span-2 row-span-2" />
-            <WalletCard darkMode={darkMode} walletFunction={CoinBaseConnect} />
             <Card title="Small Card 2" description="This is a small card." darkMode={darkMode} />
             <Card title="Large Card 2" description="This is another large card." darkMode={darkMode} className="col-span-2 row-span-1" />
             <Card title="Small Card 3" description="This is a small card." darkMode={darkMode} />
@@ -61,6 +72,9 @@ const HomeScreen: React.FC = () => {
             <Card title="Small Card 7" description="This is a small card." darkMode={darkMode} />
           </div>
         </div>
+        
+        {/* Wallet Prompt */}
+        {walletConnectPrompt && < WalletPrompt close={toggleWalletPrompt}/>}
       </div>
     </div>
   );
