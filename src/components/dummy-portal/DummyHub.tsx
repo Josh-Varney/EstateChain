@@ -5,13 +5,20 @@ import { CoinBaseConnect, MetaMaskConnect } from '../../wallet-connect/web3';
 import Sidebar from './components/Sidebar';
 import Card from './components/HomeCard';
 import WalletPrompt from './components/WalletWarningPrompt';
+import WalletDropdown from './components/WalletConnected';
 
 const HomeScreen: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false)
+  const [walletConnectedPrompt, setWalletConnectedPrompt] = useState(false)
 
-  const toggleWalletPrompt = () => {
-    setWalletConnectPrompt(prev => !prev);
+  const toggleWalletPrompt = () => { 
+    if (localStorage.getItem('connectedAccount')){
+      console.log("There is a wallet already");
+      setWalletConnectedPrompt(true);
+    } else {
+      setWalletConnectPrompt(prev => !prev);
+    }
   };
 
   const toggleDarkMode = () => {
@@ -38,7 +45,7 @@ const HomeScreen: React.FC = () => {
         {/* Header Bar */}
         <div className={`flex flex-row justify-end space-x-4 items-center h-16 px-4 ${darkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
 
-        <div className=''>
+          <div className=''>
             <FaIcons />
           </div>
           <div className=''>
@@ -72,9 +79,12 @@ const HomeScreen: React.FC = () => {
             <Card title="Small Card 7" description="This is a small card." darkMode={darkMode} />
           </div>
         </div>
-        
+
         {/* Wallet Prompt */}
-        {walletConnectPrompt && < WalletPrompt close={toggleWalletPrompt}/>}
+        {walletConnectPrompt && <WalletPrompt close={toggleWalletPrompt} />}
+        
+        {/* Wallet Connected Dropdown */}
+        {walletConnectedPrompt && <WalletDropdown close={toggleWalletPrompt} />}
       </div>
     </div>
   );

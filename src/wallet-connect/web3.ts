@@ -19,7 +19,7 @@ const MetaMaskConnect = async (): Promise<void> => {
             const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
             localStorage.setItem("connectedAccount", accounts as string);
             isWalletConnected = true;
-            console.log("MetaMask Accounts:", accounts);
+            console.log("MetaMask Accounts:", localStorage.getItem('connectedAccount'));
         } catch (error) {
             console.log("MetaMask Connection Error:", error);
         }
@@ -29,13 +29,12 @@ const MetaMaskConnect = async (): Promise<void> => {
     }
 };
 
-
 // Coinbase Wallet Connect
 const CoinBaseConnect = async (): Promise<void> => {
     if (typeof window !== "undefined") {
         try {
             const APP_NAME = "Your App";
-            const APP_LOGO_URL = process.env.APP_LOGO_URL; // Replace with your logo URL
+            const APP_LOGO_URL = process.env.APP_LOGO_URL; 
             const DEFAULT_ETH_JSONRPC_URL = `${process.env.COINBASE_CONNECT_KEY}`; // Your Infura API key
             const DEFAULT_CHAIN_ID = 1; // Ethereum mainnet
 
