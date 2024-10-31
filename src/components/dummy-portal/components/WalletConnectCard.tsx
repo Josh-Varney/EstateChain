@@ -1,20 +1,22 @@
-// Card.tsx
 import React from 'react';
+import { FaWallet } from 'react-icons/fa';
 
-interface CardProps {
-  title: string;
-  description: string;
+interface WalletCardProps {
   darkMode: boolean;
   className?: string; // Allow additional classes
+  walletFunction: () => Promise<void>; // Function to handle wallet actions
 }
 
-const Card: React.FC<CardProps> = ({ title, description, darkMode, className = '' }) => {
+const WalletCard: React.FC<WalletCardProps> = ({ darkMode, className = '', walletFunction }) => {
   return (
-    <div className={`p-4 rounded-lg shadow-md transition-colors duration-300 ${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} ${className}`}>
-      <h2 className="text-lg font-semibold mb-2">{title}</h2>
-      <p className="text-sm">{description}</p>
+    <div
+      onClick={walletFunction}
+      className={`cursor-pointer p-4 rounded-lg shadow-md transition-colors duration-300 ${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} ${className}`}
+    >
+      <FaWallet className="text-2xl" />
+      <p>This is a wallet</p>
     </div>
   );
 };
 
-export default Card;
+export default WalletCard;

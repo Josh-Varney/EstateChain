@@ -1,8 +1,10 @@
 // HomeScreen.tsx
 import React, { useState, useEffect } from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
+import { CoinBaseConnect, MetaMaskConnect } from '../../wallet-connect/web3';
 import Sidebar from './components/Sidebar';
 import Card from './components/HomeCard';
+import WalletCard from './components/WalletConnectCard';
 
 const HomeScreen: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -48,7 +50,7 @@ const HomeScreen: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
             {/* Large and Small Cards */}
             <Card title="Large Card 1" description="This is a large card." darkMode={darkMode} className="col-span-2 row-span-2" />
-            <Card title="Small Card 1" description="This is a small card." darkMode={darkMode} />
+            <WalletCard darkMode={darkMode} walletFunction={CoinBaseConnect} />
             <Card title="Small Card 2" description="This is a small card." darkMode={darkMode} />
             <Card title="Large Card 2" description="This is another large card." darkMode={darkMode} className="col-span-2 row-span-1" />
             <Card title="Small Card 3" description="This is a small card." darkMode={darkMode} />

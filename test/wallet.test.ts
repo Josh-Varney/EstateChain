@@ -1,5 +1,5 @@
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import { MetaMaskConnect } from "../conf/wallet-connect/web3";
+import { MetaMaskConnect } from "../src/wallet-connect/web3";
 
 type MockedMetaMaskProvider = MetaMaskInpageProvider & {
     request: jest.Mock;
@@ -26,7 +26,7 @@ describe("ConnectMetaMask", () => {
         await MetaMaskConnect();
 
         expect(window.ethereum?.request).toHaveBeenCalledWith({ method: "eth_requestAccounts" });
-        expect(consoleLogSpy).toHaveBeenCalledWith(mockAccounts);
+        expect(consoleLogSpy).toHaveBeenCalledWith("MetaMask Accounts:", mockAccounts);
     });
 
     it("should log an error message when MetaMask connection fails", async () => {
@@ -42,7 +42,7 @@ describe("ConnectMetaMask", () => {
         await MetaMaskConnect();
 
         expect(window.ethereum?.request).toHaveBeenCalledWith({ method: "eth_requestAccounts" });
-        expect(consoleLogSpy).toHaveBeenCalledWith("Error: ", mockError);
+        expect(consoleLogSpy).toHaveBeenCalledWith("MetaMask Connection Error:", mockError);
     });
 
     it("should log 'Please install MetaMask' if MetaMask is not installed", async () => {
@@ -54,6 +54,6 @@ describe("ConnectMetaMask", () => {
 
         await MetaMaskConnect();
 
-        expect(consoleLogSpy).toHaveBeenCalledWith("Please install MetaMask");
+        expect(consoleLogSpy).toHaveBeenCalledWith("Please install MetaMask.");
     });
 });
