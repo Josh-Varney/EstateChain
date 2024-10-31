@@ -15,7 +15,7 @@ describe("ConnectMetaMask", () => {
 
     it("should log the account when MetaMask is connected", async () => {
         // Mock MetaMask installed and account response
-        const mockAccounts = ["0x1234567890abcdef"];
+        const mockAccounts = "0x1234567890abcdef";
         window.ethereum = {
             request: jest.fn().mockResolvedValue(mockAccounts),
         } as MockedMetaMaskProvider;
