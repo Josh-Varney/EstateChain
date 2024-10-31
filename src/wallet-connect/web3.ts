@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 
-let isWalletConnected = false;
+// let isWalletConnected = false;
 
 // Extension to the Window Interface
 declare global {
@@ -18,7 +18,6 @@ const MetaMaskConnect = async (): Promise<void> => {
         try {
             const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
             localStorage.setItem("connectedAccount", accounts as string);
-            isWalletConnected = true;
             console.log("MetaMask Accounts:", localStorage.getItem('connectedAccount'));
         } catch (error) {
             console.log("MetaMask Connection Error:", error);
@@ -35,8 +34,8 @@ const CoinBaseConnect = async (): Promise<void> => {
         try {
             const APP_NAME = "Your App";
             const APP_LOGO_URL = process.env.APP_LOGO_URL; 
-            const DEFAULT_ETH_JSONRPC_URL = `${process.env.COINBASE_CONNECT_KEY}`; // Your Infura API key
-            const DEFAULT_CHAIN_ID = 1; // Ethereum mainnet
+            // const DEFAULT_ETH_JSONRPC_URL = `${process.env.COINBASE_CONNECT_KEY}`; // Your Infura API key
+            // const DEFAULT_CHAIN_ID = 1; // Ethereum mainnet
 
             const coinbaseWallet = new CoinbaseWalletSDK({
                 appName: APP_NAME,
