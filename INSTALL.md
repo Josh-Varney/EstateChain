@@ -1,3 +1,3 @@
 -- Installation Documentation -- 
-    - npm install 
+    - npm install/npm ci
     - npm start
