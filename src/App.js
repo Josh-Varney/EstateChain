@@ -6,11 +6,13 @@ import CreateAccountScreen from './components/form/Create.tsx';
 import ForgotPasswordScreen from './components/form/Forgot.tsx';
 import HomeScreen from './components/dummy-portal/DummyHub.tsx'
 import ProtectedRoute from './contexts/authContext/route_context.tsx'
+import LandingPage from './components/landing/landing.tsx' 
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path='/landing' element={<LandingPage />} />
         <Route path="/" element={<InitialiseScreen />} />
         <Route path="/register" element={<CreateAccountScreen />} />
         <Route path="/forgot" element={<ForgotPasswordScreen />} />
