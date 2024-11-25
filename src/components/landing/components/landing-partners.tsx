@@ -1,5 +1,14 @@
 import React from "react";
 
+const svgCards = [
+    { id: 1, label: "Card 1", path: "/assets/metamask.svg" },
+    { id: 2, label: "Card 2", path: "/assets/binance.svg" },
+    { id: 3, label: "Card 3", path: "/assets/ethereum.svg" },
+    { id: 4, label: "Card 4", path: "/assets/stellar-xlm-logo-full.svg" },
+    { id: 5, label: "Card 5", path: "/assets/vechain-vet-logo.svg" },
+    { id: 6, label: "Card 6", path: "/assets/coinbase.svg" },
+];
+
 const PartnerCards: React.FC = () => {
     return (
         <div className="p-6 space-y-8">
@@ -18,14 +27,17 @@ const PartnerCards: React.FC = () => {
 
             {/* Carousel Section */}
             <div className="rounded-lg shadow-md text-center text-white">
-                <div className="grid grid-cols-6 gap-2">
-                    {/* Example cards */}
-                    {[...Array(6)].map((_, index) => (
+                <div className="grid grid-cols-6 gap-4">
+                    {svgCards.map((card) => (
                         <div
-                            key={index}
-                            className="bg-slate-400 text-purple-600 rounded-lg pl-10 pr-10 pb-6 pt-6 flex items-center justify-center"
+                            key={card.id}
+                            className="bg-slate-700 opacity-75 text-purple-600 rounded-lg p-6 flex flex-col items-center justify-center space-y-2"
                         >
-                            <p className="">Card {index + 1}</p>
+                            {/* SVG Icon */}
+                            <div className="w-22 h-12">
+                                <img src={card.path} alt={`SVG for ${card.label}`} className="w-full h-full" />
+                            </div>
+                            {/* Card Label */}
                         </div>
                     ))}
                 </div>

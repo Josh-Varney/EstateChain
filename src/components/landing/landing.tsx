@@ -10,7 +10,7 @@ import LandingExtras from "./components/landing-extras";
 
 const LandingPage: React.FC = () => {
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-black via-gf-900 to-slate-800 overflow-hidden">
+    <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 overflow-hidden">
 
       {/* Content */}
       <div className="relative z-10 flex flex-col justify-center items-center h-full">

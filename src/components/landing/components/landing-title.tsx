@@ -1,12 +1,13 @@
-import React from "react"
-import { FaStar } from "react-icons/fa";
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 const LandingTitle: React.FC = () => {
-    return(
+    return (
         <div className="flex flex-col space-y-6 justify-center text-center mx-auto max-w-3xl">
             {/* Header Section */}
             <div className="flex flex-row items-center justify-center mt-6 space-x-2 bg-gray-800 text-gray-200 rounded-3xl w-fit mx-auto px-4 py-2 shadow-md">
-                <FaStar className="text-yellow-400" />
+                <FontAwesomeIcon className='h-3 w-5'icon={faStar} />
                 <p className="font-medium text-xs">Trusted Platform</p>
             </div>
 
@@ -33,5 +34,6 @@ const LandingTitle: React.FC = () => {
             </div>
         </div>
     );
-}
+};
+
 export default LandingTitle;
