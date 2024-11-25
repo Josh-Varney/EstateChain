@@ -18,11 +18,11 @@ const LandingPage: React.FC = () => {
         <LandingHeader />
         
         {/* Sick Title with Get Started */}
-        <div className="mt-8">
+        <div className="mt-4">
           <LandingTitle />
         </div>
         {/* Innovative Features of BlockEstate */}
-        <div className="mt-16">
+        <div className="mt-10">
           <PartnerCards /> 
         </div>
         <div className="mt-16">

@@ -1,4 +1,6 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 const LandingHeader: React.FC = () => {
     return (
@@ -13,7 +15,7 @@ const LandingHeader: React.FC = () => {
                 <p className="text-white text-sm font-sans selection:bg-cyan-600 selection:text-white">
                     Home
                 </p>
-                <p className="text-white font-sans selection:bg-cyan-600 selection:text-white">
+                <p className="text-white text-sm font-sans selection:bg-cyan-600 selection:text-white">
                     About
                 </p>
                 <p className="text-white text-sm font-sans selection:bg-cyan-600 selection:text-white">
@@ -29,8 +31,12 @@ const LandingHeader: React.FC = () => {
 
             {/* Button Section */}
             <div className="mr-4">
-                <button className="rounded-3xl text-white bg-gray-400 text-sm text-nowrap p-2 selection:bg-cyan-700 selection:text-white">
-                    Get Started
+                <button className="flex items-center space-x-1 rounded-xl bg-gray-700 text-white p-2 text-xs text-center text-nowrap hover:bg-gray-500">
+                    {/* Icon */}
+                    <FontAwesomeIcon icon={faUser} size="1x" />
+
+                    {/* Button Text */}
+                    <span>Create Account</span>
                 </button>
             </div>
         </div>

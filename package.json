@@ -5,6 +5,8 @@
     "dependencies": {
         "@coinbase/wallet-sdk": "^4.1.0",
         "@ethersproject/providers": "^5.7.2",
+        "@fortawesome/free-solid-svg-icons": "^6.7.1",
+        "@fortawesome/react-fontawesome": "^0.2.2",
         "@metamask/providers": "^18.1.1",
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^13.4.0",
