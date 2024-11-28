@@ -5,8 +5,7 @@ import PartnerCards from "./components/landing-partners";
 import Features from "./components/landing-features";
 import TrainingDashboard from "./components/landing-training";
 import LandingFAQ from "./components/landing-FAQ";
-import { FaGripHorizontal } from "react-icons/fa";
-import LandingExtras from "./components/landing-extras";
+import LandingSubscription from "./components/landing-extras";
 
 const LandingPage: React.FC = () => {
   return (
@@ -37,10 +36,10 @@ const LandingPage: React.FC = () => {
           <LandingFAQ />
         </div>
 
-        <hr className="border-green-500 border-2 mt-16 w-screen" />
+        <hr className="border-gray-500 border-1 mt-16 w-screen" />
 
         <div className="mt-8">
-          <LandingExtras />
+          <LandingSubscription />
         </div>
 
       </div>

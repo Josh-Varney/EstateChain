@@ -5,12 +5,14 @@ import { doCreateUserWithEmailAndPassword, doSendEmailVerification } from "../..
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
+
 const CreateAccountScreen: React.FC = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [error, setError] = useState<string>(""); // Error state
     const [success, setSuccess] = useState<string>(""); // Success message state
+
 
     // Initialize navigate hook
     const navigate = useNavigate();

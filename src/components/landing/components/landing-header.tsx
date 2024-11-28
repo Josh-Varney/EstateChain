@@ -1,8 +1,18 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 const LandingHeader: React.FC = () => {
+    // List of navigation links with their respective routes (default or placeholders where needed)
+    const navLinks = [
+        { label: "Home", path: "/landing" }, // Home is associated with /landing
+        { label: "Technology", path: "/technology" }, // Technology is associated with /technology
+        { label: "Features", path: "/features" }, // Default for Features
+        { label: "Pricing", path: "/pricing" }, // Default for Pricing
+        { label: "FAQ", path: "/faq" }, // FAQ is associated with /faq
+    ];
+
     return (
         <div className="flex flex-wrap w-full items-center mt-4">
             {/* Logo Section */}
@@ -12,21 +22,19 @@ const LandingHeader: React.FC = () => {
 
             {/* Navigation Links */}
             <div className="flex flex-row items-center justify-center space-x-5 flex-1 overflow-x-auto">
-                <p className="text-white text-sm font-sans selection:bg-cyan-600 selection:text-white">
-                    Home
-                </p>
-                <p className="text-gray-500 text-sm font-sans selection:bg-cyan-600 selection:text-white">
-                    Technology
-                </p>
-                <p className="text-gray-500 text-sm font-sans selection:bg-cyan-600 selection:text-white">
-                    Features
-                </p>
-                <p className="text-gray-500 text-sm font-sans selection:bg-cyan-600 selection:text-white">
-                    Pricing
-                </p>
-                <p className="text-gray-500 text-sm font-sans selection:bg-cyan-600 selection:text-white">
-                    FAQ
-                </p>
+                {navLinks.map((link) => (
+                    <NavLink
+                        key={link.path}
+                        to={link.path} // Route for the link
+                        className={({ isActive }) =>
+                            `text-sm font-sans selection:bg-cyan-600 selection:text-white cursor-pointer ${
+                                isActive ? "text-white" : "text-gray-500"
+                            }`
+                        }
+                    >
+                        {link.label}
+                    </NavLink>
+                ))}
             </div>
 
             {/* Button Section */}
