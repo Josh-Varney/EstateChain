@@ -9,6 +9,7 @@ import ProtectedRoute from './contexts/authContext/route_context.tsx'
 import LandingPage from './components/landing/landing.tsx' 
 import FAQPage from './components/landing/faq.tsx' 
 import TechnologyPage from './components/landing/technology.tsx' 
+import FeaturesPage from './components/landing/features.tsx' 
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path='/landing' element={<LandingPage />} />
           <Route path='/faq' element={<FAQPage /> } />
           <Route path='/technology' element={<TechnologyPage />} />
+          <Route path='/features' element={<FeaturesPage />} />
           <Route path="/" element={<InitialiseScreen />} />
           <Route path="/register" element={<CreateAccountScreen />} />
           <Route path="/forgot" element={<ForgotPasswordScreen />} />
