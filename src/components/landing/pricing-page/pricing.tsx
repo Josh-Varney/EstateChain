@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import LandingHeader from "./components/header";
-import LandingSubscription from "./components/footer";
+import LandingHeader from "../components/header";
+import LandingSubscription from "../components/footer";
 
 const PricingPage: React.FC = () => {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(

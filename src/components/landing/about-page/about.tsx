@@ -1,6 +1,6 @@
 import React from "react";
-import LandingHeader from "./components/header";
-import LandingSubscription from "./components/footer";
+import LandingHeader from "../components/header";
+import LandingSubscription from "../components/footer";
 
 const AboutUsPage: React.FC = () => {
   return (
