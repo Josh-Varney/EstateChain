@@ -1,6 +1,6 @@
 import React from "react";
-import LandingHeader from "./components/landing-header";
-import LandingSubscription from "./components/landing-extras";
+import LandingHeader from "./components/header";
+import LandingSubscription from "./components/footer";
 
 const TechnologyPage = () => {
   return (

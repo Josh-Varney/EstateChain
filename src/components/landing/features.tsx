@@ -1,11 +1,12 @@
 import React from "react";
-import LandingHeader from "./components/landing-header";
+import LandingHeader from "./components/header";
+import LandingSubscription from "./components/footer";
 
 const FeaturesPage: React.FC = () => {
   return (
     <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-white overflow-hidden">
       {/* Header */}
-      <LandingHeader />
+      <LandingHeader/>
 
       {/* Hero Section */}
       <section className="py-16 px-6 text-center">
@@ -125,6 +126,11 @@ const FeaturesPage: React.FC = () => {
           </button>
         </div>
       </section>
+
+      <div className="mt-8">
+          <LandingSubscription />
+        </div>
+
     </div>
   );
 };

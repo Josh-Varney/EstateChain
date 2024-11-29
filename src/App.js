@@ -6,10 +6,12 @@ import CreateAccountScreen from './components/form/Create.tsx';
 import ForgotPasswordScreen from './components/form/Forgot.tsx';
 import HomeScreen from './components/dummy-portal/DummyHub.tsx'
 import ProtectedRoute from './contexts/authContext/route_context.tsx'
-import LandingPage from './components/landing/landing.tsx' 
+import LandingPage from './components/landing/landing-page/landing.tsx' 
 import FAQPage from './components/landing/faq.tsx' 
 import TechnologyPage from './components/landing/technology.tsx' 
 import FeaturesPage from './components/landing/features.tsx' 
+import PricingPage from './components/landing/pricing.tsx'  
+import AboutPage from './components/landing/about.tsx'  
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/" element={<InitialiseScreen />} />
           <Route path="/register" element={<CreateAccountScreen />} />
           <Route path="/forgot" element={<ForgotPasswordScreen />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/contact" element={<AboutPage /> } />
           <Route
             path="/home"
             element={

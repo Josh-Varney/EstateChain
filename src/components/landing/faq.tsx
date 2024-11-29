@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import LandingHeader from "./components/landing-header";
+import LandingHeader from "./components/header";
+import LandingSubscription from "./components/footer";
 
 const FAQPage: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [openItem, setOpenItem] = useState<number | null>(null);
-
-  const faqData = [
+  const [faqData, setFaqData] = useState([
     {
       question: "What is Frank AI?",
       answer:
@@ -55,85 +56,169 @@ const FAQPage: React.FC = () => {
       answer:
         "Yes, Frank AI includes advanced analytics and reporting tools to track recruitment performance and HR metrics in real time.",
     },
-    {
-      question: "Can I customize Frank AI for my company’s needs?",
-      answer:
-        "Yes, Frank AI offers customization options to align with your company's unique HR and recruitment workflows.",
-    },
-    {
-      question: "Is there a trial version available for Frank AI?",
-      answer:
-        "Yes, you can request a free trial to explore Frank AI's features before committing to a subscription.",
-    },
-  ];
+  ]);
+
+  const [newQuestion, setNewQuestion] = useState("");
+  const [newAnswer, setNewAnswer] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Filter FAQs based on search query
+  const filteredFAQs = faqData.filter((faq) =>
+    faq.question.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Limit the number of FAQs displayed to 8 if no search query
+  const visibleFAQs = searchQuery ? filteredFAQs : filteredFAQs.slice(0, 8);
 
   const toggleItem = (index: number) => {
     setOpenItem(openItem === index ? null : index);
   };
 
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSuccessMessage(null);
+
+    if (!newQuestion.trim() || !newAnswer.trim()) {
+      setError("Both fields are required.");
+      return;
+    }
+
+    if (
+      faqData.some(
+        (faq) =>
+          faq.question.toLowerCase() === newQuestion.trim().toLowerCase()
+      )
+    ) {
+      setError("This question already exists.");
+      return;
+    }
+
+    setFaqData((prev) => [
+      ...prev,
+      { question: newQuestion.trim(), answer: newAnswer.trim() },
+    ]);
+    setNewQuestion("");
+    setNewAnswer("");
+    setSuccessMessage("Your question has been successfully submitted!");
+  };
+
   return (
-    <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 overflow-hidden">
-      <div className="relative z-10 flex flex-col h-full">
-        {/* Header Bar */}
-        <LandingHeader />
+    <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-gray-100">
+      <LandingHeader />
 
-        {/* Main FAQ Content */}
-        <main className="flex-1 px-6 py-12">
-          <div className="max-w-4xl mx-auto">
-            {/* Title */}
-            <h1 className="text-4xl font-bold text-white mb-6 text-center">
-              Frequently Asked Questions
-            </h1>
-            <p className="text-lg text-gray-300 mb-10 text-center">
-              Here are answers to some common queries.
-            </p>
+      <main className="flex-1 px-6 py-12">
+        <div className="max-w-4xl mx-auto">
+          {/* Title Section */}
+          <h1 className="text-4xl font-extrabold text-center text-teal-400">
+            Frequently Asked Questions
+          </h1>
+          <p className="mt-4 text-lg text-gray-300 text-center">
+            Find answers to common queries or submit your own question below.
+          </p>
 
-            {/* FAQ Items */}
-            <div className="space-y-6">
-              {faqData.map((faq, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-800 rounded-xl p-5 shadow-lg transition hover:shadow-2xl"
-                >
-                  <button
-                    className="flex justify-between w-full text-left text-xl font-semibold text-white"
-                    onClick={() => toggleItem(index)}
-                  >
-                    <span>{faq.question}</span>
-                    <span
-                      className={`transform transition-transform ${
-                        openItem === index ? "rotate-180" : ""
-                      }`}
-                    >
-                      {openItem === index ? "−" : "+"}
-                    </span>
-                  </button>
-                  {openItem === index && (
-                    <p className="mt-3 text-gray-400 text-base">{faq.answer}</p>
-                  )}
-                </div>
-              ))}
-            </div>
+          {/* Search Input */}
+          <div className="mt-8">
+            <input
+              type="text"
+              placeholder="Search for a question..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+              aria-label="Search FAQs"
+            />
           </div>
-        </main>
 
-        {/* Footer Navigation */}
-        <footer className="fixed bottom-0 left-0 w-full bg-gray-900 border-t border-gray-700 py-5">
-          <div className="flex justify-center space-x-6">
-            {["General", "Build", "Promote", "Manage", "Integrations", "Legal"].map(
-              (item, index) => (
-                <a
-                  key={index}
-                  href="#"
-                  className="text-gray-400 hover:text-teal-300 transition"
+          {/* FAQ Items */}
+          <div className="mt-8 space-y-6">
+            {visibleFAQs.map((faq, index) => (
+              <div
+                key={index}
+                className="bg-gray-800 rounded-xl p-5 shadow-lg transition hover:shadow-xl"
+                role="region"
+                aria-labelledby={`faq-question-${index}`}
+              >
+                <button
+                  id={`faq-question-${index}`}
+                  className="flex justify-between w-full text-left text-xl font-semibold text-white"
+                  onClick={() => toggleItem(index)}
+                  aria-expanded={openItem === index}
                 >
-                  {item}
-                </a>
-              )
+                  <span>{faq.question}</span>
+                  <span
+                    className={`transform transition-transform ${
+                      openItem === index ? "rotate-180" : ""
+                    }`}
+                  >
+                    {openItem === index ? "−" : "+"}
+                  </span>
+                </button>
+                {openItem === index && (
+                  <p className="mt-3 text-gray-400 text-base" aria-live="polite">
+                    {faq.answer}
+                  </p>
+                )}
+              </div>
+            ))}
+            {filteredFAQs.length === 0 && (
+              <p className="text-gray-400 text-center">No results found.</p>
             )}
           </div>
-        </footer>
-      </div>
+
+          {/* Submit New Question */}
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold text-teal-400 mb-4">
+              Submit Your Own Question
+            </h2>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+            {successMessage && (
+              <p className="text-green-500 mb-4">{successMessage}</p>
+            )}
+            <form onSubmit={handleFormSubmit} className="space-y-6">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Enter your question"
+                  value={newQuestion}
+                  onChange={(e) => setNewQuestion(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+                  maxLength={150}
+                  aria-label="New question"
+                  required
+                />
+                <p className="text-sm text-gray-400 mt-2">
+                  {newQuestion.length}/150 characters
+                </p>
+              </div>
+              <div>
+                <textarea
+                  placeholder="Enter the answer to your question"
+                  value={newAnswer}
+                  onChange={(e) => setNewAnswer(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+                  rows={4}
+                  maxLength={300}
+                  aria-label="New answer"
+                  required
+                />
+                <p className="text-sm text-gray-400 mt-2">
+                  {newAnswer.length}/300 characters
+                </p>
+              </div>
+              <button
+                type="submit"
+                className="w-full py-3 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold shadow-lg hover:shadow-xl transition"
+                aria-label="Submit question"
+              >
+                Submit Question
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+
+      <LandingSubscription />
     </div>
   );
 };
