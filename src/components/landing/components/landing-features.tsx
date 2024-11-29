@@ -16,7 +16,7 @@ const Features: React.FC = () => {
                 </div>
 
                 <div className="w-3/4 mx-auto px-8">
-                    <p className="text-gray-500 justify-center text-xs md:text-xs lg:text-xs">
+                    <p className="text-gray-500 justify-center text-sm md:text-sm lg:text-sm">
                         Our platform combines advanced security, real-time analytics, and user friendly design to provide an unparallel trading experience.
                     </p>
                 </div>

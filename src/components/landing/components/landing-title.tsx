@@ -20,7 +20,7 @@ const LandingTitle: React.FC = () => {
 
             {/* Subtitle Section */}
             <div className="w-3/4 mx-auto px-8">
-                <p className="text-gray-500 justify-center text-xs md:text-xs lg:text-xs ">
+                <p className="text-gray-500 justify-center text-sm md:text-sm lg:text-sm">
                     Experience the future of digital transactions with our state-of-the-art blockchain technology. Our secure,
                     decentralized platform ensures every transaction is transparent, immutable, and protected against fraud.
                 </p>
