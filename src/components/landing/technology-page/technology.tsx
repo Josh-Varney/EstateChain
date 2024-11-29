@@ -162,7 +162,7 @@ const TechnologyPage = () => {
 
       {/* Footer */}
       <hr className="border-gray-600 mt-16 w-full" />
-      <div className="mt-8">
+      <div className="mt-8 mb-8">
         <LandingSubscription />
       </div>
     </div>

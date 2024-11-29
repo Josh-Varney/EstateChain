@@ -127,9 +127,11 @@ const FeaturesPage: React.FC = () => {
         </div>
       </section>
 
-      <div className="mt-8">
+      <hr className="border-gray-500 border-1 mt-8 w-screen" />
+
+      <div className="mt-8 mb-8">
           <LandingSubscription />
-        </div>
+      </div>
 
     </div>
   );

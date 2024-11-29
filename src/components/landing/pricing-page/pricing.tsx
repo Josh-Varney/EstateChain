@@ -174,12 +174,14 @@ const PricingPage: React.FC = () => {
             ))}
           </div>
         </div>
-      </section>
 
-      <div className="mt-8">
+        <hr className="border-gray-500 border-1 mt-16 w-screen" />
+        
+        <div className="mt-8">
         <LandingSubscription />
-      </div>
-
+        </div>
+      </section>
+      
     </div>
   );
 };

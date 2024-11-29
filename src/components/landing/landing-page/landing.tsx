@@ -38,7 +38,7 @@ const LandingPage: React.FC = () => {
 
         <hr className="border-gray-500 border-1 mt-16 w-screen" />
 
-        <div className="mt-8">
+        <div className="mt-8 mb-12">
           <LandingSubscription />
         </div>
 

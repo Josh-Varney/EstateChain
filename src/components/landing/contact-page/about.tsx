@@ -4,10 +4,10 @@ import LandingSubscription from "../components/footer";
 
 const AboutUsPage: React.FC = () => {
   return (
-    <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 text-gray-100">
+    <div className="relative bg-gradient-to-b from-gray-800 to-gray-900  text-gray-100">
       <LandingHeader />
 
-      <main className="flex-1 px-6 sm:px-12 py-12">
+      <main className="flex-1 px-6 sm:px-8 py-8">
         <div className="max-w-7xl mx-auto space-y-16">
           {/* Hero Section */}
           <section className="relative text-center">
@@ -156,9 +156,13 @@ const AboutUsPage: React.FC = () => {
             </button>
           </section>
         </div>
-      </main>
 
-      <LandingSubscription />
+        <hr className="border-gray-500 border-1 mt-16 w-screen" />
+        
+        <section className="mt-8">
+          <LandingSubscription />
+        </section>
+      </main> 
     </div>
   );
 };

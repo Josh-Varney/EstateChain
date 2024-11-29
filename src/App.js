@@ -11,7 +11,7 @@ import FAQPage from './components/landing/faq-page/faq.tsx'
 import TechnologyPage from './components/landing/technology-page/technology.tsx' 
 import FeaturesPage from './components/landing/feature-page/features.tsx' 
 import PricingPage from './components/landing/pricing-page/pricing.tsx'  
-import AboutPage from './components/landing/about-page/about.tsx'  
+import AboutPage from './components/landing/contact-page/about.tsx'  
 
 function App() {
   return (
