@@ -71,7 +71,7 @@ const FeaturesPage: React.FC = () => {
       {/* How It Works Section */}
       <section className="py-16 px-6 bg-gradient-to-b from-gray-800 to-gray-900">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold">How It Works</h2>
+          <h2 className="text-4xl text-white md:text-5xl lg:text-5xl justify-center text-balance text-center">How It Works</h2>
           <p className="mt-4 text-gray-300">
             Experience a simple, transparent, and secure way to invest in real estate through tokenization.
           </p>
@@ -98,7 +98,7 @@ const FeaturesPage: React.FC = () => {
       {/* Testimonials Section */}
       <section className="py-16 px-6 bg-gradient-to-b from-gray-800 to-gray-900">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold">What Our Users Say</h2>
+          <h2 className="text-4xl text-white md:text-5xl lg:text-5xl justify-center text-balance text-center">What Our Users Say</h2>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
             <Testimonial
               name="John Doe"

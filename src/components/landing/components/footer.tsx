@@ -11,7 +11,7 @@ const LandingSubscription: React.FC = () => {
                         <p className="text-white font-extrabold text-2xl">Logo</p>
                     </div>
                     <div className="mt-6">
-                        <h1 className="text-2xl sm:text-3xl font-extrabold text-white leading-snug">
+                        <h1 className="text-2xl sm:text-3xl font-sem text-white leading-snug">
                             Stay Ahead with Webtrix Insights
                         </h1>
                     </div>
@@ -96,7 +96,7 @@ const LandingSubscription: React.FC = () => {
                         },
                     ].map((section, index) => (
                         <div key={index}>
-                            <p className="font-bold text-white mb-4">{section.title}</p>
+                            <p className=" text-white mb-4">{section.title}</p>
                             <ul className="text-gray-400 space-y-2 text-sm">
                                 {section.links.map((link, idx) => (
                                     <li
@@ -132,13 +132,14 @@ const LandingSubscription: React.FC = () => {
                         />
                     ))}
                 </div>
-                <div className="flex space-x-4">
+                <div className="flex items-center space-x-4">
                     <a
                         href="/privacy-policy"
                         className="hover:text-teal-500 transition"
                     >
                         Privacy Policy
                     </a>
+                    {/* <div className="h-full border-l border-gray-400"></div> Vertical Line */}
                     <a
                         href="/terms-of-service"
                         className="hover:text-teal-500 transition"
