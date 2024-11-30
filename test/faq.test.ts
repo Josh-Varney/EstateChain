@@ -1,4 +1,5 @@
 import { submitQuestion } from "../src/firebase/faq/faq-submit";
+import { getApprovedQuestions } from "../src/firebase/faq/faq-grab";
 import { getDoc, setDoc, doc } from "firebase/firestore";
 
 // Mock Firestore methods
@@ -119,3 +120,89 @@ describe("submitQuestion Function", () => {
     });
   });
 });
+
+
+describe("getApprovedQuestions Function", () => {
+    beforeEach(() => {
+      jest.clearAllMocks(); // Reset mocks before each test
+      (doc as jest.Mock).mockImplementation(() => ({})); // Ensure `doc` always returns a valid reference
+    });
+  
+    it("should return an empty array if the document does not exist", async () => {
+      // Mock Firestore's getDoc behavior to simulate a non-existent document
+      (getDoc as jest.Mock).mockResolvedValueOnce({
+        exists: () => false,
+      });
+  
+      const result = await getApprovedQuestions();
+      expect(doc).toHaveBeenCalledWith(expect.anything(), "faq", "questionsDocument");
+      expect(getDoc).toHaveBeenCalledWith(expect.any(Object));
+      expect(result).toEqual([]); // Expect an empty array
+    });
+  
+    it("should return an empty array if there are no questions", async () => {
+      // Mock Firestore's getDoc behavior to return an empty questions array
+      (getDoc as jest.Mock).mockResolvedValueOnce({
+        exists: () => true,
+        data: () => ({ questions: [] }),
+      });
+  
+      const result = await getApprovedQuestions();
+      expect(doc).toHaveBeenCalledWith(expect.anything(), "faq", "questionsDocument");
+      expect(getDoc).toHaveBeenCalledWith(expect.any(Object));
+      expect(result).toEqual([]); // Expect an empty array
+    });
+  
+    it("should return only approved questions", async () => {
+      // Mock Firestore's getDoc behavior to return questions, some of which are approved
+      (getDoc as jest.Mock).mockResolvedValueOnce({
+        exists: () => true,
+        data: () => ({
+          questions: [
+            { message: "Question 1", approved: true },
+            { message: "Question 2", approved: false },
+            { message: "Question 3", approved: true },
+          ],
+        }),
+      });
+  
+      const result = await getApprovedQuestions();
+      expect(doc).toHaveBeenCalledWith(expect.anything(), "faq", "questionsDocument");
+      expect(getDoc).toHaveBeenCalledWith(expect.any(Object));
+      expect(result).toEqual([
+        { message: "Question 1", approved: true },
+        { message: "Question 3", approved: true },
+      ]); // Expect only approved questions
+    });
+  
+    it("should handle documents with no questions array gracefully", async () => {
+      // Mock Firestore's getDoc behavior to return a document with no "questions" field
+      (getDoc as jest.Mock).mockResolvedValueOnce({
+        exists: () => true,
+        data: () => ({}), // No "questions" field
+      });
+  
+      const result = await getApprovedQuestions();
+      expect(doc).toHaveBeenCalledWith(expect.anything(), "faq", "questionsDocument");
+      expect(getDoc).toHaveBeenCalledWith(expect.any(Object));
+      expect(result).toEqual([]); // Expect an empty array
+    });
+  
+    it("should handle Firestore errors gracefully", async () => {
+      // Mock Firestore to throw an error
+      (getDoc as jest.Mock).mockRejectedValueOnce(new Error("Firestore Error"));
+  
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+  
+      const result = await getApprovedQuestions();
+      expect(doc).toHaveBeenCalledWith(expect.anything(), "faq", "questionsDocument");
+      expect(getDoc).toHaveBeenCalledWith(expect.any(Object));
+      expect(console.error).toHaveBeenCalledWith(
+        "Error fetching approved questions:",
+        expect.any(Error)
+      );
+      expect(result).toEqual([]); // Expect an empty array in case of error
+  
+      consoleSpy.mockRestore();
+    });
+  });
