@@ -28,7 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ darkMode }) => {
 const SidebarLink: React.FC<{ location: string; icon: React.ReactNode; tooltip: string; darkMode: boolean }> = ({ location, icon, tooltip, darkMode }) => {
   return (
     <a
-      // href={href}
+      href={location}
       onClick={() => samePageRedirectIssue(window.location.href)}
       className={`relative flex items-center justify-center w-12 h-12 rounded-full transition-colors duration-300 group ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-300'}`}
     >

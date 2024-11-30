@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import LandingHeader from "../components/header";
 import LandingSubscription from "../components/footer";
+import FAQTitle from "./components/faq-title";
+import FAQSearchTerm from "./components/faq-search";
+import FAQList from "./components/faq-list";
+import FAQForm from "./components/faq-form";
 
 const FAQPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -71,9 +75,9 @@ const FAQPage: React.FC = () => {
   // Limit the number of FAQs displayed to 8 if no search query
   const visibleFAQs = searchQuery ? filteredFAQs : filteredFAQs.slice(0, 8);
 
-  const toggleItem = (index: number) => {
-    setOpenItem(openItem === index ? null : index);
-  };
+  // const toggleItem = (index: number) => {
+  //   setOpenItem(openItem === index ? null : index);
+  // };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,118 +115,41 @@ const FAQPage: React.FC = () => {
       <main className="flex-1 px-6 py-12">
         <div className="max-w-4xl mx-auto">
           {/* Title Section */}
-          <h1 className="text-4xl font-extrabold text-center text-teal-400">
-            Frequently Asked Questions
-          </h1>
-          <p className="mt-4 text-lg text-gray-300 text-center">
-            Find answers to common queries or submit your own question below.
-          </p>
+          <FAQTitle />
 
           {/* Search Input */}
-          <div className="mt-8">
-            <input
-              type="text"
-              placeholder="Search for a question..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
-              aria-label="Search FAQs"
-            />
-          </div>
+          <FAQSearchTerm searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
           {/* FAQ Items */}
-          <div className="mt-8 space-y-6">
-            {visibleFAQs.map((faq, index) => (
-              <div
-                key={index}
-                className="bg-gray-800 rounded-xl p-5 shadow-lg transition hover:shadow-xl"
-                role="region"
-                aria-labelledby={`faq-question-${index}`}
-              >
-                <button
-                  id={`faq-question-${index}`}
-                  className="flex justify-between w-full text-left text-xl font-semibold text-white"
-                  onClick={() => toggleItem(index)}
-                  aria-expanded={openItem === index}
-                >
-                  <span>{faq.question}</span>
-                  <span
-                    className={`transform transition-transform ${
-                      openItem === index ? "rotate-180" : ""
-                    }`}
-                  >
-                    {openItem === index ? "−" : "+"}
-                  </span>
-                </button>
-                {openItem === index && (
-                  <p className="mt-3 text-gray-400 text-base" aria-live="polite">
-                    {faq.answer}
-                  </p>
-                )}
-              </div>
-            ))}
-            {filteredFAQs.length === 0 && (
-              <p className="text-gray-400 text-center">No results found.</p>
-            )}
-          </div>
+          <FAQList
+            faqs={visibleFAQs}
+            openItem={openItem}
+            setOpenItem={setOpenItem}
+          />
+
+          {/* No Results Message */}
+          {filteredFAQs.length === 0 && (
+            <p className="text-gray-400 text-center mt-8">No results found.</p>
+          )}
         </div>
-        
+
         <hr className="border-gray-500 border-1 mt-16 w-screen" />
 
         {/* Submit New Question */}
-        <div className="mt-20 mb-16 px-4 sm:px-8 md:px-20 lg:px-40">
-          <h2 className="text-2xl font-bold text-teal-400 mb-4">
-            Submit Your Own Question
-          </h2>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          {successMessage && (
-            <p className="text-green-500 mb-4">{successMessage}</p>
-          )}
-          <form onSubmit={handleFormSubmit} className="space-y-6">
-            <div>
-              <input
-                type="text"
-                placeholder="Enter your question"
-                value={newQuestion}
-                onChange={(e) => setNewQuestion(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
-                maxLength={150}
-                aria-label="New question"
-                required
-              />
-              <p className="text-sm text-gray-400 mt-2">
-                {newQuestion.length}/150 characters
-              </p>
-            </div>
-            <div>
-              <textarea
-                placeholder="Enter the answer to your question"
-                value={newAnswer}
-                onChange={(e) => setNewAnswer(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
-                rows={4}
-                maxLength={300}
-                aria-label="New answer"
-                required
-              />
-              <p className="text-sm text-gray-400 mt-2">
-                {newAnswer.length}/300 characters
-              </p>
-            </div>
-            <button
-              type="submit"
-              className="w-full py-3 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold shadow-lg hover:shadow-xl transition"
-              aria-label="Submit question"
-            >
-              Submit Question
-            </button>
-          </form>
-        </div>
+        <FAQForm
+          error={error}
+          successMessage={successMessage}
+          newQuestion={newQuestion}
+          setNewQuestion={setNewQuestion}
+          newAnswer={newAnswer}
+          setNewAnswer={setNewAnswer}
+          handleFormSubmit={handleFormSubmit}
+        />
+
         <hr className="border-gray-500 border-1 mt-16 mb-8 w-screen" />
         <LandingSubscription />
       </main>
     </div>
-    
   );
 };
 
