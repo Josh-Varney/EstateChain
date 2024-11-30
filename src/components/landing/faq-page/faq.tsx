@@ -75,9 +75,9 @@ const FAQPage: React.FC = () => {
   // Limit the number of FAQs displayed to 8 if no search query
   const visibleFAQs = searchQuery ? filteredFAQs : filteredFAQs.slice(0, 8);
 
-  const toggleItem = (index: number) => {
-    setOpenItem(openItem === index ? null : index);
-  };
+  // const toggleItem = (index: number) => {
+  //   setOpenItem(openItem === index ? null : index);
+  // };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();

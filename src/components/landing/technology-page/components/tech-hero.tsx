@@ -13,10 +13,10 @@ const TechnologyHero: React.FC = () => (
         </p>
       </div>
       <div className="lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
-        <img
-          src="https://via.placeholder.com/600x400"
-          alt="Technology Hero Image"
-          className="rounded-lg shadow-xl hover:scale-105 transform transition-transform duration-300"
+      <img
+        src="https://via.placeholder.com/600x400"
+        alt="Technology Hero"
+        className="rounded-lg shadow-xl hover:scale-105 transform transition-transform duration-300"
         />
       </div>
     </div>
