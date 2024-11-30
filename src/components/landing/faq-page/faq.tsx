@@ -1,111 +1,93 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LandingHeader from "../components/header";
 import LandingSubscription from "../components/footer";
 import FAQTitle from "./components/faq-title";
 import FAQSearchTerm from "./components/faq-search";
 import FAQList from "./components/faq-list";
 import FAQForm from "./components/faq-form";
+import { submitQuestion } from "../../../firebase/faq/faq-submit";
+import { getApprovedQuestions } from "../../../firebase/faq/faq-grab";
 
 const FAQPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [openItem, setOpenItem] = useState<number | null>(null);
-  const [faqData, setFaqData] = useState([
-    {
-      question: "What is Frank AI?",
-      answer:
-        "Frank AI is an autonomous artificial intelligence assistant tool focused on helping Human Recruitment, qualifying candidates or applicants, and managing the company.",
-    },
-    {
-      question: "How does Frank AI work?",
-      answer:
-        "Frank AI uses machine learning algorithms to automate tasks in recruitment and HR management efficiently.",
-    },
-    {
-      question: "Is Frank AI right for my company's HR?",
-      answer:
-        "Yes, if you're looking for a tool to streamline HR processes, Frank AI could be a great fit.",
-    },
-    {
-      question: "What are the costs and fees to use Frank AI?",
-      answer:
-        "Frank AI offers flexible pricing options. Contact our sales team for more details.",
-    },
-    {
-      question: "How can I set up my account for Frank AI?",
-      answer:
-        "You can set up your account by visiting our signup page and following the instructions provided.",
-    },
-    {
-      question: "What industries can benefit from Frank AI?",
-      answer:
-        "Frank AI is ideal for industries such as technology, healthcare, finance, retail, and any business with active recruitment and HR needs.",
-    },
-    {
-      question: "Does Frank AI integrate with existing HR tools?",
-      answer:
-        "Yes, Frank AI supports integration with popular HR platforms such as Workday, BambooHR, and Greenhouse, among others.",
-    },
-    {
-      question: "What kind of customer support does Frank AI offer?",
-      answer:
-        "Frank AI provides 24/7 customer support through chat, email, and phone. We also offer extensive documentation and onboarding assistance.",
-    },
-    {
-      question: "Can Frank AI ensure data privacy and security?",
-      answer:
-        "Absolutely. Frank AI is compliant with GDPR, CCPA, and other major data protection regulations. Your data is encrypted and secure.",
-    },
-    {
-      question: "Does Frank AI provide reporting and analytics?",
-      answer:
-        "Yes, Frank AI includes advanced analytics and reporting tools to track recruitment performance and HR metrics in real time.",
-    },
-  ]);
-
-  const [newQuestion, setNewQuestion] = useState("");
-  const [newAnswer, setNewAnswer] = useState("");
+  const [faqData, setFaqData] = useState<{ message: string; answer: string }[]>([]); // Use dynamic data
+  const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState<string | null>(null);
+  const [newQuestion, setNewQuestion] = useState("");
+  const [newEmail, setNewEmail] = useState(""); // Email state
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Fetch FAQ data dynamically on component mount
+  useEffect(() => {
+    const fetchFAQs = async () => {
+      try {
+        setLoading(true); // Start loading
+        const data = await getApprovedQuestions(); // Fetch data
+        setFaqData(data); // Update state with fetched data
+        setLoading(false); // Stop loading
+      } catch (error) {
+        console.error("Error fetching FAQs:", error);
+        setError("Failed to load FAQs. Please try again later.");
+        setLoading(false); // Stop loading
+      }
+    };
+
+    fetchFAQs();
+  }, []);
 
   // Filter FAQs based on search query
   const filteredFAQs = faqData.filter((faq) =>
-    faq.question.toLowerCase().includes(searchQuery.toLowerCase())
+    faq.message.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Limit the number of FAQs displayed to 8 if no search query
   const visibleFAQs = searchQuery ? filteredFAQs : filteredFAQs.slice(0, 8);
 
-  // const toggleItem = (index: number) => {
-  //   setOpenItem(openItem === index ? null : index);
-  // };
-
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccessMessage(null);
 
-    if (!newQuestion.trim() || !newAnswer.trim()) {
-      setError("Both fields are required.");
+    // Input validation
+    if (!newQuestion.trim() || !newEmail.trim()) {
+      setError("Both fields (email and question) are required.");
       return;
     }
 
+    // Basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+$/;
+    if (!emailRegex.test(newEmail)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    // Check for duplicate question
     if (
       faqData.some(
         (faq) =>
-          faq.question.toLowerCase() === newQuestion.trim().toLowerCase()
+          faq.message.toLowerCase() === newQuestion.trim().toLowerCase()
       )
     ) {
       setError("This question already exists.");
       return;
     }
 
-    setFaqData((prev) => [
-      ...prev,
-      { question: newQuestion.trim(), answer: newAnswer.trim() },
-    ]);
-    setNewQuestion("");
-    setNewAnswer("");
-    setSuccessMessage("Your question has been successfully submitted!");
+    try {
+      // Submit the question to Firebase
+      await submitQuestion(newEmail, newQuestion.trim());
+
+      // Reload FAQs after submission
+      const updatedFAQs = await getApprovedQuestions();
+      setFaqData(updatedFAQs);
+
+      setNewQuestion("");
+      setNewEmail("");
+      setSuccessMessage("Your question has been successfully submitted!");
+    } catch (error) {
+      console.error("Error submitting question:", error);
+      setError("An error occurred while submitting your question. Please try again.");
+    }
   };
 
   return (
@@ -121,14 +103,23 @@ const FAQPage: React.FC = () => {
           <FAQSearchTerm searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
           {/* FAQ Items */}
-          <FAQList
-            faqs={visibleFAQs}
-            openItem={openItem}
-            setOpenItem={setOpenItem}
-          />
+          {loading ? (
+            <p className="text-center text-gray-300">Loading FAQs...</p>
+          ) : error ? (
+            <p className="text-red-500 text-center">{error}</p>
+          ) : (
+            <FAQList
+              faqs={visibleFAQs.map((faq, index) => ({
+                question: faq.message,
+                answer: faq.answer,
+              }))}
+              openItem={openItem}
+              setOpenItem={setOpenItem}
+            />
+          )}
 
           {/* No Results Message */}
-          {filteredFAQs.length === 0 && (
+          {!loading && filteredFAQs.length === 0 && !error && (
             <p className="text-gray-400 text-center mt-8">No results found.</p>
           )}
         </div>
@@ -141,8 +132,8 @@ const FAQPage: React.FC = () => {
           successMessage={successMessage}
           newQuestion={newQuestion}
           setNewQuestion={setNewQuestion}
-          newAnswer={newAnswer}
-          setNewAnswer={setNewAnswer}
+          newEmail={newEmail} // Pass email state
+          setNewEmail={setNewEmail} // Pass email setter
           handleFormSubmit={handleFormSubmit}
         />
 

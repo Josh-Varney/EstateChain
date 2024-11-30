@@ -5,8 +5,8 @@ interface FAQFormProps {
   successMessage: string | null;
   newQuestion: string;
   setNewQuestion: (value: string) => void;
-  newAnswer: string;
-  setNewAnswer: (value: string) => void;
+  newEmail: string;
+  setNewEmail: (value: string) => void;
   handleFormSubmit: (e: React.FormEvent) => void;
 }
 
@@ -15,8 +15,8 @@ const FAQForm: React.FC<FAQFormProps> = ({
   successMessage,
   newQuestion,
   setNewQuestion,
-  newAnswer,
-  setNewAnswer,
+  newEmail,
+  setNewEmail,
   handleFormSubmit,
 }) => (
   <div className="mt-20 mb-16 px-4 sm:px-8 md:px-20 lg:px-40">
@@ -42,19 +42,15 @@ const FAQForm: React.FC<FAQFormProps> = ({
         </p>
       </div>
       <div>
-        <textarea
-          placeholder="Enter the answer to your question"
-          value={newAnswer}
-          onChange={(e) => setNewAnswer(e.target.value)}
+        <input
+          type="email"
+          placeholder="Enter your email"
+          value={newEmail}
+          onChange={(e) => setNewEmail(e.target.value)}
           className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
-          rows={4}
-          maxLength={300}
-          aria-label="New answer"
+          aria-label="Email address"
           required
         />
-        <p className="text-sm text-gray-400 mt-2">
-          {newAnswer.length}/300 characters
-        </p>
       </div>
       <button
         type="submit"
