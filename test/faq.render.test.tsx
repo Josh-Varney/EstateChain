@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import FAQPage from "../src/components/landing/faq-page/faq";
 import * as faqGrab from "../src/firebase/faq/faq-grab"; // Mock Firebase functions
