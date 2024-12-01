@@ -85,7 +85,7 @@ const ForgotPasswordScreen: React.FC = () => {
 
                     <div className="text-center font-medium text-xs text-gray-500 mt-6">
                         <p>
-                            Remembered your password? <a href="/" className="text-blue-500 hover:underline">Login</a>
+                            Remembered your password? <a href="/login" className="text-blue-500 hover:underline">Login</a>
                         </p>
                     </div>
                 </form>

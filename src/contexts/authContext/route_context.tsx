@@ -11,7 +11,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
     if (loading) return <div>Loading...</div>; // Optionally handle loading state
 
-    return currentUser ? <>{children}</> : <Navigate to="/" />;
+    return currentUser ? <>{children}</> : <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;

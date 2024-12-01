@@ -5,9 +5,9 @@ const LinksCard: React.FC = () => {
         {
             title: "Explore",
             links: [
-                { name: "Property Listings", href: "/" },
-                { name: "Tokenized Properties", href: "/" },
-                { name: "Marketplace", href: "/" },
+                { name: "Property Listings", href: "/home" },
+                { name: "Tokenized Properties", href: "/home" },
+                { name: "Marketplace", href: "/home" },
                 { name: "How It Works", href: "/faq" },
                 { name: "FAQs", href: "/faq" },
             ],
@@ -15,10 +15,10 @@ const LinksCard: React.FC = () => {
         {
             title: "Invest",
             links: [
-                { name: "Start Investing", href: "/" },
+                { name: "Start Investing", href: "/home" },
                 { name: "Tokenization Benefits", href: "/faq" },
-                { name: "Investment Opportunities", href: "/" },
-                { name: "Portfolio Dashboard", href: "/" },
+                { name: "Investment Opportunities", href: "/home" },
+                { name: "Portfolio Dashboard", href: "/home" },
             ],
         },
         {

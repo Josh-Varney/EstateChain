@@ -8,7 +8,7 @@ const LandingHeader: React.FC = () => {
 
   // List of navigation links with their respective routes
   const navLinks = [
-    { label: "Home", path: "/landing" },
+    { label: "Home", path: "/" },
     { label: "Technology", path: "/technology" },
     { label: "Features", path: "/features" },
     { label: "Pricing", path: "/pricing" },
@@ -17,6 +17,11 @@ const LandingHeader: React.FC = () => {
   ];
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
+  const handleCreateAccount = () => {
+    window.location.href = "/register";
+  };
+  
 
   return (
     <header className="bg-gray-800 text-white w-full">
@@ -52,7 +57,7 @@ const LandingHeader: React.FC = () => {
 
           {/* Button Section */}
           <div className="hidden md:flex items-center space-x-4">
-            <button className="flex items-center space-x-2 rounded-md bg-gray-700 text-white px-4 py-2 text-sm hover:bg-gray-600">
+            <button onClick={handleCreateAccount} className="flex items-center space-x-2 rounded-md bg-gray-700 text-white px-4 py-2 text-sm hover:bg-gray-600">
               <FontAwesomeIcon icon={faUser} />
               <span>Create Account</span>
             </button>

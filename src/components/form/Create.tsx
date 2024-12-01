@@ -124,7 +124,7 @@ const CreateAccountScreen: React.FC = () => {
 
                     <div className="font-medium text-xs text-gray-500 text-center mt-6">
                         <p>
-                            Already have an account? <a href="/" className="text-blue-500 hover:underline">Login</a>
+                            Already have an account? <a href="/login" className="text-blue-500 hover:underline">Login</a>
                         </p>
                     </div>
                 </form>

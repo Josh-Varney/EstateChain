@@ -3,6 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 const LandingTitle: React.FC = () => {
+
+    const getStartedClick = () => {
+        window.location.href = "/home";
+    }
+
     return (
         <div className="flex flex-col space-y-6 justify-center text-center mx-auto max-w-3xl">
             {/* Header Section */}
@@ -28,7 +33,7 @@ const LandingTitle: React.FC = () => {
 
             {/* Call-to-Action Section */}
             <div className="w-fit mx-auto px-6 py-4 mt-4">
-                <button className="text-black text-sm bg-white rounded-3xl md:text-sm lg:text-sm w-fit mx-auto px-20 py-3">
+                <button onClick={getStartedClick} className="text-black text-sm bg-white rounded-3xl md:text-sm lg:text-sm w-fit mx-auto px-20 py-3">
                     Get Started
                 </button>
             </div>
