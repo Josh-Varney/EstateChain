@@ -1,11 +1,11 @@
 import React from "react";
-import LandingHeader from "../components/header";
+import LandingHeader from "../components/header/header";
 import LandingTitle from "./components/landing-title";
 import PartnerCards from "./components/landing-partners";
 import Features from "./components/landing-features";
 import TrainingDashboard from "./components/landing-training";
 import LandingFAQ from "./components/landing-FAQ";
-import LandingSubscription from "../components/footer";
+import LandingSubscription from "../components/footer/footer";
 
 const LandingPage: React.FC = () => {
   return (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import LandingHeader from "../components/header";
-import LandingSubscription from "../components/footer";
+import LandingHeader from "../components/header/header";
+import LandingSubscription from "../components/footer/footer";
 import FAQTitle from "./components/faq-title";
 import FAQSearchTerm from "./components/faq-search";
 import FAQList from "./components/faq-list";

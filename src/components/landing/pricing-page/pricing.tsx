@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import LandingHeader from "../components/header";
-import LandingSubscription from "../components/footer";
+import LandingHeader from "../components/header/header";
+import LandingSubscription from "../components/footer/footer";
 import PricingHero from "./components/pricing-hero";
 import PricingStickyHeader from "./components/pricing-sticky";
 import PricingPlans from "./components/pricing-plan";
