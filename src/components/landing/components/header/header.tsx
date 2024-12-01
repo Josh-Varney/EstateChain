@@ -13,7 +13,7 @@ const LandingHeader: React.FC = () => {
     { label: "Features", path: "/features" },
     { label: "Pricing", path: "/pricing" },
     { label: "FAQ", path: "/faq" },
-    { label: "Contact Us", path: "/contact"},
+    { label: "Contact Us", path: "/contact" },
   ];
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -21,10 +21,41 @@ const LandingHeader: React.FC = () => {
   return (
     <header className="bg-gray-800 text-white w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
+        <div className="flex items-center justify-between py-4">
           {/* Logo Section */}
           <div className="flex-shrink-0">
-            <img src="/assets/White_LOGO_Header_option_1.svg" alt="Logo 1" className="w-48"/>
+            <img
+              src="/assets/White_LOGO_Header_option_1.svg"
+              alt="Logo 1"
+              className="w-52"
+            />
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex flex-grow justify-center">
+            <nav className="flex space-x-6">
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.path}
+                  to={link.path}
+                  className={({ isActive }) =>
+                    `text-sm font-medium hover:text-white ${
+                      isActive ? "text-white" : "text-gray-400"
+                    }`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+
+          {/* Button Section */}
+          <div className="hidden md:flex items-center space-x-4">
+            <button className="flex items-center space-x-2 rounded-md bg-gray-700 text-white px-4 py-2 text-sm hover:bg-gray-600">
+              <FontAwesomeIcon icon={faUser} />
+              <span>Create Account</span>
+            </button>
           </div>
 
           {/* Hamburger Menu for Mobile */}
@@ -35,32 +66,10 @@ const LandingHeader: React.FC = () => {
               aria-expanded={isMobileMenuOpen}
               className="text-gray-400 hover:text-white focus:outline-none"
             >
-              <FontAwesomeIcon icon={isMobileMenuOpen ? faTimes : faBars} size="lg" />
-            </button>
-          </div>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex flex-row items-center justify-center space-x-6 pl-14">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.path}
-                to={link.path}
-                className={({ isActive }) =>
-                  `text-sm font-medium hover:text-white ${
-                    isActive ? "text-white" : "text-gray-400"
-                  }`
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
-          </div>
-
-          {/* Button Section */}
-          <div className="hidden md:flex items-center space-x-4">
-            <button className="flex items-center space-x-2 rounded-md bg-gray-700 text-white px-4 py-2 text-sm hover:bg-gray-600">
-              <FontAwesomeIcon icon={faUser} />
-              <span>Create Account</span>
+              <FontAwesomeIcon
+                icon={isMobileMenuOpen ? faTimes : faBars}
+                size="lg"
+              />
             </button>
           </div>
         </div>
