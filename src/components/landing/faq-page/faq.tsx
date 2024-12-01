@@ -104,9 +104,9 @@ const FAQPage: React.FC = () => {
 
           {/* FAQ Items */}
           {loading ? (
-            <p className="text-center text-gray-300">Loading FAQs...</p>
+            <p data-testid="faq-loading-error" className="text-center text-gray-300">Loading FAQs...</p>
           ) : error ? (
-            <p className="text-red-500 text-center">{error}</p>
+            <p data-testid="form-error" className="text-red-500 text-center">{error}</p>
           ) : (
             <FAQList
               faqs={visibleFAQs.map((faq, index) => ({
