@@ -15,7 +15,7 @@ const LinksCard: React.FC = () => {
         {
             title: "Who We Are",
             links: [
-                { name: "About Us", href: "/about" },
+                { name: "About Us", href: "/contact" },
                 { name: "Career", href: "/career" },
                 { name: "News and Media", href: "/news-and-media" },
                 { name: "Financial Statement", href: "/financial-statement" },
@@ -24,8 +24,8 @@ const LinksCard: React.FC = () => {
         {
             title: "Support",
             links: [
-                { name: "FAQs", href: "/support/faqs" },
-                { name: "Contacts", href: "/support/contacts" },
+                { name: "FAQs", href: "/faq" },
+                { name: "Contacts", href: "/contact" },
                 { name: "Mobile", href: "/support/mobile" },
                 { name: "Windows & Mac", href: "/support/windows-mac" },
                 { name: "Desktop Version", href: "/support/desktop-version" },
