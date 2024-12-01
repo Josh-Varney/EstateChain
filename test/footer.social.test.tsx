@@ -81,5 +81,9 @@ describe('Footer Component', () => {
         expect(container).toHaveClass('flex'); // Base flex layout
         expect(container).toHaveClass('sm:flex-row'); // Responsive class for small screens
     });
-    
+
+    it('matches the snapshot', () => {
+        const { asFragment } = render(<Footer />);
+        expect(asFragment()).toMatchSnapshot();
+    });
 });
