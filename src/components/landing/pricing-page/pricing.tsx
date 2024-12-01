@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import LandingHeader from "../components/header/header";
 import LandingSubscription from "../components/footer/footer";
 import PricingHero from "./components/pricing-hero";
@@ -23,25 +25,50 @@ const PricingPage: React.FC = () => {
     alert("Your free trial has started!");
   };
 
+  useEffect(() => {
+    AOS.init({
+      duration: 800, // Animation duration in ms
+      easing: "ease-out", // Easing function
+      offset: 50, // Offset to trigger animations
+      once: true, // Whether animation should happen only once
+    });
+  }, []);
+
   return (
-    <div data-testid="pricing-page-container" className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 text-white pb-8">
-      <LandingHeader />
-      <PricingHero
-        hasStartedFreeTrial={hasStartedFreeTrial}
-        startFreeTrial={startFreeTrial}
-      />
-      <PricingStickyHeader
-        billingCycle={billingCycle}
-        toggleBillingCycle={toggleBillingCycle}
-      />
-      <PricingPlans billingCycle={billingCycle} />
+    <div
+      data-testid="pricing-page-container"
+      className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 text-white pb-8"
+    >
+      <div data-aos="fade-down">
+        <LandingHeader />
+      </div>
+      <div data-aos="fade-up">
+        <PricingHero
+          hasStartedFreeTrial={hasStartedFreeTrial}
+          startFreeTrial={startFreeTrial}
+        />
+      </div>
+      <div data-aos="fade-right">
+        <PricingStickyHeader
+          billingCycle={billingCycle}
+          toggleBillingCycle={toggleBillingCycle}
+        />
+      </div>
+      <div data-aos="zoom-in">
+        <PricingPlans billingCycle={billingCycle} />
+      </div>
       <hr className="border-gray-500 border-1 w-screen" />
-      <PricingTestimonials />
+      <div data-aos="fade-left">
+        <PricingTestimonials />
+      </div>
       <hr className="border-gray-500 border-1 w-screen" />
-      <PricingFAQ />
+      <div data-aos="fade-up">
+        <PricingFAQ />
+      </div>
       <hr className="border-gray-500 border-1 w-screen" />
-      <div className="mt-8"></div>
-      <LandingSubscription />
+      <div data-aos="fade-up" className="mt-8">
+        <LandingSubscription />
+      </div>
     </div>
   );
 };

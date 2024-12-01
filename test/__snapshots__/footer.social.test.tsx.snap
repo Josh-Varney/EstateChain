@@ -121,14 +121,14 @@ exports[`Footer Component matches the snapshot 1`] = `
       <a
         aria-label="Privacy Policy"
         class="hover:text-teal-500 transition"
-        href="/privacy-policy"
+        href="/policy/privacy-policy"
       >
         Privacy Policy
       </a>
       <a
         aria-label="Terms of Service"
         class="hover:text-teal-500 transition"
-        href="/terms-of-service"
+        href="/policy/t&c"
       >
         Terms of Service
       </a>
