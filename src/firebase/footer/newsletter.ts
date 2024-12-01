@@ -19,18 +19,18 @@ export const validateEmail = async (email: string): Promise<string> => {
         return "Email address is too long.";
     }
 
-    // Validate email format using the regex
-    if (!emailRegex.test(email)) {
-        return "Please enter a valid email address.";
-    }
-
     // Check if the email contains spaces
     if (email.includes(" ")) {
         return "Email address contains invalid characters.";
     }
 
-    // If all checks pass, return a success message (no errors)
-    return await sendEmailToNewsletter(email);;
+    // Validate email format using the regex
+    if (!emailRegex.test(email)) {
+        return "Please enter a valid email address.";
+    }
+
+    // If all checks pass, proceed to add the email
+    return await sendEmailToNewsletter(email);
 };
 
 /**
