@@ -10,7 +10,7 @@ import CallToAction from "./components/features-cta";
 
 const FeaturesPage: React.FC = () => {
   return (
-    <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-white overflow-hidden">
+    <div data-testid="features-page-container" className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-white overflow-hidden">
       <LandingHeader />
       <FeaturesHero />
       <FeaturesSection />
