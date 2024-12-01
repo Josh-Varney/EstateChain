@@ -5,38 +5,38 @@ const LinksCard: React.FC = () => {
         {
             title: "Explore",
             links: [
-                { name: "Property Listings", href: "/product/invest-your-future" },
-                { name: "Tokenized Properties", href: "/product/find-our-stocks" },
-                { name: "Marketplace", href: "/product/find-our-crypto" },
-                { name: "How It Works", href: "/product/earn-extra-money" },
+                { name: "Property Listings", href: "/" },
+                { name: "Tokenized Properties", href: "/" },
+                { name: "Marketplace", href: "/" },
+                { name: "How It Works", href: "/faq" },
                 { name: "FAQs", href: "/faq" },
             ],
         },
         {
             title: "Invest",
             links: [
-                { name: "Start Investing", href: "" },
-                { name: "Tokenization Benefits", href: "" },
-                { name: "Investment Opportunities", href: "" },
-                { name: "Portfolio Dashboard", href: "" },
+                { name: "Start Investing", href: "/" },
+                { name: "Tokenization Benefits", href: "/faq" },
+                { name: "Investment Opportunities", href: "/" },
+                { name: "Portfolio Dashboard", href: "/" },
             ],
         },
         {
             title: "Resources",
             links: [
-                { name: "Learn About Tokenization", href: "" },
-                { name: "White Papers", href: "" },
-                { name: "Case Studies", href: "" },
-                { name: "News and Insights", href: "" },
+                { name: "Learn About Tokenization", href: "/info/tokenisation" },
+                { name: "White Papers", href: "/info/research" },
+                { name: "Case Studies", href: "/info/case-studies" },
+                { name: "News and Insights", href: "/info/news&insights" },
             ],
         },
         {
             title: "Support",
             links: [
-                { name: "Contact Us", href: "/support/contact" },
-                { name: "Help Center", href: "/support/help-center" },
-                { name: "Community Forums", href: "/support/community" },
-                { name: "Privacy Policy", href: "/support/privacy-policy" },
+                { name: "Contact Us", href: "/contact" },
+                { name: "Help Center", href: "/faq" },
+                { name: "Privacy Policy", href: "/policy/privacy-policy" },
+                { name: "Cookie Policy", href: "/policy/cookie-policy"}
             ],
         },
     ];

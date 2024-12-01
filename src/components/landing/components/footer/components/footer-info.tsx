@@ -27,10 +27,10 @@ const Footer: React.FC = () => {
                 ))}
             </div>
             <div className="flex items-center space-x-4">
-                <a href="/privacy-policy" aria-label="Privacy Policy" className="hover:text-teal-500 transition">
+                <a href="/policy/privacy-policy" aria-label="Privacy Policy" className="hover:text-teal-500 transition">
                     Privacy Policy
                 </a>
-                <a href="/terms-of-service" aria-label="Terms of Service" className="hover:text-teal-500 transition">
+                <a href="/policy/t&c" aria-label="Terms of Service" className="hover:text-teal-500 transition">
                     Terms of Service
                 </a>
             </div>
