@@ -137,7 +137,7 @@ const FAQPage: React.FC = () => {
           handleFormSubmit={handleFormSubmit}
         />
 
-        <hr className="border-gray-500 border-1 mt-16 mb-8 w-screen" />
+        <hr className="border-gray-500 border-1 mt-24 mb-16 w-screen" />
         <LandingSubscription />
       </main>
     </div>
