@@ -12,7 +12,7 @@ const PricingHero: React.FC<PricingHeroProps> = ({
   <header className="bg-gradient-to-r from-indigo-700 to-indigo-500 text-white py-16">
     <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 items-center gap-12">
       <div>
-        <h1 className="text-5xl md:text-6xl font-extrabold leading-tight">
+        <h1 className="text-5xl md:text-5xl font-bold leading-tight">
           Simple Pricing, No Surprises
         </h1>
         <p className="text-lg md:text-xl text-gray-200 mt-6">

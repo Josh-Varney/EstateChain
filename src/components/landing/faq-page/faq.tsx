@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import LandingHeader from "../components/header";
-import LandingSubscription from "../components/footer";
+import LandingHeader from "../components/header/header";
+import LandingSubscription from "../components/footer/footer";
 import FAQTitle from "./components/faq-title";
 import FAQSearchTerm from "./components/faq-search";
 import FAQList from "./components/faq-list";
@@ -137,7 +137,7 @@ const FAQPage: React.FC = () => {
           handleFormSubmit={handleFormSubmit}
         />
 
-        <hr className="border-gray-500 border-1 mt-16 mb-8 w-screen" />
+        <hr className="border-gray-500 border-1 mt-24 mb-16 w-screen" />
         <LandingSubscription />
       </main>
     </div>

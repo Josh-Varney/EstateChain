@@ -1,6 +1,6 @@
 import React from "react";
-import LandingHeader from "../components/header";
-import LandingSubscription from "../components/footer";
+import LandingHeader from "../components/header/header";
+import LandingSubscription from "../components/footer/footer";
 import FeaturesHero from "./components/features-hero";
 import FeaturesSection from "./components/features-section";
 import HowItWorks from "./components/features-guide";
@@ -17,7 +17,7 @@ const FeaturesPage: React.FC = () => {
       <HowItWorks />
       <TestimonialsSection />
       <CallToAction />
-      <hr className="border-gray-500 border-1 mt-8 w-screen" />
+      <hr className="border-gray-500 border-1 w-screen" />
       <div className="mt-8 mb-8">
         <LandingSubscription />
       </div>
