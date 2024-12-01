@@ -37,9 +37,9 @@ const SubscriptionForm: React.FC = () => {
     return (
         <div className="bg-gray-800 rounded-lg shadow-lg p-6 flex flex-col col-span-12 md:col-span-5">
             <div>
-                <p className="text-white font-extrabold text-2xl">Logo</p>
+             <img src="/assets/White_LOGO_Header_option_1.svg" alt="Logo 1" className="w-44"/>
             </div>
-            <div className="mt-6">
+            <div className="mt-2">
                 <h1 className="text-2xl sm:text-3xl font-sem text-white leading-snug">
                     Stay Ahead with Webtrix Insights
                 </h1>

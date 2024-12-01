@@ -24,9 +24,7 @@ const LandingHeader: React.FC = () => {
         <div className="flex justify-between items-center py-4">
           {/* Logo Section */}
           <div className="flex-shrink-0">
-            <p className="bg-red-50 text-gray-800 font-bold px-4 py-2 rounded-md">
-              Logo
-            </p>
+            <img src="/assets/White_LOGO_Header_option_1.svg" alt="Logo 1" className="w-48"/>
           </div>
 
           {/* Hamburger Menu for Mobile */}
