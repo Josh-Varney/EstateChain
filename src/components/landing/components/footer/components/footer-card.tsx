@@ -4,19 +4,41 @@ const LinksCard: React.FC = () => {
     const links = [
         {
             title: "Product",
-            links: ["Invest Your Future", "Find Our Stocks", "Find Our Crypto", "Earn Extra Money", "Bank Smarter"],
+            links: [
+                { name: "Invest Your Future", href: "/product/invest-your-future" },
+                { name: "Find Our Stocks", href: "/product/find-our-stocks" },
+                { name: "Find Our Crypto", href: "/product/find-our-crypto" },
+                { name: "Earn Extra Money", href: "/product/earn-extra-money" },
+                { name: "Bank Smarter", href: "/product/bank-smarter" },
+            ],
         },
         {
             title: "Who We Are",
-            links: ["About Us", "Career", "News and Media", "Financial Statement"],
+            links: [
+                { name: "About Us", href: "/about" },
+                { name: "Career", href: "/career" },
+                { name: "News and Media", href: "/news-and-media" },
+                { name: "Financial Statement", href: "/financial-statement" },
+            ],
         },
         {
             title: "Support",
-            links: ["FAQs", "Contacts", "Mobile", "Windows & Mac", "Desktop Version"],
+            links: [
+                { name: "FAQs", href: "/support/faqs" },
+                { name: "Contacts", href: "/support/contacts" },
+                { name: "Mobile", href: "/support/mobile" },
+                { name: "Windows & Mac", href: "/support/windows-mac" },
+                { name: "Desktop Version", href: "/support/desktop-version" },
+            ],
         },
         {
             title: "Documentation",
-            links: ["Public URLs", "Social Rooms", "User Guide", "Privacy Policy"],
+            links: [
+                { name: "Public URLs", href: "/docs/public-urls" },
+                { name: "Social Rooms", href: "/docs/social-rooms" },
+                { name: "User Guide", href: "/docs/user-guide" },
+                { name: "Privacy Policy", href: "/docs/privacy-policy" },
+            ],
         },
     ];
 
@@ -27,8 +49,13 @@ const LinksCard: React.FC = () => {
                     <p className="text-white mb-4">{section.title}</p>
                     <ul className="text-gray-400 space-y-2 text-sm">
                         {section.links.map((link, idx) => (
-                            <li key={idx} className="hover:text-white transition">
-                                {link}
+                            <li key={idx}>
+                                <a
+                                    href={link.href}
+                                    className="hover:text-white transition"
+                                >
+                                    {link.name}
+                                </a>
                             </li>
                         ))}
                     </ul>
