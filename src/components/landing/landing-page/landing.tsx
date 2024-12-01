@@ -9,7 +9,7 @@ import LandingSubscription from "../components/footer/footer";
 
 const LandingPage: React.FC = () => {
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 overflow-hidden">
+    <div data-testid="landing-page-container" className="relative min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 overflow-hidden">
 
       {/* Content */}
       <div className="relative z-10 flex flex-col justify-center items-center h-full">
