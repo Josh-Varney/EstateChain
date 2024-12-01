@@ -5,7 +5,7 @@ const Features: React.FC = () => {
         <div className="flex flex-col justify-center items-center text-center max-w-3xl mx-auto space-y-10">
             {/* Our Features - Circular Card */}
             <div className="w-fit mx-auto rounded-3xl bg-slate-700 px-6 py-2 text-center shadow-md">
-                <p className="text-white text-xs">Our Features</p>
+                <p className="text-xs uppercase tracking-widest text-white font-semibold">Our Features</p>
             </div>
             {/* Heading Section */}
             <div className="space-y-5">

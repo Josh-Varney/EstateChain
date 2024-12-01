@@ -17,7 +17,7 @@ const FeaturesPage: React.FC = () => {
       <HowItWorks />
       <TestimonialsSection />
       <CallToAction />
-      <hr className="border-gray-500 border-1 mt-8 w-screen" />
+      <hr className="border-gray-500 border-1 w-screen" />
       <div className="mt-8 mb-8">
         <LandingSubscription />
       </div>

@@ -24,7 +24,7 @@ const PricingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 text-white pb-8">
       <LandingHeader />
       <PricingHero
         hasStartedFreeTrial={hasStartedFreeTrial}
@@ -35,8 +35,12 @@ const PricingPage: React.FC = () => {
         toggleBillingCycle={toggleBillingCycle}
       />
       <PricingPlans billingCycle={billingCycle} />
+      <hr className="border-gray-500 border-1 w-screen" />
       <PricingTestimonials />
+      <hr className="border-gray-500 border-1 w-screen" />
       <PricingFAQ />
+      <hr className="border-gray-500 border-1 w-screen" />
+      <div className="mt-8"></div>
       <LandingSubscription />
     </div>
   );
