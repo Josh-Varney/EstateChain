@@ -3,41 +3,40 @@ import React from "react";
 const LinksCard: React.FC = () => {
     const links = [
         {
-            title: "Product",
+            title: "Explore",
             links: [
-                { name: "Invest Your Future", href: "/product/invest-your-future" },
-                { name: "Find Our Stocks", href: "/product/find-our-stocks" },
-                { name: "Find Our Crypto", href: "/product/find-our-crypto" },
-                { name: "Earn Extra Money", href: "/product/earn-extra-money" },
-                { name: "Bank Smarter", href: "/product/bank-smarter" },
+                { name: "Property Listings", href: "/product/invest-your-future" },
+                { name: "Tokenized Properties", href: "/product/find-our-stocks" },
+                { name: "Marketplace", href: "/product/find-our-crypto" },
+                { name: "How It Works", href: "/product/earn-extra-money" },
+                { name: "FAQs", href: "/faq" },
             ],
         },
         {
-            title: "Who We Are",
+            title: "Invest",
             links: [
-                { name: "About Us", href: "/contact" },
-                { name: "Career", href: "/career" },
-                { name: "News and Media", href: "/news-and-media" },
-                { name: "Financial Statement", href: "/financial-statement" },
+                { name: "Start Investing", href: "" },
+                { name: "Tokenization Benefits", href: "" },
+                { name: "Investment Opportunities", href: "" },
+                { name: "Portfolio Dashboard", href: "" },
+            ],
+        },
+        {
+            title: "Resources",
+            links: [
+                { name: "Learn About Tokenization", href: "" },
+                { name: "White Papers", href: "" },
+                { name: "Case Studies", href: "" },
+                { name: "News and Insights", href: "" },
             ],
         },
         {
             title: "Support",
             links: [
-                { name: "FAQs", href: "/faq" },
-                { name: "Contacts", href: "/contact" },
-                { name: "Mobile", href: "/support/mobile" },
-                { name: "Windows & Mac", href: "/support/windows-mac" },
-                { name: "Desktop Version", href: "/support/desktop-version" },
-            ],
-        },
-        {
-            title: "Documentation",
-            links: [
-                { name: "Public URLs", href: "/docs/public-urls" },
-                { name: "Social Rooms", href: "/docs/social-rooms" },
-                { name: "User Guide", href: "/docs/user-guide" },
-                { name: "Privacy Policy", href: "/docs/privacy-policy" },
+                { name: "Contact Us", href: "/support/contact" },
+                { name: "Help Center", href: "/support/help-center" },
+                { name: "Community Forums", href: "/support/community" },
+                { name: "Privacy Policy", href: "/support/privacy-policy" },
             ],
         },
     ];
