@@ -2,7 +2,6 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import LandingSubscription from "../src/components/landing/components/footer/footer";
-import TechnologyPage from "../src/components/landing/technology-page/technology";
 
 // Mock child components
 jest.mock("../src/components/landing/components/footer/components/footer-form", () => () => (

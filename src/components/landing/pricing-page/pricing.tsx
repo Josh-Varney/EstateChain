@@ -24,7 +24,7 @@ const PricingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 text-white pb-8">
+    <div data-testid="pricing-page-container" className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 text-white pb-8">
       <LandingHeader />
       <PricingHero
         hasStartedFreeTrial={hasStartedFreeTrial}
