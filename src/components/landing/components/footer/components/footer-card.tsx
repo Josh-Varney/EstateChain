@@ -8,16 +8,15 @@ const LinksCard: React.FC = () => {
                 { name: "Property Listings", href: "/home" },
                 { name: "Tokenized Properties", href: "/home" },
                 { name: "Marketplace", href: "/home" },
-                { name: "How It Works", href: "/faq" },
-                { name: "FAQs", href: "/faq" },
+                { name: "How It Works", href: "/info/tokenisation" },
             ],
         },
         {
             title: "Invest",
             links: [
                 { name: "Start Investing", href: "/home" },
-                { name: "Tokenization Benefits", href: "/faq" },
-                { name: "Investment Opportunities", href: "/home" },
+                { name: "Tokenization Benefits", href: "/info/tokenisation" },
+                { name: "Investment Opportunities", href: "/info/tokenisation" },
                 { name: "Portfolio Dashboard", href: "/home" },
             ],
         },
@@ -34,7 +33,7 @@ const LinksCard: React.FC = () => {
             title: "Support",
             links: [
                 { name: "Contact Us", href: "/contact" },
-                { name: "Help Center", href: "/faq" },
+                { name: "FAQs", href: "/faq" },
                 { name: "Privacy Policy", href: "/policy/privacy-policy" },
                 { name: "Cookie Policy", href: "/policy/cookie-policy"}
             ],

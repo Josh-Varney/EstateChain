@@ -11,48 +11,53 @@ import TokenizationSection from "./components/tech-use";
 const TechnologyPage: React.FC = () => {
   useEffect(() => {
     AOS.init({
-      duration: 900, // Slightly longer animations for added depth
-      easing: "ease-in-out-sine", // Balanced easing for a smoother look
-      once: true, // Trigger each animation only once
-      offset: 120, // A slightly delayed trigger
+      duration: 700, // Shorter animations for a snappier feel
+      easing: "ease-out-quart", // Smooth easing with a polished deceleration
+      once: true, // Trigger animations only once
+      offset: 80, // Start animations closer to the viewport
     });
   }, []);
 
   return (
     <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-white overflow-hidden">
       {/* Header */}
-      <div data-aos="fade-zoom-in">
+      <div data-aos="fade-down">
         <LandingHeader />
       </div>
 
       {/* Hero Section */}
-      <section className="py-16" data-aos="flip-up">
+      <section className="py-16" data-aos="fade-right">
         <TechnologyHero />
       </section>
 
       {/* Stats Section */}
-      <section className="py-16" data-aos="rotate-left">
+      <section className="py-16" data-aos="fade-left" data-aos-delay="100">
         <TechnologyStats />
       </section>
 
       {/* Cutting Edge Technologies */}
-      <section className="py-16 bg-gray-900" data-aos="fade-up-right">
+      <section className="py-16 bg-gray-900" data-aos="fade-up" data-aos-delay="200">
         <CuttingEdgeTechnologies />
       </section>
 
       {/* Tokenization Section */}
       <section
         className="py-16 bg-gradient-to-b from-gray-900 to-gray-800"
-        data-aos="fade-zoom-out"
+        data-aos="fade-in"
+        data-aos-delay="300"
       >
         <TokenizationSection />
       </section>
 
       {/* Divider */}
-      <hr className="border-gray-600 mt-16" data-aos="zoom-out" />
+      <hr
+        className="border-gray-600 mt-16"
+        data-aos="scale-up"
+        data-aos-duration="500"
+      />
 
       {/* Footer */}
-      <footer className="py-8" data-aos="fade-zoom-out">
+      <footer className="py-8" data-aos="fade-up">
         <LandingSubscription />
       </footer>
     </div>
