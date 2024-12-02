@@ -98,7 +98,7 @@ const LandingHeader: React.FC = () => {
                 {link.label}
               </NavLink>
             ))}
-            <button className="w-full flex items-center justify-center space-x-2 rounded-md bg-gray-700 text-white px-4 py-2 text-sm hover:bg-gray-600 mt-4">
+            <button onClick={handleCreateAccount} className="w-full flex items-center justify-center space-x-2 rounded-md bg-gray-700 text-white px-4 py-2 text-sm hover:bg-gray-600 mt-4">
               <FontAwesomeIcon icon={faUser} />
               <span>Create Account</span>
             </button>
