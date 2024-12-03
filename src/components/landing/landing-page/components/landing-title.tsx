@@ -15,12 +15,11 @@ const LandingTitle: React.FC = () => {
                 <FontAwesomeIcon className='h-3 w-5'icon={faStar} />
                 <p className="text-xs uppercase tracking-widest font-semibold">Trusted Platform</p>
             </div>
-
             {/* Main Title Section */}
             <div className="w-full px-4">
                 <h1 className="text-4xl text-white md:text-5xl lg:text-5xl justify-center text-balance">
                     Revolutionize Your Real Estate <br /> With Secure Blockchain Solutions
-                </h1>
+                </h1> 
             </div>
 
             {/* Subtitle Section */}

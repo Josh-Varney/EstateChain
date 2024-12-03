@@ -1,109 +1,171 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import LandingHeader from '../../components/header/header';
+import LandingSubscription from '../../components/footer/footer';
 
 const CookiePolicyPage: React.FC = () => {
+    const [expandedSection, setExpandedSection] = useState<string | null>(null);
+
+    useEffect(() => {
+        AOS.init({ duration: 1000, easing: 'ease-in-out', once: true });
+    }, []);
+
+    const toggleSection = (section: string) => {
+        setExpandedSection(expandedSection === section ? null : section);
+    };
+
     return (
         <div className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen">
             {/* Header */}
-            <header className="bg-blue-600 text-white py-16 px-8 text-center">
-                <h1 className="text-5xl font-extrabold tracking-tight">Cookie Policy</h1>
-                <p className="mt-4 text-lg">
-                    Learn about our use of cookies, their purpose, and how you can manage them.
-                </p>
+            <header>
+                <LandingHeader />
             </header>
 
+            {/* Breadcrumb Navigation */}
+            <nav
+                className="text-sm text-gray-500 dark:text-gray-400 py-4 px-6 max-w-7xl mx-auto"
+                data-aos="fade-down"
+            >
+                <a href="/" className="hover:underline">Home</a> / <span>Cookie Policy</span>
+            </nav>
+
+            {/* Hero Section */}
+            <div className="text-white py-10" data-aos="fade-up">
+                <div className="max-w-7xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+                    <h1 className="text-4xl font-bold">Cookie Policy</h1>
+                    <p className="text-gray-500 text-md mt-4">
+                        Learn about our use of cookies, their purpose, and how you can manage them.
+                    </p>
+                </div>
+            </div>
+
             {/* Main Content */}
-            <main className="max-w-7xl mx-auto py-12 px-6 space-y-12">
-                {/* What Are Cookies? */}
-                <section className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">What Are Cookies?</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        Cookies are small text files stored on your device when you visit a website. They are widely used to make websites
-                        work efficiently, improve user experience, and provide website owners with useful insights.
-                    </p>
-                </section>
-
-                {/* Types of Cookies */}
-                <section className="bg-gray-100 dark:bg-gray-700 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Types of Cookies We Use</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        We use different types of cookies to enhance your browsing experience:
-                    </p>
-                    <ul className="mt-4 list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                        <li><strong>Essential Cookies:</strong> These cookies are necessary for the website to function properly.</li>
-                        <li><strong>Performance Cookies:</strong> These cookies help us understand how users interact with our website by
-                            collecting anonymous data.
-                        </li>
-                        <li><strong>Functionality Cookies:</strong> These cookies allow us to remember your preferences and settings.</li>
-                        <li><strong>Advertising Cookies:</strong> These cookies are used to deliver relevant advertisements to you.</li>
-                    </ul>
-                </section>
-
-                {/* Why We Use Cookies */}
-                <section className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Why We Use Cookies</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        We use cookies for various purposes, such as:
-                    </p>
-                    <ul className="mt-4 list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                        <li>Ensuring the website functions correctly and securely.</li>
-                        <li>Improving your browsing experience by remembering your preferences.</li>
-                        <li>Analyzing website traffic and performance to optimize our content.</li>
-                        <li>Providing personalized advertisements based on your interests.</li>
-                    </ul>
-                </section>
-
-                {/* Managing Cookies */}
-                <section className="bg-gray-100 dark:bg-gray-700 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Managing Cookies</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        You have the right to manage your cookie preferences. Here’s how you can do it:
-                    </p>
-                    <ul className="mt-4 list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                        <li>
-                            <strong>Browser Settings:</strong> Most browsers allow you to block or delete cookies through their settings.
-                            Refer to your browser's help section for guidance.
-                        </li>
-                        <li>
-                            <strong>Cookie Consent Banner:</strong> When visiting our website, you can use the cookie consent banner to
-                            customize your preferences.
-                        </li>
-                        <li>
-                            <strong>Third-Party Tools:</strong> Some third-party tools allow you to opt-out of targeted advertisements.
-                        </li>
-                    </ul>
-                </section>
-
-                {/* Third-Party Cookies */}
-                <section className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Third-Party Cookies</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        We may allow third-party services to place cookies on your device. These cookies are subject to the privacy policies
-                        of the respective third parties. Examples include analytics providers (e.g., Google Analytics) and advertising
-                        platforms.
-                    </p>
-                </section>
-
-                {/* Updates to This Policy */}
-                <section className="bg-gray-100 dark:bg-gray-700 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Updates to This Policy</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        We may update this Cookie Policy periodically to reflect changes in technology, legislation, or our business
-                        practices. Any updates will be posted on this page with the revision date.
-                    </p>
-                </section>
-
-                {/* Contact Us */}
-                <section className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Contact Us</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        If you have any questions about this Cookie Policy, please contact us:
-                    </p>
-                    <address className="mt-4 text-gray-700 dark:text-gray-300">
-                        <strong>Email:</strong> <a href="mailto:support@example.com" className="text-blue-600 dark:text-blue-400 hover:underline">support@example.com</a> <br />
-                        <strong>Address:</strong> 123 Cookie Lane, Webtown, WT 56789
-                    </address>
-                </section>
+            <main className="max-w-7xl mx-auto py-10 px-6 space-y-10">
+                {[
+                    {
+                        title: 'What Are Cookies?',
+                        id: 'whatAreCookies',
+                        content: (
+                            <p>
+                                Cookies are small text files stored on your device when you visit a website. They are widely used to make
+                                websites work efficiently, improve user experience, and provide website owners with insights.
+                            </p>
+                        ),
+                    },
+                    {
+                        title: 'Types of Cookies We Use',
+                        id: 'typesOfCookies',
+                        content: (
+                            <ul className="list-disc list-inside space-y-2">
+                                <li><strong>Essential Cookies:</strong> Necessary for the website to function properly.</li>
+                                <li><strong>Performance Cookies:</strong> Help us understand how users interact with our website.</li>
+                                <li><strong>Functionality Cookies:</strong> Remember your preferences and settings.</li>
+                                <li><strong>Advertising Cookies:</strong> Deliver relevant advertisements to you.</li>
+                            </ul>
+                        ),
+                    },
+                    {
+                        title: 'Why We Use Cookies',
+                        id: 'whyUseCookies',
+                        content: (
+                            <ul className="list-disc list-inside space-y-2">
+                                <li>Ensuring the website functions correctly and securely.</li>
+                                <li>Improving your browsing experience by remembering preferences.</li>
+                                <li>Analyzing website traffic and performance to optimize content.</li>
+                                <li>Providing personalized advertisements based on interests.</li>
+                            </ul>
+                        ),
+                    },
+                    {
+                        title: 'Managing Cookies',
+                        id: 'managingCookies',
+                        content: (
+                            <ul className="list-disc list-inside space-y-2">
+                                <li>
+                                    <strong>Browser Settings:</strong> Most browsers allow you to block or delete cookies.
+                                </li>
+                                <li>
+                                    <strong>Cookie Consent Banner:</strong> Customize preferences using our consent banner.
+                                </li>
+                                <li>
+                                    <strong>Third-Party Tools:</strong> Opt-out of targeted advertisements through third-party tools.
+                                </li>
+                            </ul>
+                        ),
+                    },
+                    {
+                        title: 'Third-Party Cookies',
+                        id: 'thirdPartyCookies',
+                        content: (
+                            <p>
+                                We may allow third-party services to place cookies on your device, subject to their privacy policies.
+                                Examples include analytics providers (e.g., Google Analytics) and advertising platforms.
+                            </p>
+                        ),
+                    },
+                    {
+                        title: 'Updates to This Policy',
+                        id: 'updatesPolicy',
+                        content: (
+                            <p>
+                                This Cookie Policy may be updated periodically to reflect changes in technology, legislation, or business
+                                practices. Updates will be posted on this page with the revision date.
+                            </p>
+                        ),
+                    },
+                    {
+                        title: 'Contact Us',
+                        id: 'contactUs',
+                        content: (
+                            <address>
+                                <p>
+                                    If you have any questions, please contact us at:
+                                </p>
+                                <p>
+                                    <strong>Email:</strong> <a href="mailto:support@example.com" className="text-blue-600 dark:text-blue-400 hover:underline">support@example.com</a><br />
+                                    <strong>Address:</strong> 123 Cookie Lane, Webtown, WT 56789
+                                </p>
+                            </address>
+                        ),
+                    },
+                ].map(({ title, id, content }) => (
+                    <section key={id}>
+                        <div
+                            role="button"
+                            aria-expanded={expandedSection === id}
+                            tabIndex={0}
+                            onClick={() => toggleSection(id)}
+                            onKeyPress={(e) => e.key === 'Enter' && toggleSection(id)}
+                            data-aos="fade-up"
+                            className={`cursor-pointer bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 ${
+                                expandedSection === id ? 'border-l-4 border-blue-600' : ''
+                            }`}
+                        >
+                            <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 flex items-center">
+                                <span>{title}</span>
+                                <span className="ml-2">{expandedSection === id ? '-' : '+'}</span>
+                            </h2>
+                            <div
+                                style={{
+                                    maxHeight: expandedSection === id ? '500px' : '0',
+                                    opacity: expandedSection === id ? '1' : '0',
+                                }}
+                                className="transition-all duration-300 overflow-hidden mt-4"
+                            >
+                                {content}
+                            </div>
+                        </div>
+                    </section>
+                ))}
             </main>
+
+            {/* Footer */}
+            <hr className="border-gray-500 border-1 mt-12 mb-16 w-screen" />
+            <section>
+                <LandingSubscription />
+                <div className="pb-12 dark:bg-gray-900"></div>
+            </section>
         </div>
     );
 };

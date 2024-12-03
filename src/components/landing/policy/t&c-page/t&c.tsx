@@ -1,145 +1,136 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import LandingHeader from '../../components/header/header';
+import LandingSubscription from '../../components/footer/footer';
 
 const TermsOfServicePage: React.FC = () => {
+    const [expandedSection, setExpandedSection] = useState<string | null>(null);
+
+    useEffect(() => {
+        AOS.init({ duration: 1000, easing: 'ease-in-out', once: true });
+    }, []);
+
+    const toggleSection = (section: string) => {
+        setExpandedSection(expandedSection === section ? null : section);
+    };
+
     return (
-        <div className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen">
+        <div className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
             {/* Header */}
-            <header className="bg-blue-600 text-white py-16 px-8 text-center">
-                <h1 className="text-5xl font-extrabold tracking-tight">Terms of Service</h1>
-                <p className="mt-4 text-lg">
-                    These terms outline the rules and regulations for using our platform and services. Please read them carefully.
-                </p>
+            <header data-aos="fade-down">
+                <LandingHeader />
             </header>
 
+            {/* Breadcrumb Navigation */}
+            <nav
+                className="text-sm text-gray-500 dark:text-gray-400 py-4 px-6 max-w-7xl mx-auto"
+                data-aos="fade-right"
+            >
+                <a href="/" className="hover:underline">Home</a> / <span>Terms & Conditions</span>
+            </nav>
+
+            {/* Hero Section */}
+            <div className="text-white py-10" data-aos="fade-up">
+                <div className="max-w-7xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+                    <h1 className="text-4xl font-bold">Terms & Conditions</h1>
+                    <p className="text-gray-500 text-md mt-4">
+                        Please read these terms carefully before using our platform.
+                    </p>
+                </div>
+            </div>
+
             {/* Main Content */}
-            <main className="max-w-7xl mx-auto py-12 px-6 space-y-12">
-                {/* Introduction */}
-                <section className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Introduction</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        By accessing or using our platform, you agree to be bound by these Terms of Service. If you do not agree with any
-                        part of these terms, you must not use our services. These terms are legally binding and apply to all users.
-                    </p>
-                </section>
-
-                {/* Eligibility */}
-                <section className="bg-gray-100 dark:bg-gray-700 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Eligibility</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        To use our platform, you must:
-                    </p>
-                    <ul className="mt-4 list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                        <li>Be at least 18 years old or the age of majority in your jurisdiction.</li>
-                        <li>Provide accurate and truthful information during registration.</li>
-                        <li>Not be prohibited from using our services under applicable laws.</li>
-                    </ul>
-                </section>
-
-                {/* User Obligations */}
-                <section className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">User Obligations</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        As a user of our platform, you agree to:
-                    </p>
-                    <ul className="mt-4 list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                        <li>Comply with all applicable local, national, and international laws and regulations.</li>
-                        <li>Use our platform only for lawful purposes and in a manner consistent with these terms.</li>
-                        <li>Maintain the confidentiality of your account credentials and notify us immediately of any unauthorized access.</li>
-                        <li>Not use the platform for any fraudulent, harmful, or malicious activities.</li>
-                    </ul>
-                </section>
-
-                {/* Prohibited Activities */}
-                <section className="bg-gray-100 dark:bg-gray-700 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Prohibited Activities</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        You are strictly prohibited from:
-                    </p>
-                    <ul className="mt-4 list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                        <li>Engaging in activities that violate any applicable laws or regulations.</li>
-                        <li>Uploading, transmitting, or distributing malicious software, viruses, or harmful code.</li>
-                        <li>Attempting to gain unauthorized access to our systems, data, or user accounts.</li>
-                        <li>Engaging in harassment, discrimination, or any abusive behavior towards other users or our staff.</li>
-                        <li>Using the platform to infringe upon the intellectual property rights of others.</li>
-                    </ul>
-                </section>
-
-                {/* Payment Terms */}
-                <section className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Payment Terms</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        If you make purchases or subscribe to paid services on our platform:
-                    </p>
-                    <ul className="mt-4 list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                        <li>All payments must be made in accordance with the prices and terms listed at the time of purchase.</li>
-                        <li>You agree to provide valid and current payment information.</li>
-                        <li>We reserve the right to suspend or terminate your access for non-payment or chargebacks.</li>
-                    </ul>
-                </section>
-
-                {/* Intellectual Property */}
-                <section className="bg-gray-100 dark:bg-gray-700 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Intellectual Property</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        All content on this platform, including text, graphics, logos, and software, is the intellectual property of our
-                        company or our licensors. You may not reproduce, distribute, or create derivative works without our explicit
-                        permission.
-                    </p>
-                </section>
-
-                {/* Privacy and Data Protection */}
-                <section className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Privacy and Data Protection</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        Your use of the platform is subject to our Privacy Policy, which explains how we collect, use, and protect your
-                        personal data. By using the platform, you consent to the collection and use of your data in accordance with the
-                        Privacy Policy.
-                    </p>
-                </section>
-
-                {/* Limitation of Liability */}
-                <section className="bg-gray-100 dark:bg-gray-700 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Limitation of Liability</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        To the fullest extent permitted by law, we are not liable for:
-                    </p>
-                    <ul className="mt-4 list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                        <li>Any indirect, incidental, or consequential damages arising from your use of the platform.</li>
-                        <li>Loss of data, revenue, or profits.</li>
-                        <li>Errors, interruptions, or failures of the platform.</li>
-                    </ul>
-                </section>
-
-                {/* Termination */}
-                <section className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Termination</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        We reserve the right to terminate or suspend your access to the platform at any time, for any reason, including
-                        breach of these Terms of Service.
-                    </p>
-                </section>
-
-                {/* Governing Law */}
-                <section className="bg-gray-100 dark:bg-gray-700 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Governing Law</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        These terms are governed by and construed in accordance with the laws of [Your Jurisdiction]. Any disputes will be
-                        resolved exclusively in the courts of [Your Jurisdiction].
-                    </p>
-                </section>
-
-                {/* Contact Information */}
-                <section className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-semibold text-blue-600 dark:text-blue-400">Contact Us</h2>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                        If you have any questions or concerns about these Terms of Service, you can contact us at:
-                    </p>
-                    <address className="mt-4 text-gray-700 dark:text-gray-300">
-                        <strong>Email:</strong> <a href="mailto:support@example.com" className="text-blue-600 dark:text-blue-400 hover:underline">support@example.com</a> <br />
-                        <strong>Address:</strong> 123 Terms Lane, Legal City, LC 12345
-                    </address>
-                </section>
+            <main className="max-w-7xl mx-auto py-10 px-6 space-y-10">
+                {[
+                    {
+                        title: 'Introduction',
+                        id: 'introduction',
+                        content: (
+                            <p>
+                                By accessing or using our platform, you agree to be bound by these Terms of Service. If you do not agree
+                                with any part of these terms, you must not use our services.
+                            </p>
+                        ),
+                    },
+                    {
+                        title: 'Eligibility',
+                        id: 'eligibility',
+                        content: (
+                            <ul className="list-disc list-inside space-y-2">
+                                <li>Be at least 18 years old or the age of majority in your jurisdiction.</li>
+                                <li>Provide accurate and truthful information during registration.</li>
+                                <li>Not be prohibited from using our services under applicable laws.</li>
+                            </ul>
+                        ),
+                    },
+                    {
+                        title: 'User Obligations',
+                        id: 'userObligations',
+                        content: (
+                            <ul className="list-disc list-inside space-y-2">
+                                <li>Comply with all applicable laws and regulations.</li>
+                                <li>Use our platform only for lawful purposes.</li>
+                                <li>Maintain the confidentiality of your account credentials.</li>
+                            </ul>
+                        ),
+                    },
+                    {
+                        title: 'Prohibited Activities',
+                        id: 'prohibitedActivities',
+                        content: (
+                            <ul className="list-disc list-inside space-y-2">
+                                <li>Engaging in illegal activities or harassment.</li>
+                                <li>Uploading malicious software or viruses.</li>
+                                <li>Infringing intellectual property rights of others.</li>
+                            </ul>
+                        ),
+                    },
+                    {
+                        title: 'Limitation of Liability',
+                        id: 'limitationLiability',
+                        content: (
+                            <p>
+                                We are not liable for any indirect, incidental, or consequential damages arising from your use of the platform.
+                            </p>
+                        ),
+                    },
+                ].map(({ title, id, content }) => (
+                    <section key={id} data-aos="fade-up">
+                        <div
+                            role="button"
+                            aria-expanded={expandedSection === id}
+                            tabIndex={0}
+                            onClick={() => toggleSection(id)}
+                            onKeyPress={(e) => e.key === 'Enter' && toggleSection(id)}
+                            className={`cursor-pointer bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 ${
+                                expandedSection === id ? 'border-l-4 border-blue-600' : ''
+                            }`}
+                        >
+                            <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 flex items-center">
+                                <span>{title}</span>
+                                <span className="ml-2">{expandedSection === id ? '-' : '+'}</span>
+                            </h2>
+                            <div
+                                style={{
+                                    maxHeight: expandedSection === id ? '500px' : '0',
+                                    opacity: expandedSection === id ? '1' : '0',
+                                }}
+                                className="transition-all duration-300 overflow-hidden mt-4"
+                            >
+                                {content}
+                            </div>
+                        </div>
+                    </section>
+                ))}
             </main>
+
+            {/* Footer */}
+            <hr className="border-gray-500 border-1 mt-12 mb-16 w-screen" data-aos="fade-up" />
+            <section data-aos="fade-in">
+                <LandingSubscription />
+                <div className="pb-12 dark:bg-gray-900"></div>
+            </section>
         </div>
     );
 };
