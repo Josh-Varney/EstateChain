@@ -22,7 +22,7 @@ const FeaturesPage: React.FC = () => {
   return (
     <div
       data-testid="features-page-container"
-      className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-white overflow-hidden"
+      className="relative min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 text-white overflow-hidden"
     >
       {/* Landing Header */}
       <div data-aos="fade" data-aos-duration="600">
@@ -39,6 +39,13 @@ const FeaturesPage: React.FC = () => {
         <FeaturesSection />
       </div>
 
+      <hr
+        className="border-gray-500 border-1 w-screen"
+        data-aos="fade"
+        data-aos-duration="600"
+        data-aos-delay="600"
+      />
+
       {/* How It Works */}
       <div data-aos="fade" data-aos-duration="700" data-aos-delay="300">
         <HowItWorks />
@@ -50,7 +57,7 @@ const FeaturesPage: React.FC = () => {
       </div>
 
       {/* Call to Action */}
-      <div data-aos="fade" data-aos-duration="700" data-aos-delay="500">
+      <div data-aos="fade" data-aos-duration="700" data-aos-delay="600">
         <CallToAction />
       </div>
 
@@ -63,7 +70,7 @@ const FeaturesPage: React.FC = () => {
       />
 
       {/* Footer */}
-      <div className="mt-8 mb-8" data-aos="fade-up" data-aos-duration="700" data-aos-delay="700">
+      <div className=" pb-8 pt-10 " data-aos="fade-up" data-aos-duration="700" data-aos-delay="700">
         <LandingSubscription />
       </div>
     </div>

@@ -65,7 +65,7 @@ const PricingPage: React.FC = () => {
       <div data-aos="fade-up">
         <PricingFAQ />
       </div>
-      <hr className="border-gray-500 border-1 w-screen" />
+      <hr className="border-gray-500 border-1 w-screen"/>
       <div data-aos="fade-up" className="mt-8">
         <LandingSubscription />
       </div>

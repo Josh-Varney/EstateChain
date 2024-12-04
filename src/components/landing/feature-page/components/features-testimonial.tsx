@@ -14,7 +14,7 @@ interface TestimonialCardProps {
 );
 
 const TestimonialsSection: React.FC = () => (
-  <section className="py-16 px-6 bg-gradient-to-b from-gray-800 to-gray-900">
+  <section className="py-16 px-6 bg-gradient-to-t from-gray-800 to-gray-900">
     <div className="max-w-5xl mx-auto text-center">
       <h2 className="text-4xl text-white md:text-5xl lg:text-5xl">What Our Users Say</h2>
       <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
