@@ -5,7 +5,7 @@ import LandingHeader from "../components/header/header";
 import LandingTitle from "./components/landing-title";
 import PartnerCards from "./components/landing-partners";
 import Features from "./components/landing-features";
-import TrainingDashboard from "./components/landing-training";
+import TrainingDashboard from './components/landing-training';
 import LandingFAQ from "./components/landing-FAQ";
 import LandingSubscription from "../components/footer/footer";
 
@@ -41,7 +41,7 @@ const LandingPage: React.FC = () => {
         </div>
 
         {/* Training Dashboard */}
-        <div className="mt-16" data-aos="zoom-in-up">
+        <div className="mt-8" data-aos="zoom-in-up">
           <TrainingDashboard />
         </div>
 

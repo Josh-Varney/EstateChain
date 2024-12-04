@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
 
     return (
         <footer role="contentinfo" className="bg-gray-800 rounded-lg shadow-lg p-6 mt-6 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-400 space-y-4 sm:space-y-0">
-            <p className="text-center sm:text-left">© 2024 Webtrix. All Rights Reserved.</p>
+            <p className="text-center sm:text-left">© 2024 EquiSpace. All Rights Reserved.</p>
             <div className="flex space-x-4">
                 {socialIcons.map(({ component: Icon, alt, href }, idx) => (
                     <a

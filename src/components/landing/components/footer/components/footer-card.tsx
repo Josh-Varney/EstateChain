@@ -24,7 +24,6 @@ const LinksCard: React.FC = () => {
             title: "Resources",
             links: [
                 { name: "Learn About Tokenization", href: "/info/tokenisation" },
-                { name: "White Papers", href: "/info/research" },
                 { name: "Case Studies", href: "/info/case-studies" },
                 { name: "News and Insights", href: "/info/news&insights" },
             ],

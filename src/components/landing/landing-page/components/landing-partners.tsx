@@ -21,7 +21,7 @@ const PartnerCards: React.FC = () => {
             {/* Tagline Section */}
             <div className="text-white text-center">
                 <p className="text-xl">
-                    Leading the Way in Crypto Trust with Webtrix
+                    Leading the Way in Crypto Trust with EquiSpace
                 </p>
             </div>
 

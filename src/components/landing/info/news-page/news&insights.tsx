@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import 'aos/dist/aos.css';
 import AOS from 'aos';
+import LandingHeader from '../../components/header/header';
+import LandingSubscription from '../../components/footer/footer';
 
 const NewsInsightsPage: React.FC = () => {
     useEffect(() => {
@@ -8,10 +10,15 @@ const NewsInsightsPage: React.FC = () => {
     }, []);
 
     return (
-        <div className="bg-gray-50 text-gray-900">
+        <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-gray-100 flex flex-col min-h-screen">
+            {/* Header */}
+            <header>
+                <LandingHeader />
+            </header>
+
             {/* Hero Section */}
-            <header className="relative bg-gradient-to-br from-purple-700 to-blue-500 text-white">
-                <div className="container mx-auto px-6 md:px-12 py-16 text-center md:text-left flex flex-col md:flex-row items-center">
+            <section className="relative bg-gradient-to-br from-purple-700 to-blue-600 text-white py-20">
+                <div className="container mx-auto px-6 md:px-12 text-center md:text-left flex flex-col md:flex-row items-center">
                     <div className="md:w-1/2" data-aos="fade-right">
                         <h1 className="text-5xl font-extrabold tracking-tight">
                             Insights that Drive Change
@@ -38,13 +45,13 @@ const NewsInsightsPage: React.FC = () => {
                         />
                     </div>
                 </div>
-            </header>
+            </section>
 
             {/* Latest News Section */}
-            <section id="latest-news" className="py-16 bg-gray-100">
+            <section id="latest-news" className="py-16 bg-gray-800">
                 <div className="container mx-auto px-6 md:px-12">
                     <h2
-                        className="text-4xl font-bold text-blue-600 mb-10 text-center"
+                        className="text-4xl font-bold text-blue-400 mb-10 text-center"
                         data-aos="fade-up"
                     >
                         Latest News
@@ -52,38 +59,38 @@ const NewsInsightsPage: React.FC = () => {
                     <div className="flex flex-col md:flex-row items-start gap-8">
                         {/* News Item 1 */}
                         <div
-                            className="p-6 bg-white shadow-md rounded-lg flex-1 hover:shadow-lg transition-shadow"
+                            className="p-6 bg-gray-700 shadow-md rounded-lg flex-1 hover:shadow-lg transition-shadow"
                             data-aos="fade-right"
                         >
-                            <h3 className="text-xl font-semibold text-blue-500 mb-4">
+                            <h3 className="text-xl font-semibold text-blue-400 mb-4">
                                 Tokenization Trends in 2024
                             </h3>
-                            <p className="text-gray-700">
+                            <p className="text-gray-300">
                                 Discover the latest innovations in blockchain tokenization and how it’s transforming
                                 industries.
                             </p>
                             <a
                                 href="#"
-                                className="mt-4 inline-block text-blue-500 hover:underline"
+                                className="mt-4 inline-block text-blue-400 hover:underline"
                             >
                                 Read more
                             </a>
                         </div>
                         {/* News Item 2 */}
                         <div
-                            className="p-6 bg-white shadow-md rounded-lg flex-1 hover:shadow-lg transition-shadow"
+                            className="p-6 bg-gray-700 shadow-md rounded-lg flex-1 hover:shadow-lg transition-shadow"
                             data-aos="fade-up"
                         >
-                            <h3 className="text-xl font-semibold text-purple-500 mb-4">
+                            <h3 className="text-xl font-semibold text-purple-400 mb-4">
                                 How AI is Revolutionizing Data Security
                             </h3>
-                            <p className="text-gray-700">
+                            <p className="text-gray-300">
                                 Explore how AI advancements are setting new standards in cybersecurity and protecting
                                 critical systems.
                             </p>
                             <a
                                 href="#"
-                                className="mt-4 inline-block text-purple-500 hover:underline"
+                                className="mt-4 inline-block text-purple-400 hover:underline"
                             >
                                 Read more
                             </a>
@@ -92,22 +99,61 @@ const NewsInsightsPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* Expert Insights Section */}
-            <section className="py-16 bg-gradient-to-r from-gray-100 to-gray-50">
+            {/* Featured Stories Section */}
+            <section className="py-16 bg-gradient-to-r from-gray-700 to-gray-800">
+                <div className="container mx-auto px-6 md:px-12">
+                    <h2
+                        className="text-4xl font-bold text-green-400 mb-10 text-center"
+                        data-aos="fade-up"
+                    >
+                        Featured Stories
+                    </h2>
+                    <div className="grid md:grid-cols-2 gap-12">
+                        <div
+                            className="p-6 bg-gray-700 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105"
+                            data-aos="fade-right"
+                        >
+                            <h3 className="text-2xl font-bold text-green-400 mb-4">The Rise of Green Technology</h3>
+                            <p className="text-gray-300 mb-6">
+                                Green technology is paving the way for sustainable innovation. Learn how companies are
+                                harnessing renewable energy and eco-friendly practices to shape the future.
+                            </p>
+                            <a href="#" className="text-green-400 hover:underline">
+                                Read the full story →
+                            </a>
+                        </div>
+                        <div
+                            className="p-6 bg-gray-700 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105"
+                            data-aos="fade-left"
+                        >
+                            <h3 className="text-2xl font-bold text-blue-400 mb-4">Blockchain in Healthcare</h3>
+                            <p className="text-gray-300 mb-6">
+                                Discover how blockchain is transforming the healthcare industry by enhancing data
+                                security and ensuring transparency in patient care.
+                            </p>
+                            <a href="#" className="text-blue-400 hover:underline">
+                                Read the full story →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Why Insights Matter Section */}
+            <section className="py-16 bg-gray-800">
                 <div className="container mx-auto px-6 md:px-12">
                     <div className="grid md:grid-cols-2 items-center gap-12">
-                        {/* Insights Content */}
                         <div data-aos="fade-right">
-                            <h2 className="text-4xl font-bold text-purple-700 mb-6">
-                                Expert Insights
+                            <h2 className="text-4xl font-bold text-purple-400 mb-6">
+                                Why Insights Matter
                             </h2>
-                            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                                Gain exclusive knowledge from our industry leaders, tackling the biggest challenges and
-                                opportunities in innovation.
+                            <p className="text-lg text-gray-300 leading-relaxed mb-6">
+                                In a rapidly changing world, staying informed is key to making impactful decisions. Our
+                                insights empower leaders and innovators to navigate challenges and seize opportunities.
                             </p>
-                            <ul className="space-y-4 text-gray-700">
+                            <ul className="space-y-4 text-gray-300">
                                 <li className="flex items-start">
-                                    <div className="text-blue-600 mr-4">
+                                    <div className="text-blue-400 mr-4">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             className="h-6 w-6"
@@ -123,10 +169,10 @@ const NewsInsightsPage: React.FC = () => {
                                             />
                                         </svg>
                                     </div>
-                                    Blockchain: The Future of Trust
+                                    Stay ahead of industry trends
                                 </li>
                                 <li className="flex items-start">
-                                    <div className="text-purple-600 mr-4">
+                                    <div className="text-purple-400 mr-4">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             className="h-6 w-6"
@@ -142,10 +188,10 @@ const NewsInsightsPage: React.FC = () => {
                                             />
                                         </svg>
                                     </div>
-                                    The Role of AI in Modern Analytics
+                                    Navigate challenges with confidence
                                 </li>
                                 <li className="flex items-start">
-                                    <div className="text-green-600 mr-4">
+                                    <div className="text-green-400 mr-4">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             className="h-6 w-6"
@@ -161,15 +207,14 @@ const NewsInsightsPage: React.FC = () => {
                                             />
                                         </svg>
                                     </div>
-                                    Overcoming Industry Challenges
+                                    Inspire innovation and growth
                                 </li>
                             </ul>
                         </div>
-                        {/* Insights Illustration */}
                         <div data-aos="fade-left" className="flex justify-center">
                             <img
                                 src="https://via.placeholder.com/400x300"
-                                alt="Expert Insights"
+                                alt="Why Insights Matter"
                                 className="rounded-lg shadow-lg"
                             />
                         </div>
@@ -177,35 +222,9 @@ const NewsInsightsPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="py-16 bg-blue-600 text-white text-center">
-                <div className="container mx-auto px-6 md:px-12">
-                    <h2
-                        className="text-4xl font-bold mb-6"
-                        data-aos="fade-up"
-                    >
-                        Subscribe to Our Newsletter
-                    </h2>
-                    <p className="text-lg font-light max-w-xl mx-auto mb-8">
-                        Stay ahead of the curve with exclusive updates on industry news and expert opinions.
-                    </p>
-                    <a
-                        href="#"
-                        className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-full shadow-lg hover:bg-gray-100 transition-colors"
-                        data-aos="fade-up"
-                    >
-                        Subscribe Now
-                    </a>
-                </div>
-            </section>
-
-            {/* Footer Section */}
-            <footer className="bg-gray-900 text-gray-300 py-12">
-                <div className="container mx-auto px-6 md:px-12 text-center">
-                    <p className="text-sm md:text-base">
-                        &copy; {new Date().getFullYear()} Innovation Insights. All Rights Reserved.
-                    </p>
-                </div>
+            {/* Footer */}
+            <footer className="bg-gradient-to-b from-gray-800 to-gray-900 py-12">
+                <LandingSubscription />
             </footer>
         </div>
     );
