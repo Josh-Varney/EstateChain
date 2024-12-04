@@ -13,7 +13,7 @@ const LandingHeader: React.FC = () => {
     { label: "Features", path: "/features" },
     { label: "Pricing", path: "/pricing" },
     { label: "FAQ", path: "/faq" },
-    { label: "Contact Us", path: "/contact" },
+    { label: "About Us", path: "/about-us" },
   ];
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -58,7 +58,7 @@ const LandingHeader: React.FC = () => {
           {/* Button Section */}
           <div className="hidden md:flex items-center space-x-4">
             <button onClick={handleCreateAccount} className="flex items-center space-x-2 rounded-md bg-gray-700 text-white px-4 py-2 text-sm hover:bg-gray-600">
-              <FontAwesomeIcon icon={faUser} />
+              <FontAwesomeIcon className='' icon={faUser} />
               <span>Create Account</span>
             </button>
           </div>

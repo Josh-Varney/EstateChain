@@ -91,6 +91,7 @@
         "@types/mocha": "^10.0.10",
         "@types/react-beautiful-dnd": "^13.1.8",
         "@types/react-slick": "^0.23.13",
+        "@types/react-transition-group": "^4.4.11",
         "@types/web3": "^1.0.20",
         "aos": "^2.3.4",
         "babel-jest": "^29.7.0",

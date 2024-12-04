@@ -8,7 +8,7 @@ interface StepCardProps {
   
   const StepCard: React.FC<StepCardProps> = ({ step, title, description }) => (
     <div className="bg-gray-800 rounded-xl p-8 shadow-lg">
-      <div className="text-blue-400 text-3xl font-bold">{step}</div>
+      <div className="text-teal-400 text-3xl font-bold">{step}</div>
       <h3 className="text-xl font-semibold mt-4">{title}</h3>
       <p className="mt-2 text-gray-300">{description}</p>
     </div>

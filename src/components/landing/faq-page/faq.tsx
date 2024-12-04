@@ -161,7 +161,7 @@ const FAQPage: React.FC = () => {
           />
         </div>
 
-        <hr data-aos="fade-left" className="border-gray-500 border-1 mt-24 mb-16 w-screen" />
+        <hr data-aos="fade-left" className="border-gray-500 border-1 mt-24 mb-12 w-screen" />
 
         <div data-aos="zoom-in">
           <LandingSubscription />

@@ -11,7 +11,7 @@ const CallToAction: React.FC = () => (
       </p>
       <button onClick={() => {
         window.location.href = "/home"
-      }}className="mt-8 bg-blue-500 text-white py-3 px-8 rounded-full shadow-lg hover:bg-blue-600 transition-transform transform hover:scale-105">
+      }}className="mt-8 bg-teal-500 text-white py-3 px-8 rounded-full shadow-lg hover:bg-teal-600 transition-transform transform hover:scale-105">
         Get Started Now
       </button>
     </div>

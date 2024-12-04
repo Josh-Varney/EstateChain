@@ -3,22 +3,22 @@ import React from "react";
 const AboutTimeline: React.FC = () => {
   const timelineEvents = [
     {
-      year: "2020",
-      title: "Founded Webtrix",
-      description:
-        "A small startup with a big vision to bridge the gap between people and technology.",
-    },
-    {
-      year: "2021",
-      title: "First Product Launch",
-      description:
-        "Introduced our flagship AI-powered tool, which received accolades from industry experts.",
-    },
-    {
       year: "2022",
-      title: "Global Expansion",
+      title: "Founded EquiSpace",
       description:
-        "Expanded operations to 20+ countries, delivering solutions to healthcare, finance, and more.",
+        "Started with a vision to empower small businesses through innovative technology solutions.",
+    },
+    {
+      year: "2023",
+      title: "First Client Onboarded",
+      description:
+        "Collaborated with our first client, delivering a custom digital solution that exceeded expectations.",
+    },
+    {
+      year: "2024",
+      title: "Team Expansion",
+      description:
+        "Grew our passionate team of experts to scale operations and bring new ideas to life.",
     },
   ];
 

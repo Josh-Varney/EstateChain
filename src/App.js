@@ -31,7 +31,7 @@ function App() {
           <Route path="/register" element={<CreateAccountScreen />} />
           <Route path="/forgot" element={<ForgotPasswordScreen />} />
           <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/contact" element={<AboutPage /> } />
+          <Route path="/about-us" element={<AboutPage /> } />
           <Route path="/info/case-studies" element={<CaseStudiesPage />} />
           <Route path='/info/news&insights' element={<NewsInsightsPage />} />
           <Route path='/policy/cookie-policy' element={<CookiePolicyPage />} />

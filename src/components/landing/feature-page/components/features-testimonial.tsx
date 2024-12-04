@@ -9,7 +9,7 @@ interface TestimonialCardProps {
   const TestimonialCard: React.FC<TestimonialCardProps> = ({ name, feedback }) => (
     <div className="bg-gray-800 rounded-xl p-8 shadow-lg">
       <p className="text-gray-300 italic">"{feedback}"</p>
-      <p className="mt-4 text-blue-400 font-semibold">- {name}</p>
+      <p className="mt-4 text-teal-400 font-semibold">- {name}</p>
     </div>
 );
 

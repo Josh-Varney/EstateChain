@@ -4,18 +4,18 @@ const AboutTestimonials: React.FC = () => {
   const testimonials = [
     {
       quote:
-        "Webtrix transformed how we do business. Their innovative tools are a game-changer!",
+        "EquiSpace transformed how we do business. Their innovative tools are a game-changer!",
       client: "Jane Doe, CEO of TechCorp",
     },
     {
       quote:
-        "Working with Webtrix has been an incredible experience. Their team is top-notch.",
-      client: "John Smith, Founder of StartUp Hub",
+        "Working with EquiSpace has been an incredible experience. Their team is top-notch.",
+      client: "John Doe, Founder of StartUp Hub",
     },
     {
       quote:
-        "Webtrix's solutions are reliable, efficient, and easy to use. Highly recommended!",
-      client: "Emily Davis, COO of InnovateCo",
+        "EquiSpace's solutions are reliable, efficient, and easy to use. Highly recommended!",
+      client: "Emily Doe, COO of InnovateCo",
     },
   ];
 

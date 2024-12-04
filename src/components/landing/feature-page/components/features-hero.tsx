@@ -9,7 +9,7 @@ const FeaturesHero: React.FC = () => (
         </p>
       </div>
       <h1 className="text-4xl text-white md:text-5xl lg:text-5xl mt-6 leading-snug">
-        Revolutionize Real Estate with <span className="text-blue-400">Tokenization</span>
+        Revolutionize Real Estate with <span className="text-teal-400">Tokenization</span>
       </h1>
       <p className="mt-6 text-gray-400 text-base md:text-md lg:text-md leading-relaxed text-balance">
         Unlock fractional ownership, enhance liquidity, and access global real estate opportunities seamlessly. Invest smarter, faster, and with more flexibility than ever before.
