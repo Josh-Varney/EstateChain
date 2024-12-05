@@ -1,6 +1,5 @@
 import React from "react";
 import GoogleProvider from "../../../provider/google/googleProvider";
-import FacebookProvider from "../../../provider/google/facebookProvider";
 
 const SocialLoginProviders: React.FC = () => (
   <div>
@@ -11,7 +10,6 @@ const SocialLoginProviders: React.FC = () => (
     </h3>
     <div className="flex flex-row justify-center space-x-10">
       <GoogleProvider />
-      <FacebookProvider />
     </div>
   </div>
 );
