@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; 
 import './App.css';
-import InitialiseScreen from './components/form/Initialise.tsx';
-import CreateAccountScreen from './components/form/Create.tsx';
-import ForgotPasswordScreen from './components/form/Forgot.tsx';
+import LoginScreen from './components/form/login-account/login-account.tsx';
+import CreateAccountScreen from "./components/form/create-account/create-account.tsx"
+import ForgotPasswordScreen from './components/form/forgot-password/forgot-password.tsx';
 import HomeScreen from './components/dummy-portal/DummyHub.tsx'
 import ProtectedRoute from './contexts/authContext/route_context.tsx'
 import LandingPage from './components/landing/landing-page/landing.tsx' 
@@ -27,7 +27,7 @@ function App() {
           <Route path='/faq' element={<FAQPage /> } />
           <Route path='/technology' element={<TechnologyPage />} />
           <Route path='/features' element={<FeaturesPage />} />
-          <Route path="/login" element={<InitialiseScreen />} />
+          <Route path="/login" element={<LoginScreen />} />
           <Route path="/register" element={<CreateAccountScreen />} />
           <Route path="/forgot" element={<ForgotPasswordScreen />} />
           <Route path="/pricing" element={<PricingPage />} />
