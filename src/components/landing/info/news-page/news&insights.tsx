@@ -17,7 +17,7 @@ const NewsInsightsPage: React.FC = () => {
             </header>
 
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-br from-purple-700 to-blue-600 text-white py-20">
+            <section className="relative bg-gradient-to-r from-teal-500 to-gray-800 text-white py-20">
                 <div className="container mx-auto px-6 md:px-12 text-center md:text-left flex flex-col md:flex-row items-center">
                     <div className="md:w-1/2" data-aos="fade-right">
                         <h1 className="text-5xl font-extrabold tracking-tight">
@@ -29,7 +29,7 @@ const NewsInsightsPage: React.FC = () => {
                         </p>
                         <a
                             href="#latest-news"
-                            className="mt-6 inline-block bg-white text-blue-600 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-100 transition-colors"
+                            className="mt-6 inline-block bg-white text-black font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-100 transition-colors"
                         >
                             Discover More
                         </a>
@@ -47,11 +47,17 @@ const NewsInsightsPage: React.FC = () => {
                 </div>
             </section>
 
+            <hr
+                className="border-gray-600 "
+                data-aos="scale-up"
+                data-aos-duration="500"
+            />
+
             {/* Latest News Section */}
             <section id="latest-news" className="py-16 bg-gray-800">
                 <div className="container mx-auto px-6 md:px-12">
                     <h2
-                        className="text-4xl font-bold text-blue-400 mb-10 text-center"
+                        className="text-4xl font-bold text-teal-400 mb-10 text-center"
                         data-aos="fade-up"
                     >
                         Latest News
@@ -99,11 +105,17 @@ const NewsInsightsPage: React.FC = () => {
                 </div>
             </section>
 
+            <hr
+                className="border-gray-600 "
+                data-aos="scale-up"
+                data-aos-duration="500"
+            />
+
             {/* Featured Stories Section */}
             <section className="py-16 bg-gradient-to-r from-gray-700 to-gray-800">
                 <div className="container mx-auto px-6 md:px-12">
                     <h2
-                        className="text-4xl font-bold text-green-400 mb-10 text-center"
+                        className="text-4xl font-bold text-teal-400 mb-10 text-center"
                         data-aos="fade-up"
                     >
                         Featured Stories
@@ -139,12 +151,18 @@ const NewsInsightsPage: React.FC = () => {
                 </div>
             </section>
 
+            <hr
+                className="border-gray-600 "
+                data-aos="scale-up"
+                data-aos-duration="500"
+            />
+
             {/* Why Insights Matter Section */}
             <section className="py-16 bg-gray-800">
                 <div className="container mx-auto px-6 md:px-12">
                     <div className="grid md:grid-cols-2 items-center gap-12">
                         <div data-aos="fade-right">
-                            <h2 className="text-4xl font-bold text-purple-400 mb-6">
+                            <h2 className="text-4xl font-bold text-teal-400 mb-6">
                                 Why Insights Matter
                             </h2>
                             <p className="text-lg text-gray-300 leading-relaxed mb-6">
@@ -221,9 +239,16 @@ const NewsInsightsPage: React.FC = () => {
                     </div>
                 </div>
             </section>
+            
+            {/* Divider */}
+            <hr
+                className="border-gray-600 "
+                data-aos="scale-up"
+                data-aos-duration="500"
+            />
 
             {/* Footer */}
-            <footer className="bg-gradient-to-b from-gray-800 to-gray-900 py-12">
+            <footer className="bg-gradient-to-b from-gray-800 to-gray-900 py-10">
                 <LandingSubscription />
             </footer>
         </div>

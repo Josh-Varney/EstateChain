@@ -34,7 +34,8 @@ const LinksCard: React.FC = () => {
                 { name: "About Us", href: "/about-us" },
                 { name: "FAQs", href: "/faq" },
                 { name: "Privacy Policy", href: "/policy/privacy-policy" },
-                { name: "Cookie Policy", href: "/policy/cookie-policy"}
+                { name: "Cookie Policy", href: "/policy/cookie-policy"},
+                { name: "T&C Policy", href: "/policy/t&c-policy"},
             ],
         },
     ];

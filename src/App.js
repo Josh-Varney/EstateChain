@@ -36,7 +36,7 @@ function App() {
           <Route path='/info/news&insights' element={<NewsInsightsPage />} />
           <Route path='/policy/cookie-policy' element={<CookiePolicyPage />} />
           <Route path='/policy/privacy-policy' element={<PrivacyPolicyPage />} />
-          <Route path='/policy/t&c' element={<TermsOfServicePage />} />
+          <Route path='/policy/t&c-policy' element={<TermsOfServicePage />} />
           <Route path='/info/tokenisation' element={<TokenInformation />} />
           <Route
             path="/home"

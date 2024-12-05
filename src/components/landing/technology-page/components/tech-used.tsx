@@ -4,7 +4,7 @@ const FutureInnovations: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
 
   return (
-    <div className="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white py-16">
+    <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-white py-16">
       {/* Section Header */}
       <section className="px-6 lg:px-20">
         <div className="max-w-7xl mx-auto text-center">

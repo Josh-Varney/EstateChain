@@ -83,10 +83,10 @@ const ContentSection: React.FC<ContentSectionProps> = ({ expandedSection, toggle
                     onClick={() => toggleSection(id)}
                     onKeyPress={(e) => e.key === 'Enter' && toggleSection(id)}
                     className={`cursor-pointer bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 ${
-                        expandedSection === id ? 'border-l-4 border-blue-600' : ''
+                        expandedSection === id ? 'border-l-4 border-teal-400' : ''
                     }`}
                 >
-                    <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 flex items-center">
+                    <h2 className="text-2xl font-semibold text-teal-400 flex items-center justify-between">
                         <span>{title}</span>
                         <span className="ml-2">{expandedSection === id ? '-' : '+'}</span>
                     </h2>
