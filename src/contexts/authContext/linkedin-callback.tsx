@@ -35,7 +35,7 @@ const LinkedinCallback: React.FC = () => {
       setTimeout(() => {
         if (window.opener) {
           window.opener.postMessage({ status: 'success', accessToken, expiresIn },'http://localhost:3000');
-        //   window.close(); // Close the popup
+          window.close(); // Close the popup
         }
       }, 3000); // 3-second delay
     } else {

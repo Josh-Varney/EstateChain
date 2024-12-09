@@ -37,12 +37,10 @@ const LoginScreen: React.FC = () => {
     }
   
     const { status, accessToken } = event.data;
-
-    console.log("shush");
   
     if (status === 'success') {
-      console.log("shush succes")
       console.log('Login Successful! Access Token:', accessToken);
+      navigate("/home");
     } else if (status === 'failure') {
       console.log('Login Failed!');
     }
