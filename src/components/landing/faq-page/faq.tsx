@@ -9,6 +9,7 @@ import FAQList from "./components/faq-list";
 import FAQForm from "./components/faq-form";
 import { submitQuestion } from "../../../firebase/faq/faq-submit";
 import { getApprovedQuestions } from "../../../firebase/faq/faq-grab";
+import RiseLoader from "react-spinners/RiseLoader";
 
 const FAQPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,17 +21,15 @@ const FAQPage: React.FC = () => {
   const [newEmail, setNewEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // Initialize AOS animations
   useEffect(() => {
     AOS.init({
-      duration: 800, // Animation duration
-      easing: "ease-out", // Animation easing
-      offset: 50, // Trigger offset
-      once: true, // Run animation only once
+      duration: 700, // Standardized duration for all animations
+      easing: "ease-out-cubic", // Consistent easing for smoother animations
+      offset: 0, // Offset for triggering animations
+      once: true, // Animation will occur only once
     });
   }, []);
 
-  // Fetch FAQs dynamically on component mount
   useEffect(() => {
     const fetchFAQs = async () => {
       try {
@@ -44,7 +43,6 @@ const FAQPage: React.FC = () => {
         setLoading(false);
       }
     };
-
     fetchFAQs();
   }, []);
 
@@ -94,40 +92,38 @@ const FAQPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-gray-100">
+      {/* Header */}
       <div data-aos="fade-down">
         <LandingHeader />
       </div>
 
+      {/* Main Content */}
       <main className="flex-1 px-6 py-12">
         <div className="max-w-4xl mx-auto">
+          {/* FAQ Title */}
           <div data-aos="fade-up">
             <FAQTitle />
           </div>
 
-          <div data-aos="fade-right">
+          {/* FAQ Search */}
+          <div data-aos="fade-right" data-aos-delay="200">
             <FAQSearchTerm searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           </div>
 
+          {/* FAQ List */}
           {loading ? (
-            <p
+            <div
               data-aos="zoom-in"
-              data-testid="faq-loading-error"
-              className="text-center text-gray-300"
+              className="text-center text-gray-300 mt-32 mb-32"
             >
-              Loading FAQs...
-            </p>
+              <RiseLoader size={15} color="#2DD4BF" />
+            </div>
           ) : error ? (
-            <p
-              data-aos="fade-left"
-              data-testid="form-error"
-              className="text-red-500 text-center"
-            >
-              {error}
-            </p>
+            <p className="text-red-500 text-center">{error}</p>
           ) : (
-            <div data-aos="fade-up">
+            <div data-aos="">
               <FAQList
-                faqs={visibleFAQs.map((faq, index) => ({
+                faqs={visibleFAQs.map((faq, _) => ({
                   question: faq.message,
                   answer: faq.answer,
                 }))}
@@ -147,9 +143,11 @@ const FAQPage: React.FC = () => {
           )}
         </div>
 
+        {/* Divider */}
         <hr data-aos="fade-right" className="border-gray-500 border-1 mt-16 w-screen" />
 
-        <div data-aos="fade-up">
+        {/* FAQ Form */}
+        <div data-aos="fade-up" data-aos-delay="200">
           <FAQForm
             error={error}
             successMessage={successMessage}
@@ -161,8 +159,10 @@ const FAQPage: React.FC = () => {
           />
         </div>
 
+        {/* Divider */}
         <hr data-aos="fade-left" className="border-gray-500 border-1 mt-24 mb-12 w-screen" />
 
+        {/* Footer */}
         <div data-aos="zoom-in">
           <LandingSubscription />
         </div>

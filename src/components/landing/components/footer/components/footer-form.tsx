@@ -37,7 +37,11 @@ const SubscriptionForm: React.FC = () => {
     return (
         <div className="bg-gray-800 rounded-lg shadow-lg p-6 flex flex-col col-span-12 md:col-span-5">
             <div>
-             <img src="/assets/White_LOGO_Header_option_1.svg" alt="Logo 1" className="w-44"/>
+                <img
+                    src="/assets/White_LOGO_Header_option_1.svg"
+                    alt="Logo 1"
+                    className="w-44"
+                />
             </div>
             <div className="mt-2">
                 <h1 className="text-2xl sm:text-3xl font-sem text-white leading-snug">
@@ -46,14 +50,17 @@ const SubscriptionForm: React.FC = () => {
             </div>
             <div>
                 <p className="text-gray-400 text-sm mt-4">
-                    Be the first to know about new features, upcoming events, and everything happening in the world of Webtrix.
+                    Be the first to know about new features, upcoming events, and everything
+                    happening in the world of Webtrix.
                 </p>
             </div>
             <form onSubmit={handleSubmit} className="mt-6">
                 {message && (
                     <div
                         className={`mb-4 text-sm p-2 rounded transition-opacity duration-1000 ${
-                            messageType === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                            messageType === "success"
+                                ? "bg-green-500 text-white"
+                                : "bg-red-500 text-white"
                         } ${fadeOut ? "opacity-0" : "opacity-100"}`}
                     >
                         {message}
@@ -65,12 +72,12 @@ const SubscriptionForm: React.FC = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter your email address"
-                        className="flex-grow px-4 py-3 text-sm bg-transparent text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="flex-grow min-w-0 px-4 py-3 text-sm bg-transparent text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
                         aria-label="Email Address"
                     />
                     <button
                         type="submit"
-                        className="flex-shrink-0 px-6 py-3 bg-teal-500 text-white font-semibold text-sm hover:bg-teal-600 focus:ring-2 focus:ring-teal-500 focus:outline-none transition whitespace-nowrap"
+                        className="flex-shrink-0 px-4 sm:px-6 py-3 bg-teal-500 text-white font-semibold text-sm hover:bg-teal-600 focus:ring-2 focus:ring-teal-500 focus:outline-none transition whitespace-nowrap"
                     >
                         Subscribe
                     </button>
