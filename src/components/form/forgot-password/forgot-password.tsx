@@ -6,8 +6,6 @@ import Header from "./components/forgot-password-header";
 import PasswordResetForm from "./components/forgot-password-reset-form";
 
 const ForgotPasswordScreen: React.FC = () => {
-    const [error, setError] = useState<string>(""); // Error state
-    const [success, setSuccess] = useState<string>(""); // Success message state
 
     useEffect(() => {
         AOS.init({ duration: 1000 }); // Initialize AOS with animations
@@ -21,7 +19,6 @@ const ForgotPasswordScreen: React.FC = () => {
                     await signOut(auth);
                 } catch (error) {
                     console.error("Error signing out: ", error);
-                    setError("Error signing out. Please try again.");
                 }
             }
         };
@@ -37,17 +34,7 @@ const ForgotPasswordScreen: React.FC = () => {
                 data-aos="zoom-in"
             >
                 <div className="w-full max-w-sm p-6 rounded-lg shadow-md bg-white bg-opacity-90">
-                    {error && (
-                        <div className="mb-4 text-red-500" data-aos="fade-right">
-                            {error}
-                        </div>
-                    )}
-                    {success && (
-                        <div className="mb-4 text-green-500" data-aos="fade-right">
-                            {success}
-                        </div>
-                    )}
-                    <PasswordResetForm setError={setError} setSuccess={setSuccess} />
+                    <PasswordResetForm />
                 </div>
             </div>
         </div>

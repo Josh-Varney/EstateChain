@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { doSendEmailVerification, doSignInWithEmailAndPassword } from "../../../../firebase/auth";
 import SocialLoginProviders from "./login-form-social-providers";
@@ -33,6 +33,7 @@ const LoginForm: React.FC = () => {
       const userCredentials = await doSignInWithEmailAndPassword(username, password);
 
       if (userCredentials.emailVerified) {
+        setSuccess("Login successful. Redirecting...");
         setTimeout(() => navigate("/home"), 2000);
       } else {
         setError("Please verify your email.");
@@ -46,6 +47,20 @@ const LoginForm: React.FC = () => {
       setError(errorMessage);
     }
   };
+
+  // Timer to clear error or success messages
+  useEffect(() => {
+    let timer: NodeJS.Timeout | undefined;
+    if (error || success) {
+      timer = setTimeout(() => {
+        setError("");
+        setSuccess("");
+      }, 5000); // 5 seconds
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [error, success]);
 
   return (
     <div className="w-full max-w-sm p-6 rounded-lg shadow-md bg-white bg-opacity-90">

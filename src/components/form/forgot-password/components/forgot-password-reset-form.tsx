@@ -1,20 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
 import { doPasswordReset } from "../../../../firebase/auth";
 
-interface PasswordResetFormProps {
-    setError: (error: string) => void;
-    setSuccess: (success: string) => void;
-}
-
-const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ setError, setSuccess }) => {
+const PasswordResetForm: React.FC = () => {
     const [email, setEmail] = useState<string>("");
+    const [error, setError] = useState<string>(""); // Local state for error messages
+    const [success, setSuccess] = useState<string>(""); // Local state for success messages
+
+    // Effect to clear error and success messages after 4 seconds
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setError("");
+            setSuccess("");
+        }, 4000);
+
+        return () => clearTimeout(timer); // Cleanup timer on unmount or state change
+    }, [error, success]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             setError(""); // Clear previous errors
-            setSuccess(""); // Clear previous success message
+            setSuccess(""); // Clear previous success messages
 
             await doPasswordReset(email); // Send password reset email
             setSuccess("Password reset email sent successfully. Please check your inbox.");
@@ -29,8 +36,26 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ setError, setSucc
                 Forgot Password
             </h2>
 
+            <div className="mb-4">
+                {error && (
+                    <div
+                        className="flex items-center justify-center text-sm mb-4 text-red-600 bg-red-100 border border-red-300 rounded-md p-3 w-full max-w-md"
+                        aria-live="assertive"
+                    >
+                        <span>{error}</span>
+                    </div>
+                )}
+                {success && (
+                    <div
+                        className="flex items-center justify-center text-sm text-green-600 bg-green-100 border border-green-300 rounded-md p-3 w-full max-w-md"
+                        aria-live="polite"
+                    >
+                        {success}
+                    </div>
+                )}
+            </div>
             <div
-                className="flex font-medium text-sm items-center mb-4 border rounded-full p-2 border-gray-300"
+                className="flex font-medium text-sm items-center mb-6 border rounded-full p-2 border-gray-300"
                 data-aos="fade-up"
             >
                 <FaUser className="text-gray-600 mr-3" />

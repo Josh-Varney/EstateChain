@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doSignInWithGoogle } from '../../../firebase/auth';
+import { doSignInWithGoogle } from '../../firebase/auth';
 
 const GoogleProvider: React.FC = () => {
     const navigate = useNavigate();
@@ -8,7 +8,6 @@ const GoogleProvider: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
         e.preventDefault();
         // const auth = getAuth();
-
         try {
             await doSignInWithGoogle();
             await new Promise((resolve) => setTimeout(resolve, 1000));

@@ -1,5 +1,5 @@
 import React from "react";
-import GoogleProvider from "../../../provider/google/googleProvider";
+import GoogleProvider from "../../../provider/googleProvider";
 
 const SocialLoginProviders: React.FC = () => (
   <div>

@@ -10,14 +10,14 @@ const CaseStudiesPage: React.FC = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 text-gray-100 flex flex-col">
+        <div className="min-h-screen bg-gradient-to-t from-gray-800 to-gray-900 text-gray-100 flex flex-col">
             {/* Header */}
             <header>
                 <LandingHeader />
             </header>
 
             {/* Hero Section */}
-            <section className="bg-gradient-to-r from-blue-600 to-purple-800 text-white py-20 shadow-lg">
+            <section className="bg-gradient-to-b from-teal-500 to-gray-800 text-white py-20 shadow-lg">
                 <div className="container mx-auto px-6 md:px-12 text-center">
                     <h1
                         className="text-5xl md:text-6xl font-extrabold tracking-tight drop-shadow-lg"
@@ -34,11 +34,13 @@ const CaseStudiesPage: React.FC = () => {
                 </div>
             </section>
 
+            <hr className="border-gray-500 border-1 w-screen"/>
+
             {/* Main Content */}
             <main className="container mx-auto px-6 md:px-12 py-16 flex-grow">
                 {/* Introduction Section */}
                 <section className="mb-20 text-center" data-aos="fade-up">
-                    <h2 className="text-4xl font-bold text-blue-400 mb-6 tracking-tight">
+                    <h2 className="text-4xl font-bold text-teal-400 mb-6 tracking-tight">
                         What is Tokenization?
                     </h2>
                     <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
@@ -67,7 +69,7 @@ const CaseStudiesPage: React.FC = () => {
 
                 {/* Case Studies Section */}
                 <section className="mb-20">
-                    <h2 className="text-4xl font-bold text-purple-400 mb-12 text-center tracking-wide" data-aos="fade-up">
+                    <h2 className="text-4xl font-bold text-teal-400 mb-12 text-center tracking-wide" data-aos="fade-up">
                         Real-World Applications
                     </h2>
                     <div className="grid md:grid-cols-2 gap-12">
@@ -112,7 +114,7 @@ const CaseStudiesPage: React.FC = () => {
 
                 {/* CTA Section */}
                 <section
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-12 text-center rounded-xl shadow-lg"
+                    className="bg-gradient-to-r from-teal-500 to-gray-800 text-white py-12 text-center rounded-xl shadow-lg"
                     data-aos="zoom-in"
                 >
                     <h2 className="text-4xl font-bold mb-4">Learn More About Real Estate Tokenization</h2>
@@ -122,12 +124,16 @@ const CaseStudiesPage: React.FC = () => {
                     <a
                         href="#"
                         className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+                        onClick={() => {
+                            window.location.href = "/login";
+                        }}
                     >
                         Get Started
                     </a>
                 </section>
             </main>
-
+            
+            <hr className="border-gray-500 border-1 w-screen"/>
             {/* Footer */}
             <footer className="bg-gradient-to-b from-gray-800 to-gray-900 py-12">
                 <LandingSubscription />
