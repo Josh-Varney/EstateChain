@@ -19,26 +19,15 @@ const GoogleProvider: React.FC = () => {
 
     return (
         <button
-            className="
-                m-1 mb-6 w-fit p-1 pl-2 pr-2 border bg-white bg-opacity-20
-                square-full shadow-md rounded-lg 
-                transition-transform transform 
-                hover:scale-105 hover:bg-white
-                hover:shadow-md active:scale-95 
-                focus:outline-none
-            "
-            onClick={handleSubmit}
-        >
-            <div className="flex flex-row text-center justify-center items-center">
-                <img
-                    src="/assets/icons8-google.svg"
-                    className="h-8"
-                    alt="Google Icon"
-                />
-                <p className="pl-2 text-sm">Sign In With Google</p>
-            </div>
+            className="m-1 mb-6 p-2 border bg-white square-full shadow-md transition-transform transform hover:scale-105 hover:bg-blue-500 hover:shadow-lg active:scale-95 focus:outline-none" onClick={handleSubmit}
+            >
+            <img
+                src={"/assets/icons8-google-2.svg"}
+                alt="Google Logo"
+                className="w-11 h-10 opacity-100"
+            />
         </button>
-      );
+    );
 };
 
 
