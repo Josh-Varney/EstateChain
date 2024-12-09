@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import RiseLoader from "react-spinners/RiseLoader";
 
 const LinkedinProvider: React.FC = () => {
     const handleLinkedinLogin = (e: React.FormEvent<HTMLButtonElement>) => {
@@ -25,6 +25,7 @@ const LinkedinProvider: React.FC = () => {
                 alt="Google Logo"
                 className="w-11 h-10 opacity-100"
             />
+            
         </button>
     );
 };

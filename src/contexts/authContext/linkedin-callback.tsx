@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import RiseLoader from 'react-spinners/RiseLoader';
 
 const LoadingDots = () => {
     return (
@@ -34,7 +35,7 @@ const LinkedinCallback: React.FC = () => {
       setTimeout(() => {
         if (window.opener) {
           window.opener.postMessage({ status: 'success', accessToken, expiresIn },'http://localhost:3000');
-          window.close(); // Close the popup
+        //   window.close(); // Close the popup
         }
       }, 3000); // 3-second delay
     } else {
@@ -52,14 +53,19 @@ const LinkedinCallback: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50">
+    <div className="relative min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 overflow-hidden">
     {/* Logo Section */}
-    <section className="flex flex-col items-center mb-2">
-        <img
-            className="w-3/4 mb-4"
-            src="/centreform-new-logo.png"
-            alt="Centreform logo"
-        />
+    <section className="flex flex-col justify-center items-center min-h-screen space-y-4">
+        <div>
+            <img
+                className=""
+                src="/assets/White_LOGO_Header_option_1.svg"
+                alt=""
+            />
+        </div>
+        <div>
+            <RiseLoader size={15} color="#2DD4BF"/>
+        </div>
     </section>
 
     {/* Status Message and Loading Animation Section */}
