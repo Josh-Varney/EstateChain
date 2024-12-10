@@ -99,7 +99,7 @@ const LoginForm: React.FC = () => {
           </a>
         </div>
 
-        <button type="submit" className="w-full py-2 bg-teal-500 text-white rounded-lg ">
+        <button type="submit" className="w-full py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
           Login
         </button>
 

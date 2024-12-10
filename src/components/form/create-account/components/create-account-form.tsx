@@ -97,7 +97,7 @@ const CreateAccountForm: React.FC = () => {
             </div>
 
 
-            <button type="submit" className="w-full py-2 bg-teal-500 text-white rounded-lg">
+            <button type="submit" className="w-full py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
                 Create Account
             </button>
 

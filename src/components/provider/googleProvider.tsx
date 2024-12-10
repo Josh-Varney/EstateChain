@@ -19,7 +19,7 @@ const GoogleProvider: React.FC = () => {
 
     return (
         <button
-            className="w-full p-2 border bg-gray-300 square-full rounded-lg shadow-md transition-transform hover:shadow-lg focus:outline-none" onClick={handleSubmit}
+            className="w-full p-2 border bg-gray-300 square-full rounded-lg shadow-md hover:bg-gray-400" onClick={handleSubmit}
             >
             <div className="flex flex-row items-center justify-center text-center space-x-1">
                 <img
