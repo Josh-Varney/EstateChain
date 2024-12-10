@@ -63,9 +63,9 @@ const LoginForm: React.FC = () => {
   }, [error, success]);
 
   return (
-    <div className="w-full max-w-sm p-6 rounded-lg shadow-md bg-white bg-opacity-90">
+    <div className="w-full max-w-sm p-6 rounded-lg shadow-xl bg-slate-700 bg-opacity-90">
       <form onSubmit={handleSubmit}>
-        <h2 className="text-2xl font-semibold text-center mb-6" data-aos="fade-up">
+        <h2 className="text-2xl font-semibold text-center text-teal-500 mb-6" data-aos="fade-up">
           Login Form
         </h2>
 
@@ -87,26 +87,36 @@ const LoginForm: React.FC = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <div className="flex items-center font-medium text-xs text-gray-500 justify-between mb-6">
+        <div className="flex items-center font-medium text-xs text-white justify-between mb-6">
           <label className="flex items-center">
-            <input type="checkbox" className="mr-2" />
-            Remember Me
+            <div className="flex flex-row space-x-1">
+              <input type="checkbox" className="mr-2 accent-teal-500" />
+              Remember Me
+            </div>
           </label>
-          <a href="/forgot" className="text-blue-500 font-medium text-xs hover:underline">
+          <a href="/forgot" className="text-teal-500 font-medium text-xs hover:underline">
             Forgot Password?
           </a>
         </div>
 
-        <SocialLoginProviders />
-
-        <button type="submit" className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+        <button type="submit" className="w-full py-2 bg-teal-500 text-white rounded-lg ">
           Login
         </button>
 
-        <div className="text-center text-xs font-medium text-gray-500 mt-6">
+        <div className="flex justify-center items-center my-6">
+          <hr className="flex-grow border-gray-300 mx-4" />
+          <p className="text-white text-xs font-medium">Or Sign In With</p>
+          <hr className="flex-grow border-gray-300 mx-4" />
+        </div>
+
+        <div>
+          <SocialLoginProviders />
+        </div>
+
+        <div className="text-center text-xs font-medium text-white mt-6">
           <p>
             Don't Have An Account?{" "}
-            <a href="/register" className="text-blue-500 hover:underline">
+            <a href="/register" className="text-teal-500 hover:underline">
               Register
             </a>
           </p>

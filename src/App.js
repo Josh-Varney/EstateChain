@@ -18,7 +18,6 @@ import CookiePolicyPage from "./components/landing/policy/cookie-page/cookies.ts
 import PrivacyPolicyPage from "./components/landing/policy/privacy-page/privacy-policy.tsx"
 import TermsOfServicePage from "./components/landing/policy/t&c-page/t&c.tsx"
 import TokenInformation from "./components/landing/info/tokenisation-page/token-guide.tsx"
-import LinkedinCallback from "./contexts/authContext/linkedin-callback.tsx"
 
 function App() {
   return (
@@ -38,7 +37,6 @@ function App() {
           <Route path='/policy/cookie-policy' element={<CookiePolicyPage />} />
           <Route path='/policy/privacy-policy' element={<PrivacyPolicyPage />} />
           <Route path='/policy/t&c-policy' element={<TermsOfServicePage />} />
-          <Route path="/linkedin/callback" element={<LinkedinCallback />} />
           <Route path='/info/tokenisation' element={<TokenInformation />} />
           <Route
             path="/home"

@@ -28,24 +28,6 @@ const LoginScreen: React.FC = () => {
     checkAuthStatus();
   }, [navigate]);
 
-  window.addEventListener('message', (event: MessageEvent) => {
-    console.log('Message received:', event); // Debugging all messages
-  
-    if (event.origin !== 'http://localhost:3000') {
-      console.error('Unexpected origin:', event.origin);
-      return;
-    }
-  
-    const { status, accessToken } = event.data;
-  
-    if (status === 'success') {
-      console.log('Login Successful! Access Token:', accessToken);
-      navigate("/home");
-    } else if (status === 'failure') {
-      console.log('Login Failed!');
-    }
-  });
-
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-800 to-gray-900">
       <div data-aos="fade-down">

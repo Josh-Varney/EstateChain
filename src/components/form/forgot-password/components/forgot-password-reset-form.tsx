@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
 import { doPasswordReset } from "../../../../firebase/auth";
 
-const PasswordResetForm: React.FC = () => {
+const PasswordResetForm: React.FC<{ 
+    renderButton?: () => JSX.Element 
+}> = ({ renderButton }) => {
     const [email, setEmail] = useState<string>("");
     const [error, setError] = useState<string>(""); // Local state for error messages
     const [success, setSuccess] = useState<string>(""); // Local state for success messages
@@ -32,7 +34,7 @@ const PasswordResetForm: React.FC = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <h2 className="text-2xl font-semibold text-center mb-6" data-aos="fade-up">
+            <h2 className="text-2xl font-semibold text-teal-500 text-center mb-6" data-aos="fade-up">
                 Forgot Password
             </h2>
 
@@ -58,32 +60,36 @@ const PasswordResetForm: React.FC = () => {
                 className="flex font-medium text-sm items-center mb-6 border rounded-full p-2 border-gray-300"
                 data-aos="fade-up"
             >
-                <FaUser className="text-gray-600 mr-3" />
+                <FaUser className="text-teal-500 mr-3" />
                 <input
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="flex-1 p-2 outline-none bg-transparent"
+                    className="flex-1 p-2 outline-none bg-transparent text-white"
                 />
             </div>
 
-            <button
-                type="submit"
-                className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                data-aos="fade-up"
-            >
-                Send Reset Email
-            </button>
+            {renderButton ? (
+                renderButton()
+            ) : (
+                <button
+                    type="submit"
+                    className="w-full p-2 bg-teal-500 rounded-lg shadow-md text-white transition-transform transform hover:scale-105 hover:shadow-lg active:scale-95 focus:outline-none"
+                    data-aos="fade-up"
+                >
+                    Send Reset Email
+                </button>
+            )}
 
             <div
-                className="text-center font-medium text-xs text-gray-500 mt-6"
+                className="text-center font-medium text-xs text-white mt-6"
                 data-aos="fade-up"
             >
                 <p>
-                    Remembered your password?{" "}
-                    <a href="/login" className="text-blue-500 hover:underline">
+                    Remembered your password?{"  "}
+                    <a href="/login" className="text-teal-500 hover:underline">
                         Login
                     </a>
                 </p>

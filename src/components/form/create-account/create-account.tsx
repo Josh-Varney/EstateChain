@@ -29,7 +29,7 @@ const CreateAccountScreen: React.FC = () => {
         <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-800 to-gray-900">
             <Header />
             <div className="flex items-center justify-center flex-grow p-4 bg-cover bg-center">
-                <div className="w-full max-w-sm p-6 rounded-lg shadow-md bg-white bg-opacity-90" data-aos="zoom-in">
+                <div className="w-full max-w-sm p-6 rounded-lg shadow-xl bg-slate-700 bg-opacity-90" data-aos="zoom-in">
                     <CreateAccountForm />
                 </div>
             </div>

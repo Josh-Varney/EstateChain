@@ -33,7 +33,7 @@ const ForgotPasswordScreen: React.FC = () => {
                 className="flex items-center justify-center flex-grow p-4 bg-cover bg-center"
                 data-aos="zoom-in"
             >
-                <div className="w-full max-w-sm p-6 rounded-lg shadow-md bg-white bg-opacity-90">
+                <div className="w-full max-w-sm p-6 rounded-lg shadow-xl bg-slate-700 bg-opacity-90">
                     <PasswordResetForm />
                 </div>
             </div>
