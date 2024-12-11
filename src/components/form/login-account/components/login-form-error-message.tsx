@@ -12,7 +12,7 @@ const ErrorSuccessMessage: React.FC<Props> = ({ error, success, onResend, showRe
     <div className="flex flex-col items-center space-y-4 mb-2">
       {error && (
         <div
-          className="flex items-center justify-center text-sm mb-4 text-red-600 bg-red-100 border border-red-300 rounded-md p-3 w-full max-w-md"
+          className="flex items-center justify-center text-sm mb-4 text-red-500 border border-red-500 rounded-md p-3 w-full max-w-md"
           aria-live="assertive"
         >
           <span>{error}</span>
@@ -28,7 +28,7 @@ const ErrorSuccessMessage: React.FC<Props> = ({ error, success, onResend, showRe
       )}
       {success && (
         <div
-          className="flex mb-2 items-center justify-center text-sm text-green-600 bg-green-100 border border-green-300 rounded-md p-3 w-full max-w-md"
+          className="flex mb-2 items-center justify-center text-sm text-green-500 border border-green-500 rounded-md p-3 w-full max-w-md"
           aria-live="polite"
         >
           {success}

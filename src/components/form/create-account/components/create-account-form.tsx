@@ -13,9 +13,6 @@ const CreateAccountForm: React.FC = () => {
     const [success, setSuccess] = useState<string>("");
     const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
 
-
-    const navigate = useNavigate();
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -34,27 +31,27 @@ const CreateAccountForm: React.FC = () => {
             setSuccess("");
 
             const userCredentials = await doCreateUserWithEmailAndPassword(email, password);
-            const user = userCredentials.user;
-
             await doSendEmailVerification();
-            console.log(user.emailVerified);
 
             setSuccess("Account created successfully");
 
             setTimeout(() => {
-                navigate("/login");
+                window.location.href = "/login";
             }, 2000);
         } catch (error: any) {
             setError("Sign-up error: " + error.message);
         }
     };
 
+    const clearError = () => setError(""); // Clear error on notification close
+    const clearSuccess = () => setSuccess(""); // Clear success on notification close
+
     return (
         <form onSubmit={handleSubmit}>
             <h2 className="text-2xl font-semibold text-teal-500 text-center mb-6">Create an Account</h2>
 
-            {error && <Notification message={error} type="error" />}
-            {success && <Notification message={success} type="success" />}
+            {error && <Notification message={error} type="error" onClose={clearError} />}
+            {success && <Notification message={success} type="success" onClose={clearSuccess} />}
 
             <FormInput
                 type="email"
@@ -95,7 +92,6 @@ const CreateAccountForm: React.FC = () => {
                     I agree to <a href="/policy/t&c-policy" className="text-teal-500 font-medium text-xs hover:underline">Terms & Conditions</a>
                 </label>
             </div>
-
 
             <button type="submit" className="w-full py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
                 Create Account

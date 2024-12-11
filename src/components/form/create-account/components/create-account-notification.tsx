@@ -7,30 +7,28 @@ interface NotificationProps {
 }
 
 const Notification: React.FC<NotificationProps> = ({ message, type, onClose }) => {
-    const [isVisible, setIsVisible] = useState(true);
+    const [isVisible, setIsVisible] = useState(false);
 
-    // Determine the text color based on the notification type
     const textColor = type === "error" ? "text-red-500" : "text-green-500";
-    const backgroundColor = type === "error" ? "bg-red-100" : "bg-green-100";
     const borderColor = type === "error" ? "border-red-500" : "border-green-500";
 
     useEffect(() => {
         if (message) {
+            setIsVisible(true); // Show notification when message changes
+
             const timer = setTimeout(() => {
-                setIsVisible(false); // Hide the notification after 5 seconds
-                if (onClose) onClose(); // Notify parent to clear the message state
+                setIsVisible(false); // Hide after 5 seconds
+                if (onClose) onClose(); // Clear the message state in parent
             }, 5000);
 
-            return () => clearTimeout(timer); // Cleanup the timer on unmount
+            return () => clearTimeout(timer); // Cleanup the timer
         }
     }, [message, onClose]);
 
-    if (!isVisible) return null; // Do not render if not visible
+    if (!isVisible) return null;
 
     return (
-        <div
-            className={`mb-4 p-2 rounded-lg border ${backgroundColor} ${borderColor} ${textColor} shadow-md`}
-        >
+        <div className={`mb-7 p-2 rounded-lg border ${borderColor} ${textColor} shadow-md`}>
             {message}
         </div>
     );
