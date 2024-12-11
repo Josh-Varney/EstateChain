@@ -39,25 +39,24 @@ const TrainingDashboard: React.FC = () => {
         </div>
       </div>
       <div>
-        <div className="w-screen p-6 flex flex-col items-center">
+      <div className="w-full py-10">
+        <div className="w-screen justify-center justify-items-center">
           <Carousel
             opts={{
               align: "start",
+              containScroll: "trimSnaps",
             }}
-            className="w-full max-w-6xl"
+            className="w-full lg:max-w-4xl md:max-w-2xl sm:max-w-md pl-2 pr-2"
           >
             <CarouselContent>
               {properties.map((property) => (
-                <CarouselItem
-                  key={property.id}
-                  className="snap-center flex-shrink-0 md:basis-1/2 lg:basis-1/3"
-                >
+                <CarouselItem key={property.id} className="w-screen md:basis-1/2 lg:basis-1/3">
                   <div className="p-1">
                     <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-6">
+                      <CardContent className="flex aspect-[4/3] items-center justify-center p-0">
                         <img
                           src={property.img}
-                          alt={`Property ${property.id}`}
+                          alt={`Placeholder ${property.id}`}
                           className="w-full h-full object-cover rounded-lg"
                         />
                       </CardContent>
@@ -66,10 +65,11 @@ const TrainingDashboard: React.FC = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="border border-teal-400 text-teal-500 bg-gray-800 hover:bg-teal-500 hover:text-gray-800 hover:border-gray-800 active:bg-teal-600 active:text-gray-900 active:border-gray-900" />
+            <CarouselNext className="border border-teal-400 text-teal-500 bg-gray-800 hover:bg-teal-500 hover:text-gray-800 hover:border-gray-800 active:bg-teal-600 active:text-gray-900 active:border-gray-900" />
           </Carousel>
         </div>
+      </div>
       </div>
     </div>
   );
