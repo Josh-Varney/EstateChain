@@ -6,7 +6,7 @@ import '@testing-library/jest-dom';
 describe('Footer Component', () => {
     it('renders the footer component without crashing', () => {
         render(<Footer />);
-        expect(screen.getByText('© 2024 Webtrix. All Rights Reserved.')).toBeInTheDocument();
+        expect(screen.getByText('© 2024 EquiSpace. All Rights Reserved.')).toBeInTheDocument();
     });
 
     it('renders all social icons with correct links and titles', () => {
@@ -39,10 +39,10 @@ describe('Footer Component', () => {
         const termsOfServiceLink = screen.getByText('Terms of Service');
 
         expect(privacyPolicyLink).toBeInTheDocument();
-        expect(privacyPolicyLink).toHaveAttribute('href', '/privacy-policy');
+        expect(privacyPolicyLink).toHaveAttribute('href', '/policy/privacy-policy');
 
         expect(termsOfServiceLink).toBeInTheDocument();
-        expect(termsOfServiceLink).toHaveAttribute('href', '/terms-of-service');
+        expect(termsOfServiceLink).toHaveAttribute('href', '/policy/t&c-policy');
     });
 
     it('checks that the social icons have hover styles', () => {

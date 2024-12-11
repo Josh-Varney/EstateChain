@@ -85,7 +85,7 @@ const LandingHeader: React.FC = () => {
       {/* Mobile Navigation Dropdown */}
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-gray-800">
-          <nav className="space-y-2 px-4 py-2">
+          <nav className="space-y-2 px-4 py-2" aria-label="mobile-navigation">
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}

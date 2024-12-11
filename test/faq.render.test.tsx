@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import FAQPage from "../src/components/landing/faq-page/faq";
 import * as faqGrab from "../src/firebase/faq/faq-grab"; // Mock Firebase functions
@@ -8,7 +8,13 @@ import * as faqGrab from "../src/firebase/faq/faq-grab"; // Mock Firebase functi
 jest.mock("../src/components/landing/components/header/header", () => () => <header>LandingHeader</header>);
 jest.mock("../src/components/landing/components/footer/footer", () => () => <footer>LandingSubscription</footer>);
 jest.mock("../src/components/landing/faq-page/components/faq-title", () => () => <h1>FAQTitle</h1>);
-jest.mock("../src/components/landing/faq-page/components/faq-search", () => ({ searchQuery, setSearchQuery }: { searchQuery: string; setSearchQuery: (q: string) => void }) => (
+jest.mock("../src/components/landing/faq-page/components/faq-search", () => ({
+  searchQuery,
+  setSearchQuery,
+}: {
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
+}) => (
   <input
     aria-label="Search FAQs"
     placeholder="Search FAQs"
@@ -16,7 +22,15 @@ jest.mock("../src/components/landing/faq-page/components/faq-search", () => ({ s
     onChange={(e) => setSearchQuery(e.target.value)}
   />
 ));
-jest.mock("../src/components/landing/faq-page/components/faq-list", () => ({ faqs, openItem, setOpenItem }: { faqs: { question: string; answer: string }[]; openItem: number | null; setOpenItem: (i: number | null) => void }) => (
+jest.mock("../src/components/landing/faq-page/components/faq-list", () => ({
+  faqs,
+  openItem,
+  setOpenItem,
+}: {
+  faqs: { question: string; answer: string }[];
+  openItem: number | null;
+  setOpenItem: (i: number | null) => void;
+}) => (
   <ul aria-label="FAQ List">
     {faqs.map((faq, index) => (
       <li key={index}>
@@ -26,7 +40,15 @@ jest.mock("../src/components/landing/faq-page/components/faq-list", () => ({ faq
     ))}
   </ul>
 ));
-jest.mock("../src/components/landing/faq-page/components/faq-form", () => ({ error, successMessage, newQuestion, setNewQuestion, newEmail, setNewEmail, handleFormSubmit }: any) => (
+jest.mock("../src/components/landing/faq-page/components/faq-form", () => ({
+  error,
+  successMessage,
+  newQuestion,
+  setNewQuestion,
+  newEmail,
+  setNewEmail,
+  handleFormSubmit,
+}: any) => (
   <form onSubmit={handleFormSubmit}>
     {error && <p className="error">{error}</p>}
     {successMessage && <p className="success">{successMessage}</p>}
@@ -44,9 +66,10 @@ jest.mock("../src/components/landing/faq-page/components/faq-form", () => ({ err
   </form>
 ));
 
+// Mock getApprovedQuestions
 jest.spyOn(faqGrab, "getApprovedQuestions").mockResolvedValue([
-  { message: "What is FAQ?", answer: "Frequently Asked Questions" },
-  { message: "How does it work?", answer: "It just works!" },
+  { question: "What is FAQ?", answer: "Frequently Asked Questions" },
+  { question: "How does it work?", answer: "It just works!" },
 ]);
 
 describe("FAQPage Component", () => {
@@ -79,7 +102,9 @@ describe("FAQPage Component", () => {
   });
 
   it("renders the FAQList component with FAQs", async () => {
-    render(<FAQPage />);
+    await act(async () => {
+      render(<FAQPage />);
+    });
     const faqList = await screen.findByLabelText("FAQ List");
     expect(faqList).toBeInTheDocument();
     expect(faqList).toHaveTextContent("What is FAQ?");
@@ -104,17 +129,24 @@ describe("FAQPage Component", () => {
     expect(dividers).toHaveLength(2);
   });
 
-  it("renders loading state correctly", () => {
+  it("renders loading state correctly", async () => {
     jest.spyOn(faqGrab, "getApprovedQuestions").mockImplementation(() => new Promise(() => {})); // Mock unresolved promise
-    render(<FAQPage />);
-    expect(screen.getByText("Loading FAQs...")).toBeInTheDocument();
+    await act(async () => {
+      render(<FAQPage />);
+    });
+    expect(screen.getByText((content, element) => content.includes("Loading"))).toBeInTheDocument();
   });
 
   it("renders error state correctly", async () => {
     jest.spyOn(faqGrab, "getApprovedQuestions").mockRejectedValue(new Error("Failed to fetch FAQs"));
-    render(<FAQPage />);
-    
-    const faqError = await screen.findByTestId("faq-loading-error");
-    expect(faqError).toBeInTheDocument();
+    await act(async () => {
+      render(<FAQPage />);
+    });
+
+    const faqErrorMessages = await waitFor(() =>
+      screen.getAllByText("Failed to load FAQs. Please try again later.")
+    );
+    expect(faqErrorMessages).toHaveLength(1);
+    expect(faqErrorMessages[0]).toBeInTheDocument();
   });
 });

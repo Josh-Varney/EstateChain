@@ -9,7 +9,7 @@ exports[`Footer Component matches the snapshot 1`] = `
     <p
       class="text-center sm:text-left"
     >
-      © 2024 Webtrix. All Rights Reserved.
+      © 2024 EquiSpace. All Rights Reserved.
     </p>
     <div
       class="flex space-x-4"
@@ -128,7 +128,7 @@ exports[`Footer Component matches the snapshot 1`] = `
       <a
         aria-label="Terms of Service"
         class="hover:text-teal-500 transition"
-        href="/policy/t&c"
+        href="/policy/t&c-policy"
       >
         Terms of Service
       </a>

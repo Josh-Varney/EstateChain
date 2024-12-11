@@ -21,12 +21,12 @@ const TechnologyPage: React.FC = () => {
     <div className="relative min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 text-white overflow-hidden">
       {/* Header */}
       <div data-aos="fade-down">
-        <LandingHeader />
+        <LandingHeader data-testid="landing-header" />
       </div>
 
       {/* Hero Section */}
       <section className="py-10" data-aos="fade-right">
-        <TechnologyHero />
+        <TechnologyHero data-testid="technology-hero" />
       </section>
 
         {/* Tokenization Section */}
@@ -35,7 +35,7 @@ const TechnologyPage: React.FC = () => {
         data-aos="fade-in"
         data-aos-delay="300"
       >
-        <TokenizationSection />
+        <TokenizationSection data-testid="tokenization-section"/>
       </section>
 
       {/* Divider */}
@@ -47,7 +47,7 @@ const TechnologyPage: React.FC = () => {
 
       {/* Cutting Edge Technologies */}
       <section className="" data-aos="fade-up" data-aos-delay="200">
-        <CuttingEdgeTechnologies />
+        <CuttingEdgeTechnologies data-testid="cutting-edge-technologies" />
       </section>
 
       {/* Divider */}
@@ -59,7 +59,7 @@ const TechnologyPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="py-8" data-aos="fade-up">
-        <LandingSubscription />
+        <LandingSubscription data-testid="landing-subscription"/>
       </footer>
     </div>
   );

@@ -13,9 +13,6 @@ jest.mock("../src/components/landing/components/footer/footer", () => () => (
 jest.mock("../src/components/landing/technology-page/components/tech-hero", () => () => (
   <div data-testid="technology-hero">TechnologyHero</div>
 ));
-jest.mock("../src/components/landing/technology-page/components/tech-stats", () => () => (
-  <div data-testid="technology-stats">TechnologyStats</div>
-));
 jest.mock("../src/components/landing/technology-page/components/tech-used", () => () => (
   <div data-testid="cutting-edge-technologies">CuttingEdgeTechnologies</div>
 ));
@@ -29,10 +26,9 @@ describe("TechnologyPage", () => {
   });
 
   it("renders the page without crashing", () => {
-    // Assert that all the key components are rendered
+    // Assert that all key components are rendered
     expect(screen.getByTestId("landing-header")).toBeInTheDocument();
     expect(screen.getByTestId("technology-hero")).toBeInTheDocument();
-    expect(screen.getByTestId("technology-stats")).toBeInTheDocument();
     expect(screen.getByTestId("cutting-edge-technologies")).toBeInTheDocument();
     expect(screen.getByTestId("tokenization-section")).toBeInTheDocument();
     expect(screen.getByTestId("landing-subscription")).toBeInTheDocument();
@@ -42,9 +38,8 @@ describe("TechnologyPage", () => {
     const elements = [
       screen.getByTestId("landing-header"),
       screen.getByTestId("technology-hero"),
-      screen.getByTestId("technology-stats"),
-      screen.getByTestId("cutting-edge-technologies"),
       screen.getByTestId("tokenization-section"),
+      screen.getByTestId("cutting-edge-technologies"),
       screen.getByTestId("landing-subscription"),
     ];
 
