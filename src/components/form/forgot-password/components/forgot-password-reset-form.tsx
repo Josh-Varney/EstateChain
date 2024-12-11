@@ -8,6 +8,8 @@ const PasswordResetForm: React.FC<{
     const [email, setEmail] = useState<string>("");
     const [error, setError] = useState<string>(""); // Local state for error messages
     const [success, setSuccess] = useState<string>(""); // Local state for success messages
+    const [attempts, setAttempts] = useState<number>(0); // Track number of attempts
+    const MAX_ATTEMPTS = 3; // Maximum number of attempts allowed
 
     // Effect to clear error and success messages after 4 seconds
     useEffect(() => {
@@ -20,17 +22,32 @@ const PasswordResetForm: React.FC<{
     }, [error, success]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevent default form submission behavior
+    
+        if (attempts >= MAX_ATTEMPTS) {
+            setError(`Maximum of ${MAX_ATTEMPTS} reset attempts reached.`);
+            return; // Exit early if maximum attempts are reached
+        }
+    
         try {
-            setError(""); // Clear previous errors
+            setError(""); // Clear previous error messages
             setSuccess(""); // Clear previous success messages
-
-            await doPasswordReset(email); // Send password reset email
-            setSuccess("Password reset email sent successfully. Please check your inbox.");
+    
+            await doPasswordReset(email); // Call the password reset function
+    
+            setSuccess("Password reset email sent successfully. Please check your inbox."); // Notify success
+            setAttempts(attempts + 1); // Increment the attempts count
         } catch (error: any) {
-            setError("Error sending password reset email: " + error.message); // Display error
+            // Handle specific Firebase "too many requests" error
+            if (error.message === "Firebase: Error (auth/too-many-requests).") {
+                setError("Too many requests sent. Please try again later.");
+            } else {
+                // Handle generic error
+                setError(`Error sending password reset email: ${error.message}`);
+            }
         }
     };
+    
 
     return (
         <form onSubmit={handleSubmit}>
@@ -41,7 +58,7 @@ const PasswordResetForm: React.FC<{
             <div className="mb-4">
                 {error && (
                     <div
-                        className="flex items-center justify-center text-sm mb-4 text-red-600 bg-red-100 border border-red-300 rounded-md p-3 w-full max-w-md"
+                        className="flex items-center justify-center text-sm mb-6 text-red-500 border border-red-500 rounded-md p-3 w-full max-w-md"
                         aria-live="assertive"
                     >
                         <span>{error}</span>
@@ -49,7 +66,7 @@ const PasswordResetForm: React.FC<{
                 )}
                 {success && (
                     <div
-                        className="flex items-center justify-center text-sm text-green-600 bg-green-100 border border-green-300 rounded-md p-3 w-full max-w-md"
+                        className="flex items-center justify-center text-sm mb-6 text-green-500 border border-green-500 rounded-md p-3 w-full max-w-md"
                         aria-live="polite"
                     >
                         {success}
@@ -76,7 +93,8 @@ const PasswordResetForm: React.FC<{
             ) : (
                 <button
                     type="submit"
-                    className="w-full p-2 bg-teal-500 rounded-lg shadow-md text-white transition-transform transform hover:scale-105 hover:shadow-lg active:scale-95 focus:outline-none"
+                    disabled={attempts >= MAX_ATTEMPTS} // Disable button if max attempts reached
+                    className="w-full p-2 mb-1 rounded-lg shadow-md text-white transition-transform transform bg-teal-500 hover:scale-105 hover:shadow-lg active:scale-95 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                     data-aos="fade-up"
                 >
                     Send Reset Email
