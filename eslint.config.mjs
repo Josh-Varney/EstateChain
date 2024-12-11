@@ -13,9 +13,9 @@ export default [
       globals: globals.browser,
       ...globals.node, // Include Node.js globals
     },
-    rules: {
-      semi: "error",
-    },
+    // rules: {
+    //   semi: "error",
+    // },
   },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,

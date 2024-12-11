@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { doCreateUserWithEmailAndPassword, doSendEmailVerification } from "../../../../firebase/auth";
-import { useNavigate } from "react-router-dom";
 import FormInput from "./create-account-form-input";
 import Notification from "./create-account-notification";
 
@@ -30,7 +29,7 @@ const CreateAccountForm: React.FC = () => {
             setError("");
             setSuccess("");
 
-            const userCredentials = await doCreateUserWithEmailAndPassword(email, password);
+            await doCreateUserWithEmailAndPassword(email, password);
             await doSendEmailVerification();
 
             setSuccess("Account created successfully");

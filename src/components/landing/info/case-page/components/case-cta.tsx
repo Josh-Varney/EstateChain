@@ -11,10 +11,10 @@ const CTASection: React.FC = () => (
             Dive deeper into the world of blockchain-powered real estate investments.
         </p>
         <a
-            href="#"
+            href="/login"
             className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-full shadow-lg hover:bg-gray-100 transition-colors"
             onClick={() => {
-                window.location.href = '/login';
+                
             }}
         >
             Get Started

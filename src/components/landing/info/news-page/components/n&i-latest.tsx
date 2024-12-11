@@ -16,7 +16,7 @@ const LatestNewsSection: React.FC = () => {
                         <p className="text-gray-300">
                             Discover the latest innovations in blockchain tokenization and how it’s transforming industries.
                         </p>
-                        <a href="#" className="mt-4 inline-block text-blue-400 hover:underline">
+                        <a href="!#" className="mt-4 inline-block text-blue-400 hover:underline">
                             Read more
                         </a>
                     </div>
@@ -28,7 +28,7 @@ const LatestNewsSection: React.FC = () => {
                         <p className="text-gray-300">
                             Explore how AI advancements are setting new standards in cybersecurity and protecting critical systems.
                         </p>
-                        <a href="#" className="mt-4 inline-block text-purple-400 hover:underline">
+                        <a href="!#" className="mt-4 inline-block text-purple-400 hover:underline">
                             Read more
                         </a>
                     </div>

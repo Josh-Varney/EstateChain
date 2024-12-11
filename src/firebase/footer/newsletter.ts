@@ -1,5 +1,5 @@
 import { db } from "../firebase"; 
-import { collection, addDoc, doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
 /**
  * Validates an email address string.

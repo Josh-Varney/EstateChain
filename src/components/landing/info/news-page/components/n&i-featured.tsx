@@ -13,7 +13,7 @@ const FeaturedStoriesSection: React.FC = () => {
                         <p className="text-gray-300 mb-6">
                             Green technology is paving the way for sustainable innovation. Learn how companies are harnessing renewable energy and eco-friendly practices to shape the future.
                         </p>
-                        <a href="#" className="text-green-400 hover:underline">
+                        <a href="!#" className="text-green-400 hover:underline">
                             Read the full story →
                         </a>
                     </div>
@@ -22,7 +22,7 @@ const FeaturedStoriesSection: React.FC = () => {
                         <p className="text-gray-300 mb-6">
                             Discover how blockchain is transforming the healthcare industry by enhancing data security and ensuring transparency in patient care.
                         </p>
-                        <a href="#" className="text-blue-400 hover:underline">
+                        <a href="!#" className="text-blue-400 hover:underline">
                             Read the full story →
                         </a>
                     </div>
