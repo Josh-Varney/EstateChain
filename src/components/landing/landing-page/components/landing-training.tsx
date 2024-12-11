@@ -39,14 +39,14 @@ const TrainingDashboard: React.FC = () => {
         </div>
       </div>
       <div>
-      <div className="w-full py-10">
+      <div className="w-full py-6">
         <div className="w-screen justify-center justify-items-center">
           <Carousel
             opts={{
               align: "start",
               containScroll: "trimSnaps",
             }}
-            className="w-full lg:max-w-4xl md:max-w-2xl sm:max-w-md pl-2 pr-2"
+            className="w-full lg:max-w-4xl md:max-w-2xl sm:max-w-md pl-20 pr-20"
           >
             <CarouselContent>
               {properties.map((property) => (
