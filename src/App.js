@@ -18,6 +18,7 @@ import CookiePolicyPage from "./components/landing/policy/cookie-page/cookies.ts
 import PrivacyPolicyPage from "./components/landing/policy/privacy-page/privacy-policy.tsx"
 import TermsOfServicePage from "./components/landing/policy/t&c-page/t&c.tsx"
 import TokenInformation from "./components/landing/info/tokenisation-page/token-guide.tsx"
+import Selector from "./components/portal-selection/selector.tsx"
 
 function App() {
   return (
@@ -43,6 +44,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <HomeScreen />
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path='/selector'
+            element={
+              <ProtectedRoute>
+                <Selector />
               </ProtectedRoute>
             }
           />
