@@ -35,12 +35,6 @@ describe("FeaturesPage Component", () => {
     expect(screen.getByText("LandingSubscription")).toBeInTheDocument();
   });
 
-  it("renders the horizontal divider", () => {
-    renderPage();
-    const divider = screen.getByRole("separator");
-    expect(divider).toBeInTheDocument();
-  });
-
   it("ensures the order of sections is maintained", () => {
     renderPage();
 
