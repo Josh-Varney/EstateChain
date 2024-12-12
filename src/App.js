@@ -4,7 +4,7 @@ import './App.css';
 import LoginScreen from './components/form/login-account/login-account.tsx';
 import CreateAccountScreen from "./components/form/create-account/create-account.tsx"
 import ForgotPasswordScreen from './components/form/forgot-password/forgot-password.tsx';
-import HomeScreen from './components/dummy-portal/DummyHub.tsx'
+import HomeScreen from './components/dummy-portal/components/DummyHub.tsx'
 import ProtectedRoute from './contexts/authContext/route_context.tsx'
 import LandingPage from './components/landing/landing-page/landing.tsx' 
 import FAQPage from './components/landing/faq-page/faq.tsx' 
