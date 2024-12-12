@@ -34,7 +34,7 @@ const LoginForm: React.FC = () => {
 
       if (userCredentials.emailVerified) {
         setSuccess("Login successful. Redirecting...");
-        setTimeout(() => navigate("/home"), 2000);
+        setTimeout(() => navigate("/selector"), 2000);
       } else {
         setError("Please verify your email.");
         setShowResendLink(true);

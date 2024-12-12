@@ -1,15 +1,43 @@
 import React from "react";
 
-const PortalHero: React.FC = () => {
+interface PortalHeroProps {
+    title?: string;
+    description?: string;
+}
+
+const PortalHero: React.FC<PortalHeroProps> = ({
+    title = "Choose Your System",
+    description = "Select the Real System to tokenize live real estate assets securely, or choose the Simulation System to explore features and run test scenarios with ease.",
+}) => {
     return (
-        <>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 text-center leading-tight">
-                Choose Your System
+        <section
+            className="text-center px-4 py-8 sm:py-8 md:py-8 lg:py-8"
+            aria-label="System Selection Hero"
+        >
+            <h1
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white mb-6 animate-fade-in"
+            >
+                {title}
             </h1>
-            <p className="text-base sm:text-lg md:text-xl mb-8 text-center max-w-2xl leading-relaxed">
-                Select the <span className="font-semibold text-green-400">Real System</span> to tokenize live real estate assets securely, or choose the <span className="font-semibold text-blue-400">Simulation System</span> to explore features and run test scenarios with ease.
+            <p
+                className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-gray-300 max-w-3xl mx-auto mb-8 animate-fade-in"
+                style={{ animationDelay: "0.2s" }}
+            >
+                {description.split(" ").map((word, index) =>
+                    word === "Real System" ? (
+                        <span key={index} className="font-semibold text-green-400">
+                            {word}
+                        </span>
+                    ) : word === "Simulation System" ? (
+                        <span key={index} className="font-semibold text-blue-400">
+                            {word}
+                        </span>
+                    ) : (
+                        <span key={index}>{word} </span>
+                    )
+                )}
             </p>
-        </>
+        </section>
     );
 };
 

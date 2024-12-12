@@ -40,7 +40,7 @@ function App() {
           <Route path='/policy/t&c-policy' element={<TermsOfServicePage />} />
           <Route path='/info/tokenisation' element={<TokenInformation />} />
           <Route
-            path="/home"
+            path="/simulation"
             element={
               <ProtectedRoute>
                 <HomeScreen />

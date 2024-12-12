@@ -2,21 +2,36 @@ import React from "react";
 
 const LiveSystemSection: React.FC = () => {
     return (
-        <div>
-            <h2 className="text-xl font-semibold text-gray-800">Live System</h2>
-            <p className="mt-2 text-sm">
-                Welcome to the live system. Here, you can tokenize real estate assets in real-time and make them available to investors. Key features of the live system include:
+        <div className="bg-gray-800 p-6">
+            <h2 className="text-2xl font-bold text-blue-400">Unlock Real Estate with Live Tokenization</h2>
+            <p className="mt-4 text-gray-300 text-sm">
+                Welcome to the Live System—a groundbreaking platform where innovation meets real estate. With tokenization, we empower property owners and investors to reshape the future of asset management and trading. Here’s what makes the Live System exceptional:
             </p>
-            <ul className="mt-4 list-disc list-inside text-sm space-y-2">
-                <li>Securely registering your real estate assets on the blockchain.</li>
-                <li>Generating and issuing tokens that represent ownership stakes in the asset.</li>
-                <li>Ensuring regulatory compliance, including KYC (Know Your Customer) and AML (Anti-Money Laundering) checks.</li>
-                <li>Facilitating token trading on a decentralized marketplace.</li>
-                <li>Providing real-time tracking of ownership and value changes.</li>
+            <ul className="mt-6 list-disc list-inside text-gray-200 text-sm space-y-3">
+                <li>
+                    <strong>Blockchain Integration:</strong> Securely register real estate assets on an immutable, decentralized ledger.
+                </li>
+                <li>
+                    <strong>Token Generation:</strong> Create unique digital tokens that represent ownership shares in your properties.
+                </li>
+                <li>
+                    <strong>Compliance First:</strong> Simplified KYC and AML checks to meet global regulatory standards.
+                </li>
+                <li>
+                    <strong>Decentralized Trading:</strong> Enable secure, frictionless trading of tokens on a global marketplace.
+                </li>
+                <li>
+                    <strong>Real-Time Insights:</strong> Track ownership, market value, and performance metrics in one place.
+                </li>
             </ul>
-            <p className="mt-4 text-sm">
-                By using the live system, you can unlock the potential of your real estate assets by making them accessible to a global network of investors. Tokenization transforms how assets are managed, traded, and owned, ensuring transparency and efficiency.
+            <p className="mt-6 text-gray-300 text-sm">
+                The Live System bridges the gap between traditional real estate and the digital economy. By tokenizing your assets, you open the doors to a global investor base, enhance liquidity, and ensure unparalleled transparency. Let’s build a future where ownership is accessible, seamless, and innovative.
             </p>
+            <div className="mt-6">
+                <button className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-all">
+                    Get Started
+                </button>
+            </div>
         </div>
     );
 };

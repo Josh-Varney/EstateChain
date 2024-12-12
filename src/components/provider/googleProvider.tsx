@@ -11,7 +11,7 @@ const GoogleProvider: React.FC = () => {
         try {
             await doSignInWithGoogle();
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            navigate("/home");
+            navigate("/selector");
         } catch (error) {
             console.error("Sign-in error:", error);
         }
