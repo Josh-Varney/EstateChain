@@ -12,35 +12,35 @@ interface HeaderBarProps {
 const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notificationCount = 0 }) => {
   const bgColor = darkMode ? "bg-gray-800" : "bg-white";
   const textColor = darkMode ? "text-gray-100" : "text-gray-800";
-  const hoverColor = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100";
+  const hoverColor = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200";
   const iconColor = darkMode ? "text-gray-300" : "text-gray-600";
 
   return (
     <header
-      className={`flex flex-wrap items-center justify-between h-20 px-6 ${bgColor} ${textColor} shadow-md`}
+      className={`flex items-center justify-between h-20 px-6 ${bgColor} ${textColor} shadow-md`}
       role="banner"
     >
-      {/* Left Section: Logo and Title */}
+      {/* Left Section: Logo and Navigation */}
       <div className="flex items-center space-x-4">
         {/* Logo */}
         <div className="flex items-center space-x-2">
           <img
-            src="/assets/Black_horse_logo_no_line.svg"
-            alt="Black Horse Logo"
-            className="w-12 h-12 object-contain"
+            src={darkMode ? "/assets/White_Horse_No_Logo.svg" : "/assets/Black_horse_logo_no_line.svg"}
+            alt={darkMode ? "White Horse Logo" : "Black Horse Logo"}
+            className="w-12 h-12"
           />
-          {/* Chevron Icons */}
-          <div className="flex space-x-0">
-            <FontAwesomeIcon icon={faChevronRight} className={`w-2 ${iconColor}`} />
-            <FontAwesomeIcon icon={faChevronRight} className={`w-2 ${iconColor}`} />
+          {/* Navigation Chevron */}
+          <div className="flex space-x-1">
+            <FontAwesomeIcon icon={faChevronRight} className={`w-3 ${iconColor}`} />
+            <FontAwesomeIcon icon={faChevronRight} className={`w-3 ${iconColor}`} />
           </div>
+          {/* Page Title */}
+          <h1 className="text-xl font-semibold">Dashboard</h1>
         </div>
-        {/* Title */}
-        <h1 className="text-xl font-semibold">Overview</h1>
       </div>
 
       {/* Right Section: Actions */}
-      <div className="flex items-center space-x-4 mt-2 sm:mt-0">
+      <div className="flex items-center space-x-4">
         {/* Wallet Button */}
         <button
           className={`flex items-center justify-center w-10 h-10 rounded-full ${
@@ -54,13 +54,13 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
 
         {/* Notifications */}
         <div
-          className={`relative cursor-pointer p-2 rounded-full ${hoverColor}`}
+          className={`relative p-2 rounded-full cursor-pointer ${hoverColor}`}
           aria-label="Notifications"
         >
           <FaBell className={`w-5 h-5 ${iconColor}`} />
           {notificationCount > 0 && (
             <span
-              className="absolute -top-1 -right-1 text-xs bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold"
+              className="absolute -top-2 -right-2 text-xs bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold"
               aria-label={`${notificationCount} new notifications`}
             >
               {notificationCount}
