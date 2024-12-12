@@ -5,6 +5,12 @@ type MockedMetaMaskProvider = MetaMaskInpageProvider & {
     request: jest.Mock;
 };
 
+jest.mock("@coinbase/wallet-sdk", () => {
+    return {
+      CoinbaseWalletSDK: jest.fn(),
+    };
+  });  
+
 // Unit test for the connectMetaMask function
 describe("ConnectMetaMask", () => {
     beforeEach(() => {

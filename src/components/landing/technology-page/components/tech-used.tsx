@@ -1,70 +1,90 @@
-import React from "react";
+import React, { useState } from "react";
 
-const CuttingEdgeTechnologies: React.FC = () => (
-  <section className="py-20 px-4 sm:px-6 lg:px-16 text-white rounded-3xl shadow-xl">
-    <div className="max-w-7xl mx-auto">
-      <h1 className="text-4xl md:text-5xl lg:text-5xl text-center">Our Cutting-Edge Technologies</h1>
-      <p className="mt-6 text-gray-400 leading-relaxed max-w-3xl mx-auto text-center">
-        Discover the groundbreaking technologies that drive our success. From advanced AI to quantum-level computing,
-        we leverage the tools of tomorrow to solve today’s challenges.
-      </p>
-      <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {[
-          {
-            title: "NeuralCloud AI",
-            description:
-              "A self-learning cloud platform powered by neural networks that adapts to user behavior in real time.",
-            icon: "🤖",
-          },
-          {
-            title: "QuantumSecure Encryption",
-            description:
-              "Unbreakable quantum encryption technology ensuring data security for the next generation.",
-            icon: "🔒",
-          },
-          {
-            title: "GreenCompute Framework",
-            description:
-              "An energy-efficient computing system that reduces power consumption by 70% without compromising performance.",
-            icon: "🌱",
-          },
-          {
-            title: "BioSyn Sensors",
-            description:
-              "Next-gen biometric sensors that seamlessly integrate with devices for secure and fast authentication.",
-            icon: "🔬",
-          },
-          {
-            title: "AutonoChain",
-            description:
-              "A blockchain-powered automation system enabling secure and transparent process management.",
-            icon: "⛓️",
-          },
-          {
-            title: "HoloView XR",
-            description:
-              "Immersive holographic visualization technology for training, simulations, and entertainment.",
-            icon: "🌀",
-          },
-        ].map((tech, index) => (
-          <div
-            key={index}
-            className="p-8 rounded-lg shadow-lg bg-gray-800 hover:bg-gray-700 transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl"
-          >
-            <div className="flex items-center justify-center w-16 h-16 mx-auto bg-gray-700 rounded-full mb-6">
-              <span className="text-3xl text-blue-400">{tech.icon}</span>
+const FutureInnovations: React.FC = () => {
+  const [selectedCard, setSelectedCard] = useState<number | null>(null);
+
+  return (
+    <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-white py-16">
+      {/* Section Header */}
+      <section className="px-6 lg:px-20">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl lg:text-5xl leading-relaxed text-center">
+            Explore the Technologies of Tomorrow
+          </h2>
+          <p className="mt-4 text-gray-400 text-lg">
+            Discover groundbreaking innovations that are reshaping our world.
+          </p>
+        </div>
+
+        {/* Grid of Innovations */}
+        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+          {[
+            {
+              title: "AI Synergy Engine",
+              description:
+                "A platform that harmonizes artificial intelligence with human creativity to solve complex problems.",
+              icon: "⚙️",
+            },
+            {
+              title: "Quantum Nexus",
+              description:
+                "Harness the power of quantum computing to tackle challenges beyond traditional computation.",
+              icon: "🔗",
+            },
+            {
+              title: "EcoSphere AI",
+              description:
+                "A sustainable system that uses AI to optimize renewable energy sources globally.",
+              icon: "🌍",
+            },
+            {
+              title: "MetaSense XR",
+              description:
+                "An immersive mixed-reality system redefining training, entertainment, and remote collaboration.",
+              icon: "👓",
+            },
+            {
+              title: "CryoShield Security",
+              description:
+                "State-of-the-art cryogenic encryption that protects sensitive data against future threats.",
+              icon: "❄️",
+            },
+            {
+              title: "NeuroLink Hub",
+              description:
+                "A neural interface connecting minds to machines seamlessly and intuitively.",
+              icon: "🧠",
+            },
+          ].map((innovation, index) => (
+            <div
+              key={index}
+              onClick={() => setSelectedCard(index)}
+              className={`group relative p-8 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition duration-300 ${
+                selectedCard === index ? "animate-bounce" : ""
+              }`}
+            >
+              {/* Icon */}
+              <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 w-24 h-24 bg-teal-500 bg-opacity-10 rounded-full flex items-center justify-center shadow-md">
+                <span className="text-5xl text-white group-hover:scale-110 transition duration-300">
+                  {innovation.icon}
+                </span>
+              </div>
+
+              {/* Card Content */}
+              <div className="mt-16 text-center">
+                <h3 className="text-xl font-semibold text-white">
+                  {innovation.title}
+                </h3>
+                <p className="mt-4 text-gray-300 text-sm leading-relaxed">
+                  {innovation.description}
+                </p>
+              </div>
             </div>
-            <h3 className="text-xl font-semibold text-white text-center uppercase tracking-wide">
-              {tech.title}
-            </h3>
-            <p className="mt-4 text-gray-300 text-center leading-relaxed">
-              {tech.description}
-            </p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </section>
     </div>
-  </section>
-);
+  );
+};
 
-export default CuttingEdgeTechnologies;
+export default FutureInnovations;

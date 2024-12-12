@@ -1,47 +1,54 @@
 import React, { useState, useEffect } from "react";
-import LandingHeader from "../components/header";
-import LandingSubscription from "../components/footer";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import LandingHeader from "../components/header/header";
+import LandingSubscription from "../components/footer/footer";
 import FAQTitle from "./components/faq-title";
 import FAQSearchTerm from "./components/faq-search";
 import FAQList from "./components/faq-list";
 import FAQForm from "./components/faq-form";
 import { submitQuestion } from "../../../firebase/faq/faq-submit";
 import { getApprovedQuestions } from "../../../firebase/faq/faq-grab";
+import RiseLoader from "react-spinners/RiseLoader";
 
 const FAQPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [openItem, setOpenItem] = useState<number | null>(null);
-  const [faqData, setFaqData] = useState<{ message: string; answer: string }[]>([]); // Use dynamic data
-  const [loading, setLoading] = useState(true); // Loading state
+  const [faqData, setFaqData] = useState<{ message: string; answer: string }[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [newQuestion, setNewQuestion] = useState("");
-  const [newEmail, setNewEmail] = useState(""); // Email state
+  const [newEmail, setNewEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // Fetch FAQ data dynamically on component mount
+  useEffect(() => {
+    AOS.init({
+      duration: 700, // Standardized duration for all animations
+      easing: "ease-out-cubic", // Consistent easing for smoother animations
+      offset: 0, // Offset for triggering animations
+      once: true, // Animation will occur only once
+    });
+  }, []);
+
   useEffect(() => {
     const fetchFAQs = async () => {
       try {
-        setLoading(true); // Start loading
-        const data = await getApprovedQuestions(); // Fetch data
-        setFaqData(data); // Update state with fetched data
-        setLoading(false); // Stop loading
+        setLoading(true);
+        const data = await getApprovedQuestions();
+        setFaqData(data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching FAQs:", error);
         setError("Failed to load FAQs. Please try again later.");
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
-
     fetchFAQs();
   }, []);
 
-  // Filter FAQs based on search query
   const filteredFAQs = faqData.filter((faq) =>
     faq.message.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  // Limit the number of FAQs displayed to 8 if no search query
   const visibleFAQs = searchQuery ? filteredFAQs : filteredFAQs.slice(0, 8);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -49,20 +56,17 @@ const FAQPage: React.FC = () => {
     setError(null);
     setSuccessMessage(null);
 
-    // Input validation
     if (!newQuestion.trim() || !newEmail.trim()) {
       setError("Both fields (email and question) are required.");
       return;
     }
 
-    // Basic email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+$/;
     if (!emailRegex.test(newEmail)) {
       setError("Please enter a valid email address.");
       return;
     }
 
-    // Check for duplicate question
     if (
       faqData.some(
         (faq) =>
@@ -74,13 +78,9 @@ const FAQPage: React.FC = () => {
     }
 
     try {
-      // Submit the question to Firebase
       await submitQuestion(newEmail, newQuestion.trim());
-
-      // Reload FAQs after submission
       const updatedFAQs = await getApprovedQuestions();
       setFaqData(updatedFAQs);
-
       setNewQuestion("");
       setNewEmail("");
       setSuccessMessage("Your question has been successfully submitted!");
@@ -92,53 +92,80 @@ const FAQPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-gray-100">
-      <LandingHeader />
+      {/* Header */}
+      <div data-aos="fade-down">
+        <LandingHeader />
+      </div>
 
+      {/* Main Content */}
       <main className="flex-1 px-6 py-12">
         <div className="max-w-4xl mx-auto">
-          {/* Title Section */}
-          <FAQTitle />
+          {/* FAQ Title */}
+          <div data-aos="fade-up">
+            <FAQTitle />
+          </div>
 
-          {/* Search Input */}
-          <FAQSearchTerm searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          {/* FAQ Search */}
+          <div data-aos="fade-right" data-aos-delay="200">
+            <FAQSearchTerm searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          </div>
 
-          {/* FAQ Items */}
+          {/* FAQ List */}
           {loading ? (
-            <p className="text-center text-gray-300">Loading FAQs...</p>
+            <div
+              data-aos="zoom-in"
+              className="text-center text-gray-300 mt-32 mb-32"
+            >
+              <RiseLoader size={15} color="#2DD4BF" />
+            </div>
           ) : error ? (
             <p className="text-red-500 text-center">{error}</p>
           ) : (
-            <FAQList
-              faqs={visibleFAQs.map((faq, index) => ({
-                question: faq.message,
-                answer: faq.answer,
-              }))}
-              openItem={openItem}
-              setOpenItem={setOpenItem}
-            />
+            <div data-aos="">
+              <FAQList
+                faqs={visibleFAQs.map((faq, _) => ({
+                  question: faq.message,
+                  answer: faq.answer,
+                }))}
+                openItem={openItem}
+                setOpenItem={setOpenItem}
+              />
+            </div>
           )}
 
-          {/* No Results Message */}
           {!loading && filteredFAQs.length === 0 && !error && (
-            <p className="text-gray-400 text-center mt-8">No results found.</p>
+            <p
+              data-aos="zoom-in"
+              className="text-gray-400 text-center mt-8"
+            >
+              No results found.
+            </p>
           )}
         </div>
 
-        <hr className="border-gray-500 border-1 mt-16 w-screen" />
+        {/* Divider */}
+        <hr data-aos="fade-right" className="border-gray-500 border-1 mt-16 w-screen" />
 
-        {/* Submit New Question */}
-        <FAQForm
-          error={error}
-          successMessage={successMessage}
-          newQuestion={newQuestion}
-          setNewQuestion={setNewQuestion}
-          newEmail={newEmail} // Pass email state
-          setNewEmail={setNewEmail} // Pass email setter
-          handleFormSubmit={handleFormSubmit}
-        />
+        {/* FAQ Form */}
+        <div data-aos="fade-up" data-aos-delay="200">
+          <FAQForm
+            error={error}
+            successMessage={successMessage}
+            newQuestion={newQuestion}
+            setNewQuestion={setNewQuestion}
+            newEmail={newEmail}
+            setNewEmail={setNewEmail}
+            handleFormSubmit={handleFormSubmit}
+          />
+        </div>
 
-        <hr className="border-gray-500 border-1 mt-16 mb-8 w-screen" />
-        <LandingSubscription />
+        {/* Divider */}
+        <hr data-aos="fade-left" className="border-gray-500 border-1 mt-24 mb-12 w-screen" />
+
+        {/* Footer */}
+        <div data-aos="zoom-in">
+          <LandingSubscription />
+        </div>
       </main>
     </div>
   );

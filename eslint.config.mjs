@@ -9,10 +9,13 @@ export default [
   {files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"]},
   {
     languageOptions:
-     { 
+    { 
       globals: globals.browser,
       ...globals.node, // Include Node.js globals
-     }
+    },
+    // rules: {
+    //   semi: "error",
+    // },
   },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,

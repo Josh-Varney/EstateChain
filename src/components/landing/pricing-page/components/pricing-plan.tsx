@@ -35,19 +35,19 @@ const PricingPlans: React.FC<PricingPlansProps> = ({ billingCycle }) => (
         <div
           key={index}
           className={`relative bg-gray-800 border rounded-xl shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 ${
-            plan.isPopular ? "border-blue-500 ring-2 ring-blue-500" : ""
+            plan.isPopular ? "border-teal-400 ring-2 ring-teal-400" : ""
           }`}
         >
           {plan.isPopular && (
-            <div className="absolute -top-3 right-3 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md animate-pulse">
+            <div className="absolute -top-3 right-3 bg-teal-400 text-gray-900 text-xs font-semibold px-3 py-1 rounded-full shadow-md animate-pulse">
               Most Popular
             </div>
           )}
           <div className="p-8">
-            <h3 className="text-2xl font-bold text-gray-100 mb-4">
+            <h3 className="text-2xl font-bold text-teal-400 mb-4">
               {plan.title}
             </h3>
-            <div className="text-4xl font-extrabold text-blue-400 mb-2">
+            <div className="text-4xl font-extrabold text-teal-400 mb-2">
               $
               {billingCycle === "yearly"
                 ? plan.price * 12 * 0.8
@@ -63,12 +63,12 @@ const PricingPlans: React.FC<PricingPlansProps> = ({ billingCycle }) => (
                   key={idx}
                   className="flex items-center space-x-3 text-gray-300"
                 >
-                  <span className="w-4 h-4 bg-blue-500 rounded-full"></span>
+                  <span className="w-4 h-4 bg-teal-400 rounded-full"></span>
                   <span>{feature}</span>
                 </li>
               ))}
             </ul>
-            <button className="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-gray-100 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition duration-300">
+            <button className="w-full bg-gradient-to-r from-teal-400 to-teal-500 text-gray-900 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition duration-300">
               Choose Plan
             </button>
           </div>

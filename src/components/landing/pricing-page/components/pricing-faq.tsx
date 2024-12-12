@@ -23,7 +23,7 @@ const PricingFAQ: React.FC = () => (
             key={index}
             className="bg-gray-800 p-4 rounded-lg shadow-md"
           >
-            <summary className="cursor-pointer text-lg font-semibold text-gray-100">
+            <summary className="cursor-pointer text-lg font-semibold text-teal-300">
               {item.question}
             </summary>
             <p className="mt-2 text-gray-400">{item.answer}</p>
