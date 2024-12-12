@@ -39,37 +39,40 @@ const TrainingDashboard: React.FC = () => {
         </div>
       </div>
       <div>
-      <div className="w-full py-6">
-        <div className="w-screen justify-center justify-items-center">
-          <Carousel
-            opts={{
-              align: "start",
-              containScroll: "trimSnaps",
-            }}
-            className="w-full lg:max-w-4xl md:max-w-2xl sm:max-w-md pl-20 pr-20"
-          >
-            <CarouselContent>
-              {properties.map((property) => (
-                <CarouselItem key={property.id} className="w-screen md:basis-1/2 lg:basis-1/3">
-                  <div className="p-1">
-                    <Card>
-                      <CardContent className="flex aspect-[4/3] items-center justify-center p-0">
-                        <img
-                          src={property.img}
-                          alt={`Placeholder ${property.id}`}
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="border border-teal-400 text-teal-500 bg-gray-800 hover:bg-teal-500 hover:text-gray-800 hover:border-gray-800 active:bg-teal-600 active:text-gray-900 active:border-gray-900" />
-            <CarouselNext className="border border-teal-400 text-teal-500 bg-gray-800 hover:bg-teal-500 hover:text-gray-800 hover:border-gray-800 active:bg-teal-600 active:text-gray-900 active:border-gray-900" />
-          </Carousel>
-        </div>
-      </div>
+      <div className="flex justify-center items-center w-full">
+  <Carousel
+    opts={{
+      align: "start",
+      containScroll: "trimSnaps",
+    }}
+    className="w-full lg:max-w-4xl md:max-w-xl sm:max-w-2xl mx-auto ml-20 mr-20"
+  >
+    <CarouselContent>
+      {properties.map((property) => (
+        <CarouselItem
+          key={property.id}
+          className="w-full sm:w-auto md:basis-1/2 lg:basis-1/3 flex-shrink-0"
+        >
+          <div className="p-1">
+            <Card>
+              <CardContent className="flex aspect-[4/3] items-center justify-center p-0">
+                <img
+                  src={property.img}
+                  alt={`Placeholder ${property.id}`}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </CardContent>
+            </Card>
+          </div>
+        </CarouselItem>
+      ))}
+    </CarouselContent>
+    <CarouselPrevious className="border border-teal-400 text-teal-500 bg-gray-800 hover:bg-teal-500 hover:text-gray-800 hover:border-gray-800 active:bg-teal-600 active:text-gray-900 active:border-gray-900" />
+    <CarouselNext className="border border-teal-400 text-teal-500 bg-gray-800 hover:bg-teal-500 hover:text-gray-800 hover:border-gray-800 active:bg-teal-600 active:text-gray-900 active:border-gray-900" />
+  </Carousel>
+</div>
+
+
       </div>
     </div>
   );

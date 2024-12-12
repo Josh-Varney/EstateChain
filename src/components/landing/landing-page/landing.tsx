@@ -41,7 +41,7 @@ const LandingPage: React.FC = () => {
         </div>
 
         {/* Training Dashboard */}
-        <div className="mt-8" data-aos="zoom-in-up">
+        <div className="mt-8 justify-center justify-items-center" data-aos="zoom-in-up">
           <TrainingDashboard />
         </div>
 
