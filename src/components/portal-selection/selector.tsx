@@ -11,15 +11,15 @@ const Selector: React.FC = () => {
             <PortalHero />
             <div className="w-full max-w-3xl">
                 <Tabs defaultValue="simulation" className="rounded-lg bg-white shadow-lg">
-                    <TabsList className="grid w-full grid-cols-2 rounded-t-lg bg-gray-200">
+                    <TabsList className="grid w-full grid-cols-2 rounded-t-lg bg-white">
                         <TabsTrigger
                             value="simulation"
-                            className="font-medium text-gray-700 py-3 transition hover:bg-gray-300 hover:text-gray-900 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-400 data-[state=active]:to-green-600 data-[state=active]:text-white">
+                            className="font-medium text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-400 data-[state=active]:to-green-600 data-[state=active]:text-white">
                             Simulation
                         </TabsTrigger>
                         <TabsTrigger
                             value="live-system"
-                            className="font-medium text-gray-700 py-3 transition hover:bg-gray-300 hover:text-gray-900 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-400 data-[state=active]:to-blue-600 data-[state=active]:text-white">
+                            className="font-medium text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-400 data-[state=active]:to-blue-600 data-[state=active]:text-white">
                             Live System
                         </TabsTrigger>
                     </TabsList>
