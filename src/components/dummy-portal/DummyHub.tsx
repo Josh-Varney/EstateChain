@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaMoon, FaWallet } from "react-icons/fa";
 import Sidebar from "./components/Sidebar";
-import Card from "./components/HomeCard";
 import WalletPrompt from "./components/WalletWarningPrompt";
 import WalletDropdown from "./components/WalletConnected";
 import CardGrid from "./components/CardGrid";

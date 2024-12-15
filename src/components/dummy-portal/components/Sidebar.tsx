@@ -2,13 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import {
   FaUsers,
-  FaCog,
   FaSignOutAlt,
   FaMoneyCheck,
   FaInfo,
   FaInnosoft,
   FaChartArea,
-  FaBars,
   FaUserCircle,
   FaMoon,
   FaSun,
