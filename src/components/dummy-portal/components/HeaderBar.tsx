@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaWallet, FaBell, FaUserCircle } from "react-icons/fa";
 
 interface HeaderBarProps {
@@ -30,11 +28,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
             alt={darkMode ? "White Horse Logo" : "Black Horse Logo"}
             className="w-10 h-10 sm:w-12 sm:h-12"
           />
-          {/* Navigation Chevron */}
-          <div className="hidden sm:flex space-x-1">
-            <FontAwesomeIcon icon={faChevronRight} className={`w-3 ${iconColor}`} />
-            <FontAwesomeIcon icon={faChevronRight} className={`w-3 ${iconColor}`} />
-          </div>
+
           {/* Page Title */}
           <h1 className="text-lg sm:text-xl font-semibold">Dashboard</h1>
         </div>
