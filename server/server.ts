@@ -25,7 +25,7 @@ app.use(express.json());
 // Serve static files (optional for deployment)
 app.use(express.static(path.join(process.cwd(), 'build')));
 
-app.get("/api/getBalances", async (req: Request, res: Response) => {
+app.get("/api/getBalancesTestNet", async (req: Request, res: Response) => {
   const infuraApiKey = process.env.INFURA_DEV_API;
 
   // Check if the INFURA_DEV_API environment variable is set

@@ -1,4 +1,4 @@
-import { testAllNetworks } from "../components/dummy-portal/testnet/infura-meta";
+import { getTestNetworkBalances } from "../components/dummy-portal/testnet/infura-meta";
 
 // MetaMask Connection to Wallet
 const MetaMaskConnect = async (): Promise<void> => {
@@ -14,7 +14,7 @@ const MetaMaskConnect = async (): Promise<void> => {
             
             alert(localStorage.getItem("connectedAccount"));
 
-            testAllNetworks(localStorage.getItem("connectedAccount") as string);
+            getTestNetworkBalances(localStorage.getItem("connectedAccount") as string);
 
         } catch (error) {
             console.log("MetaMask Connection Error:", error);
