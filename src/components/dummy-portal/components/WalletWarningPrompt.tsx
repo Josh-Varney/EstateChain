@@ -1,5 +1,5 @@
 import React from 'react';
-import { CoinBaseConnect, MetaMaskConnect } from '../../../wallet-connect/web3';
+import { MetaMaskConnect } from '../../../wallet-connect/web3';
 
 interface WalletPromptProps {
   close: () => void; 
@@ -23,7 +23,7 @@ const WalletPrompt: React.FC<WalletPromptProps> = ({ close }) => {
           
           <button className="w-full mb-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold rounded-md shadow-lg transform hover:scale-105 transition duration-300 ease-in-out" 
             onClick={ async () => {
-                await CoinBaseConnect();
+                // await CoinBaseConnect();
                 close(); // Should close only and when the wallet request has been completed (BUG)
             }}>
             Coinbase

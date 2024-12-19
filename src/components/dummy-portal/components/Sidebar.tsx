@@ -20,7 +20,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ darkMode, setDarkMode }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [shouldRenderText, setShouldRenderText] = useState(!isCollapsed);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
