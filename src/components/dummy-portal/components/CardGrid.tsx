@@ -1,6 +1,7 @@
 import React from "react";
 import Card from "./HomeCard";
 import CryptoCardAnalytics from "./CryptoPricesCard";
+import CalenderCard from "./CalenderCard";
 
 interface CardGridProps {
   darkMode: boolean;
@@ -16,12 +17,12 @@ const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 lg:grid-rows-5 gap-8 w-full">
         {/* Large Cards */}
-        <CryptoCardAnalytics
+        {/* <CalenderCard
           title="Large Card 1"
           description="This is a large card."
           darkMode={darkMode}
           className="row-span-3 col-span-2"
-        />
+        /> */}
         <Card
           title="Current Simulation"
           description="Simulation Type: Buyer"

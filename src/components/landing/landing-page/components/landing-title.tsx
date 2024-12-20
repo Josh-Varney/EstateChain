@@ -5,7 +5,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 const LandingTitle: React.FC = () => {
 
     const getStartedClick = () => {
-        window.location.href = "/home";
+        window.location.href = "/login";
     }
 
     return (

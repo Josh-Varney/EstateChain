@@ -69,8 +69,8 @@ const Sidebar: React.FC<SidebarProps> = ({ darkMode, setDarkMode }) => {
                 isCollapsed ? "rotate-180" : ""
               } ${
                 darkMode
-                  ? "bg-gray-800 hover:bg-gray-700"
-                  : "bg-white hover:bg-gray-200"
+                  ? "bg-gray-900 transition-transform ease-in-out"
+                  : "bg-white transition-transform ease-in-out"
               }`}
               aria-label="Toggle Sidebar"
             >
@@ -88,6 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({ darkMode, setDarkMode }) => {
             )}
           </div>
         </div>
+
 
         {/* Navigation Links */}
         <nav className="mt-8 space-y-4">
@@ -114,11 +115,11 @@ const Sidebar: React.FC<SidebarProps> = ({ darkMode, setDarkMode }) => {
       <div className="mb-6">
       <hr
           className={`mb-6 border-0 h-px transition-colors duration-300 ${
-            darkMode ? "bg-gray-700" : "bg-gray-300"
+            darkMode ? "bg-gray-700" : "bg-gray-400"
           }`}
         />
         {/* Dark Mode Toggle */}
-        <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between px-3 py-3">
           {shouldRenderText && !isCollapsed && (
             <span className="text-sm font-medium whitespace-nowrap">
               {darkMode ? "Dark Mode" : "Light Mode"}
@@ -138,12 +139,12 @@ const Sidebar: React.FC<SidebarProps> = ({ darkMode, setDarkMode }) => {
             />
             <div
               className={`w-10 h-6 rounded-full transition-colors duration-300 ${
-                darkMode ? "bg-teal-600" : "bg-gray-300"
+                darkMode ? "bg-teal-600" : "bg-gray-400"
               }`}
             ></div>
             <span
               className={`absolute w-5 h-5 rounded-full transform transition-transform duration-300 ${
-                darkMode ? "translate-x-5 bg-white" : "translate-x-1 bg-black"
+                darkMode ? "translate-x-5 bg-white" : "translate-x-1 bg-white"
               } flex items-center justify-center shadow-md`}
             >
               {darkMode ? (
@@ -153,21 +154,13 @@ const Sidebar: React.FC<SidebarProps> = ({ darkMode, setDarkMode }) => {
                   }`}
                 />
               ) : (
-                <FaSun className="text-white text-xs" />
+                <FaSun className="text-yellow-600 text-xs" />
               )}
             </span>
           </label>
         </div>
 
         <nav className="mt-4 space-y-2">
-          <SidebarLink
-            location="/profile"
-            icon={<FaUserCircle />}
-            label="Profile"
-            darkMode={darkMode}
-            isCollapsed={isCollapsed}
-            shouldRenderText={shouldRenderText}
-          />
           <SidebarLink
             location="/logout"
             icon={<FaSignOutAlt />}
@@ -198,7 +191,7 @@ const SidebarLink: React.FC<{
           ? darkMode
             ? "bg-gray-800 text-white"
             : "bg-gray-200 text-gray-900"
-          : "hover:bg-gray-200 dark:hover:bg-gray-700"
+          : `${darkMode ? "hover:bg-gray-200/10" : "hover:bg-gray-200 text-gray-800"} m-2`
       } ${isCollapsed ? "justify-center" : "pl-4"}`
     }
     aria-label={label}

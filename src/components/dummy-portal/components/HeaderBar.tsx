@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FaWallet, FaBell, FaUserCircle } from "react-icons/fa";
+import { FaWallet, FaBell } from "react-icons/fa";
+import { Avatar, AvatarFallback, AvatarImage } from "../../../shadcn-components/avatar";
 
 interface HeaderBarProps {
   darkMode: boolean;
@@ -9,7 +10,7 @@ interface HeaderBarProps {
 
 const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notificationCount = 0 }) => {
   const [isBuyer, setIsBuyer] = useState(true);
-  const bgColor = darkMode ? "bg-gray-800" : "bg-white";
+  const bgColor = darkMode ? "bg-gray-800" : "";
   const textColor = darkMode ? "text-gray-100" : "text-gray-800";
   const hoverColor = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200";
   const iconColor = darkMode ? "text-gray-300" : "text-gray-600";
@@ -37,9 +38,9 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
       {/* Right Section: Actions */}
       <div className="flex items-center space-x-4 flex-wrap">
         {/* Buyer and Seller Toggle */}
-        <div className="flex items-center justify-between px-4 py-2 rounded-lg shadow-sm">
+        <div className="flex items-center justify-between py-2">
           <button
-            className={`relative inline-flex items-center w-28 h-6 rounded-full transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+            className={`relative inline-flex items-center w-28 h-6 rounded-full transition-colors duration-300 ease-in-out focus:outline-none focus:ring-1 focus:ring-offset-1 ${
               isBuyer ? "bg-teal-500" : "bg-red-500"
             }`}
             aria-pressed={isBuyer}
@@ -63,20 +64,22 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
         </div>
 
         {/* Wallet Button */}
-        <button
-          className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full `}
-          onClick={onWalletClick}
-          aria-label="Wallet"
-        >
-          <FaWallet className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-        </button>
-
+        <div>
+          <button
+            className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full `}
+            onClick={onWalletClick}
+            aria-label="Wallet"
+          >
+            <FaWallet className={`w-4 h-4 sm:w-5 sm:h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
+          </button>
+        </div>
+        
         {/* Notifications */}
         <div
           className={`relative p-2 rounded-full cursor-pointer ${hoverColor}`}
           aria-label="Notifications"
         >
-          <FaBell className={`w-4 h-4 sm:w-5 sm:h-5 ${iconColor}`} />
+          <FaBell className={`w-5 h-5 sm:w-5 sm:h-5 ${iconColor}`} />
           {notificationCount > 0 && (
             <span
               className="absolute -top-2 -right-2 text-xs bg-red-600 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold"
@@ -86,13 +89,11 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
             </span>
           )}
         </div>
-
-        {/* User Profile */}
-        <div
-          className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full cursor-pointer ${hoverColor}`}
-          aria-label="User Profile"
-        >
-          <FaUserCircle className={`w-5 h-5 sm:w-6 sm:h-6 ${iconColor}`} />
+        <div>
+          <Avatar className="w-8 h-8">
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
         </div>
       </div>
     </header>
