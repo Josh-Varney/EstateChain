@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaWallet, FaBell } from "react-icons/fa";
-import { Avatar, AvatarFallback, AvatarImage } from "../../../shadcn-components/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../../../../shadcn-components/avatar";
 
 interface HeaderBarProps {
   darkMode: boolean;
@@ -17,7 +17,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
 
   return (
     <header
-      className={`flex items-center justify-between h-20 px-4 sm:px-6 md:px-10 ${bgColor} ${textColor} shadow-md flex-wrap`}
+      className={` p-3 flex items-center justify-between h-20 px-4 sm:px-6 md:px-10 ${bgColor} ${textColor} shadow-md flex-wrap`}
       role="banner"
     >
       {/* Left Section: Logo and Navigation */}

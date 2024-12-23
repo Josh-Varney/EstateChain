@@ -1,5 +1,5 @@
 import React from 'react';
-import { MetaMaskConnect } from '../../../wallet-connect/web3';
+import { MetaMaskConnect } from '../../../../wallet-connect/web3';
 
 interface WalletPromptProps {
   close: () => void; 

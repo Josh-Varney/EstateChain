@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "./components/Sidebar";
-import WalletPrompt from "./components/WalletWarningPrompt";
-import WalletDropdown from "./components/WalletConnected";
-import CardGrid from "./components/CardGrid";
-import HeaderBar from "./components/HeaderBar";
+import Sidebar from "./components/main/Sidebar";
+import WalletPrompt from "./components/prompts/WalletWarningPrompt";
+import WalletDropdown from "./components/prompts/WalletConnected";
+import CardGrid from "./components/main/CardGrid";
+import HeaderBar from "./components/main/HeaderBar";
 
 const HomeScreen: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
