@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaWallet, FaBell } from "react-icons/fa";
-import { Avatar, AvatarFallback, AvatarImage } from "../../../../shadcn-components/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../../../../shadcn-components/ui/avatar";
 
 interface HeaderBarProps {
   darkMode: boolean;
@@ -13,11 +13,11 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
   const bgColor = darkMode ? "bg-gray-800" : "";
   const textColor = darkMode ? "text-gray-100" : "text-gray-800";
   const hoverColor = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200";
-  const iconColor = darkMode ? "text-gray-300" : "text-gray-600";
+  const iconColor = darkMode ? "text-white" : "text-black";
 
   return (
     <header
-      className={` p-3 flex items-center justify-between h-20 px-4 sm:px-6 md:px-10 ${bgColor} ${textColor} shadow-md flex-wrap`}
+      className={`p-3 flex ${darkMode ? "border-b border-gray-700" : ""} items-center justify-between h-20 px-4 sm:px-6 md:px-10 ${bgColor} ${textColor} shadow-md flex-wrap`}
       role="banner"
     >
       {/* Left Section: Logo and Navigation */}
@@ -66,11 +66,11 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
         {/* Wallet Button */}
         <div>
           <button
-            className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full `}
+            className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full ${hoverColor} `}
             onClick={onWalletClick}
             aria-label="Wallet"
           >
-            <FaWallet className={`w-4 h-4 sm:w-5 sm:h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
+            <FaWallet className={`w-4 h-4 sm:w-5 sm:h-5`} />
           </button>
         </div>
         
@@ -90,7 +90,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
           )}
         </div>
         <div>
-          <Avatar className="w-8 h-8">
+          <Avatar className={`w-7 h-7 rounded-full cursor-pointer`}>
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>

@@ -45,7 +45,7 @@ const HousingAssetCard: React.FC<HousingAssetCardProps> = ({ darkMode, asset }) 
       <div
         className={`
           flex flex-col justify-between p-4 rounded-lg shadow-md border transition-colors duration-300 h-full
-          ${darkMode ? "bg-gray-900 text-white border-gray-700" : "bg-white text-gray-900 border-gray-200"}
+          ${darkMode ? "bg-gray-900 border border-gray-700 text-gray-100" : "bg-white border border-gray-300 text-gray-900"}
         `}
       >
         {/* Image */}

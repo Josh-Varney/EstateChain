@@ -53,23 +53,21 @@ const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
         min-h-screen
         w-full
         p-4
-        sm:p-6
         transition-colors
         duration-300
-        ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}
         overflow-y-auto
         overflow-x-hidden
+        ${darkMode ? "bg-gradient-to-b from-gray-800 to-gray-900" : ""}
       `}
     >
       <div
         className="
           grid
-          gap-4
-          sm:gap-6
           grid-cols-1
           sm:grid-cols-2
           lg:grid-cols-4
           xl:grid-cols-6
+          pb-12
         "
       >
         {/* Wallet Card */}
@@ -82,13 +80,12 @@ const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
             w-full
             overflow-hidden
             rounded-lg
-            shadow-md
             transition-transform
             duration-300
           "
         >
           <WalletGridCard
-            darkMode={true}
+            darkMode={darkMode}
             accounts={accounts}
             cryptocurrencies={cryptocurrencies}
             revenueSources={revenueSources}
@@ -105,7 +102,6 @@ const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
             w-full
             overflow-hidden
             rounded-lg
-            shadow-md
             transition-transform
             duration-300
           "
@@ -117,13 +113,13 @@ const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
         <div
           className="
             col-span-2
-            md:col-span-2
+            sm:col-span-1
+            md:col-span-1
             lg:col-span-2
             xl:col-span-2
             w-full
             overflow-hidden
             rounded-lg
-            shadow-md
             transition-transform
             duration-300
           "
@@ -137,12 +133,13 @@ const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
             key={index}
             className="
               col-span-2
+              sm:col-span-1
+              md:col-span-1
               lg:col-span-2
               xl:col-span-2
               w-full
               overflow-hidden
               rounded-lg
-              shadow-md
               transition-transform
               duration-300
             "
@@ -160,7 +157,6 @@ const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
             w-full
             overflow-hidden
             rounded-lg
-            shadow-md
             transition-transform
             duration-300
           "
@@ -177,7 +173,6 @@ const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
             w-full
             overflow-hidden
             rounded-lg
-            shadow-md
             transition-transform
             duration-300
           "

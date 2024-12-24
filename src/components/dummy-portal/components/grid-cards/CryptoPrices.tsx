@@ -101,8 +101,7 @@ const FakeCryptoListCard: FC<FakeCryptoListCardProps> = ({ darkMode }) => {
           shadow-md
           transition-colors
           duration-300
-          ${darkMode ? "bg-gray-800" : "bg-white"}
-          ${darkMode ? "text-gray-300" : "text-gray-600"}
+          ${darkMode ? "bg-gray-900 border border-gray-700 text-gray-100" : "bg-white border border-gray-300 text-gray-900"}
         `}
       >
         {/* Header */}

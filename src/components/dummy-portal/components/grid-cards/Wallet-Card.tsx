@@ -37,8 +37,8 @@ const WalletGridCard: FC<WalletGridCardProps> = ({
     <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-lg mx-auto">
       {/* Wallet Card */}
       <div
-        className={`p-6 rounded-lg shadow-lg border transition-transform duration-300 ${
-          darkMode ? "bg-gray-900 border-gray-700 text-gray-100" : "bg-white border-gray-300 text-gray-900"
+        className={`p-6 rounded-lg shadow-lg transition-transform duration-300 ${
+          darkMode ? "bg-gray-900 border border-gray-700 text-gray-100" : "bg-white border border-gray-300 text-gray-900"
         }`}
       >
         <div className="flex justify-between items-center mb-4">

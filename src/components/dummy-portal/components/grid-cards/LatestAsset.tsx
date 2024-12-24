@@ -47,7 +47,7 @@ const LatestAssetCard: React.FC<LatestAssetCardProps> = ({ darkMode }) => {
           className={`
             flex flex-col h-full p-6 rounded-lg shadow-lg
             transition-all duration-300
-            ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-800"}
+            ${darkMode ? "bg-gray-900 border border-gray-700 text-gray-100" : "bg-white border border-gray-300 text-gray-900"}
           `}
         >
           {/* Card Header */}

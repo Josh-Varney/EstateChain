@@ -17,18 +17,14 @@ const CalendarCard: FC<CalendarCardProps> = ({ darkMode }) => {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-lg mx-auto">
-      <div
-        className={`flex flex-col rounded-lg shadow-lg p-8 w-full max-w-md transition-colors ${
-          darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-        }`}
-      >
+    <div className="flex flex-col gap-6 p-2 sm:p-6 max-w-lg mx-auto">
+      <div className={`flex flex-col shadow-md rounded-lg p-8 w-full max-w-md ${darkMode ? "bg-gray-900 border border-gray-700 text-gray-100" : "bg-white border border-gray-300 text-gray-900"}`}>
         {/* Header */}
-        <header className="flex flex-row justify-between items-center mb-6">
+        <header className="flex flex-row justify-between items-center mb-2">
           <h1 className="text-lg font-semibold">Rental Overview</h1>
           <h2 className="text-sm font-medium">{formatDate(date)}</h2>
         </header>
-        <hr className=" border-gray-700" />
+        <hr className="border-gray-800" />
 
         {/* Stats Section */}
         <section className="flex justify-between items-center text-center gap-6">
@@ -41,16 +37,16 @@ const CalendarCard: FC<CalendarCardProps> = ({ darkMode }) => {
             <p className="text-2xl font-bold text-green-500">30</p>
           </div>
         </section>
-        <hr className=" border-gray-700" />
+        <hr className="border-gray-800" />
 
         {/* Calendar Section */}
         <section className="mt-4 justify-items-center">
-          <div className="rounded-lg overflow-hidden shadow-sm border border-gray-300 dark:border-gray-700">
+          <div className="rounded-lg overflow-hidden shadow-sm border border-gray-800">
             <Calendar
               mode="single"
               selected={date}
               onSelect={setDate}
-              className="w-full p-6"
+              className="w-full p-8"
               aria-label="Select a date"
             />
           </div>
