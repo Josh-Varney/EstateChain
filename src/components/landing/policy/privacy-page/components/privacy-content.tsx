@@ -82,7 +82,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ expandedSection, toggle
                     tabIndex={0}
                     onClick={() => toggleSection(id)}
                     onKeyPress={(e) => e.key === 'Enter' && toggleSection(id)}
-                    className={`cursor-pointer bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 ${
+                    className={`cursor-pointer bg-gray-800 text-gray-400 shadow-lg rounded-lg p-6 ${
                         expandedSection === id ? 'border-l-4 border-teal-400' : ''
                     }`}
                 >

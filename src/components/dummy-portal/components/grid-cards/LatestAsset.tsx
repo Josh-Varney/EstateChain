@@ -1,5 +1,3 @@
-// src/components/grid-cards/LatestAssetCard.tsx
-
 import React from "react";
 
 // Define the shape of a single asset
@@ -16,56 +14,74 @@ type Asset = {
 // Props for the LatestAssetCard
 interface LatestAssetCardProps {
   darkMode: boolean;
-  // Optionally, you can pass the latest asset as a prop
-  // latestAsset?: Asset;
 }
 
 const LatestAssetCard: React.FC<LatestAssetCardProps> = ({ darkMode }) => {
-  // Sample latest asset data
-  const latestAsset: Asset = {
-    id: 1,
-    name: "Luxury Villa in Beverly Hills",
-    dateAdded: "2024-12-22T09:00:00Z",
-    imageUrl: "https://images.unsplash.com/photo-1600607685362-cf365f694d68",
-    description: "A stunning luxury villa located in the heart of Beverly Hills.",
-    value: 5000000,
-    category: "Real Estate",
-  };
+  // Sample assets data
+  const assets: Asset[] = [
+    {
+      id: 1,
+      name: "Luxury Villa in Beverly Hills",
+      dateAdded: "2024-12-22T09:00:00Z",
+      imageUrl: "https://images.unsplash.com/photo-1600607685362-cf365f694d68",
+      description: "A stunning luxury villa located in the heart of Beverly Hills.",
+      value: 5000000,
+      category: "Real Estate",
+    },
+    {
+      id: 2,
+      name: "Modern Apartment in New York",
+      dateAdded: "2024-12-20T09:00:00Z",
+      imageUrl: "https://images.unsplash.com/photo-1560185127-6d3cb9e6e17c",
+      description: "A beautiful modern apartment located in the heart of New York City.",
+      value: 2500000,
+      category: "Real Estate",
+    },
+  ];
 
   return (
-    <div
-      className={`
-        w-full p-4 rounded-lg shadow-md
-        transition-colors duration-300
-        ${darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"}
-      `}
-    >
-      {/* Card Header */}
-      <h2 className="text-xl font-bold mb-4">Latest Asset Added</h2>
+    <div className="flex flex-col gap-6 p-4 sm:p-6 h-full w-full mx-auto">
+      {assets.map((asset) => (
+        <div
+          key={asset.id}
+          className={`
+            flex flex-col h-full p-6 rounded-lg shadow-lg
+            transition-all duration-300
+            ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-800"}
+          `}
+        >
+          {/* Card Header */}
+          <h2 className="text-lg font-semibold mb-1">Latest Asset</h2>
 
-      {/* Asset Details */}
-      <div className="flex items-center">
-        <img
-          src={latestAsset.imageUrl}
-          alt={`${latestAsset.name} image`}
-          className="h-16 w-16 rounded-full mr-4 object-cover"
-        />
-        <div>
-          <h3 className="text-lg font-semibold">{latestAsset.name}</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{latestAsset.category}</p>
+          {/* Asset Details */}
+          <div className="flex gap-4 items-start flex-grow">
+            <img
+              src={asset.imageUrl}
+              alt={asset.name}
+              className="h-32 w-32 rounded-md object-cover shadow-sm flex-none"
+            />
+            <div className="flex flex-col flex-grow">
+              <h3 className="text-base font-medium truncate">{asset.name}</h3>
+              <span className="text-sm text-gray-500 dark:text-gray-400">{asset.category}</span>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 flex-grow">
+                {asset.description}
+              </p>
+              <div className="mt-4 flex justify-end gap-2">
+                <button
+                  className="px-4 py-2 text-sm rounded bg-blue-500 text-white hover:bg-blue-600 transition"
+                >
+                  See More
+                </button>
+                <button
+                  className="px-4 py-2 text-sm rounded bg-green-500 text-white hover:bg-green-600 transition"
+                >
+                  Invest Now
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Asset Description */}
-      <p className="mt-4 text-sm">{latestAsset.description}</p>
-
-      {/* Asset Value and Date */}
-      <div className="mt-4 flex justify-between items-center">
-        <span className="font-semibold">Value: £{latestAsset.value.toLocaleString()}</span>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
-          Added on {new Date(latestAsset.dateAdded).toLocaleDateString()}
-        </span>
-      </div>
+      ))}
     </div>
   );
 };

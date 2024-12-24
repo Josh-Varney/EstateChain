@@ -151,98 +151,39 @@ const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) =
   });
 
   return (
-    <div
-      className={`
-        p-6
-        rounded-lg
-        shadow-lg
-        transition-colors
-        duration-300
-        ${darkMode ? "bg-gray-800" : "bg-white"}
-        ${darkMode ? "text-gray-300" : "text-gray-600"}
-      `}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold">Global Transactions (Last 72 Hours)</h2>
-        <span className="text-sm font-medium">FinanceHub</span>
-      </div>
+    <div className="flex flex-col p-6">
+      <div
+        className={`
+          p-6
+          rounded-lg
+          shadow-lg
+          transition-colors
+          duration-300
+          ${darkMode ? "bg-gray-800" : "bg-white"}
+          ${darkMode ? "text-gray-300" : "text-gray-600"}
+        `}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Global Transactions (Last 72 Hours)</h2>
+          <span className="text-sm font-medium">FinanceHub</span>
+        </div>
 
-      {/* Divider */}
-      <hr
-        className={`mb-4 ${
-          darkMode ? "border-gray-700" : "border-gray-300"
-        }`}
-      />
-
-      {/* Search and Filters */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 space-y-2 md:space-y-0">
-        {/* Search Input */}
-        <input
-          type="text"
-          placeholder="Search by description or user..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className={`
-            px-4 py-2
-            rounded
-            border
-            focus:outline-none
-            focus:ring-2
-            focus:ring-blue-500
-            ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-black"}
-          `}
+        {/* Divider */}
+        <hr
+          className={`mb-4 ${
+            darkMode ? "border-gray-700" : "border-gray-300"
+          }`}
         />
 
-        {/* Filter Options */}
-        <div className="flex space-x-2">
-          {/* Filter Type Buttons */}
-          <div className="flex space-x-1">
-            <button
-              onClick={() => handleFilterTypeChange("all")}
-              className={`
-                px-3 py-1 rounded
-                ${filterType === "all"
-                  ? "bg-blue-500 text-white"
-                  : darkMode
-                  ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
-              `}
-            >
-              All
-            </button>
-            <button
-              onClick={() => handleFilterTypeChange("credit")}
-              className={`
-                px-3 py-1 rounded
-                ${filterType === "credit"
-                  ? "bg-green-500 text-white"
-                  : darkMode
-                  ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
-              `}
-            >
-              Credit
-            </button>
-            <button
-              onClick={() => handleFilterTypeChange("debit")}
-              className={`
-                px-3 py-1 rounded
-                ${filterType === "debit"
-                  ? "bg-red-500 text-white"
-                  : darkMode
-                  ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
-              `}
-            >
-              Debit
-            </button>
-          </div>
-
-          {/* Filter Category Dropdown */}
-          <select
-            value={filterCategory}
-            onChange={handleFilterCategoryChange}
+        {/* Search and Filters */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 space-y-2 md:space-y-0">
+          {/* Search Input */}
+          <input
+            type="text"
+            placeholder="Search by description or user..."
+            value={searchTerm}
+            onChange={handleSearchChange}
             className={`
               px-4 py-2
               rounded
@@ -252,56 +193,117 @@ const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) =
               focus:ring-blue-500
               ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-black"}
             `}
-          >
-            <option value="all">All Categories</option>
-            {categories.map((category, idx) => (
-              <option key={idx} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+          />
 
-      {/* Transactions List */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 text-left">Date</th>
-              <th className="px-4 py-2 text-left">Description</th>
-              <th className="px-4 py-2 text-right">Amount (£)</th>
-              <th className="px-4 py-2 text-left">Category</th>
-              <th className="px-4 py-2 text-left">User</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTransactions.length > 0 ? (
-              filteredTransactions.map((tx) => (
-                <tr key={tx.id} className="border-t">
-                  <td className="px-4 py-2">{new Date(tx.date).toLocaleString()}</td>
-                  <td className="px-4 py-2">{tx.description}</td>
-                  <td
-                    className={`px-4 py-2 text-right font-semibold ${
-                      tx.amount > 0 ? "text-green-500" : "text-red-500"
-                    }`}
-                  >
-                    {tx.amount > 0 ? "+" : ""}
-                    {tx.amount.toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2">{tx.category}</td>
-                  <td className="px-4 py-2">{tx.user}</td>
-                </tr>
-              ))
-            ) : (
+          {/* Filter Options */}
+          <div className="flex space-x-2">
+            {/* Filter Type Buttons */}
+            <div className="flex space-x-1">
+              <button
+                onClick={() => handleFilterTypeChange("all")}
+                className={`
+                  px-3 py-1 rounded
+                  ${filterType === "all"
+                    ? "bg-blue-500 text-white"
+                    : darkMode
+                    ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
+                `}
+              >
+                All
+              </button>
+              <button
+                onClick={() => handleFilterTypeChange("credit")}
+                className={`
+                  px-3 py-1 rounded
+                  ${filterType === "credit"
+                    ? "bg-green-500 text-white"
+                    : darkMode
+                    ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
+                `}
+              >
+                Credit
+              </button>
+              <button
+                onClick={() => handleFilterTypeChange("debit")}
+                className={`
+                  px-3 py-1 rounded
+                  ${filterType === "debit"
+                    ? "bg-red-500 text-white"
+                    : darkMode
+                    ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
+                `}
+              >
+                Debit
+              </button>
+            </div>
+
+            {/* Filter Category Dropdown */}
+            <select
+              value={filterCategory}
+              onChange={handleFilterCategoryChange}
+              className={`
+                px-4 py-2
+                rounded
+                border
+                focus:outline-none
+                focus:ring-2
+                focus:ring-blue-500
+                ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-black"}
+              `}
+            >
+              <option value="all">All Categories</option>
+              {categories.map((category, idx) => (
+                <option key={idx} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Transactions List */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full">
+            <thead>
               <tr>
-                <td className="px-4 py-2 text-center" colSpan={5}>
-                  No transactions match your search.
-                </td>
+                <th className="px-4 py-2 text-left">Date</th>
+                <th className="px-4 py-2 text-left">Description</th>
+                <th className="px-4 py-2 text-right">Amount (£)</th>
+                <th className="px-4 py-2 text-left">Category</th>
+                <th className="px-4 py-2 text-left">User</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredTransactions.length > 0 ? (
+                filteredTransactions.map((tx) => (
+                  <tr key={tx.id} className="border-t">
+                    <td className="px-4 py-2">{new Date(tx.date).toLocaleString()}</td>
+                    <td className="px-4 py-2">{tx.description}</td>
+                    <td
+                      className={`px-4 py-2 text-right font-semibold ${
+                        tx.amount > 0 ? "text-green-500" : "text-red-500"
+                      }`}
+                    >
+                      {tx.amount > 0 ? "+" : ""}
+                      {tx.amount.toFixed(2)}
+                    </td>
+                    <td className="px-4 py-2">{tx.category}</td>
+                    <td className="px-4 py-2">{tx.user}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td className="px-4 py-2 text-center" colSpan={5}>
+                    No transactions match your search.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

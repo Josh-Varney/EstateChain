@@ -1,5 +1,3 @@
-// src/components/grid-cards/FakeCryptoListCard.tsx
-
 import React, { FC, useState, ChangeEvent } from "react";
 
 interface FakeCryptoData {
@@ -92,121 +90,124 @@ const FakeCryptoListCard: FC<FakeCryptoListCardProps> = ({ darkMode }) => {
   });
 
   return (
-    <div
-      className={`
-        p-4
-        rounded-lg
-        shadow-md
-        transition-colors
-        duration-300
-        ${darkMode ? "bg-gray-800" : "bg-white"}
-        ${darkMode ? "text-gray-300" : "text-gray-600"}
-        flex
-        flex-col
-        space-y-4
-      `}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Fakenet Cryptos</h3>
-        <span className="text-sm font-medium">CryptoChoice</span>
-      </div>
-
-      {/* Search Input */}
-      <input
-        type="text"
-        placeholder="Search by name or symbol..."
-        value={searchTerm}
-        onChange={handleSearchChange}
+    <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-lg mx-auto h-full">
+      <div
         className={`
-          px-3 py-2
-          rounded
-          border
-          focus:outline-none
-          focus:ring-2
-          focus:ring-blue-500
-          ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-black"}
+          flex-grow
+          flex
+          flex-col
+          p-4
+          rounded-lg
+          shadow-md
+          transition-colors
+          duration-300
+          ${darkMode ? "bg-gray-800" : "bg-white"}
+          ${darkMode ? "text-gray-300" : "text-gray-600"}
         `}
-      />
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">Fakenet Cryptos</h3>
+          <span className="text-sm font-medium">CryptoChoice</span>
+        </div>
 
-      {/* Filter Buttons */}
-      <div className="flex space-x-2">
-        <button
-          onClick={() => handleFilterChange("all")}
+        {/* Search Input */}
+        <input
+          type="text"
+          placeholder="Search by name or symbol..."
+          value={searchTerm}
+          onChange={handleSearchChange}
           className={`
-            px-3 py-1 rounded
-            ${filterChange === "all"
-              ? "bg-blue-500 text-white"
-              : darkMode
-              ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
+            mt-4
+            px-3 py-2
+            rounded
+            border
+            focus:outline-none
+            focus:ring-2
+            focus:ring-blue-500
+            ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-black"}
           `}
-        >
-          All
-        </button>
-        <button
-          onClick={() => handleFilterChange("positive")}
-          className={`
-            px-3 py-1 rounded
-            ${filterChange === "positive"
-              ? "bg-green-500 text-white"
-              : darkMode
-              ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
-          `}
-        >
-          Positive
-        </button>
-        <button
-          onClick={() => handleFilterChange("negative")}
-          className={`
-            px-3 py-1 rounded
-            ${filterChange === "negative"
-              ? "bg-red-500 text-white"
-              : darkMode
-              ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
-          `}
-        >
-          Negative
-        </button>
-      </div>
+        />
 
-      {/* Crypto List */}
-      <div className="overflow-y-auto max-h-48">
-        {filteredCryptos.length > 0 ? (
-          <ul className="space-y-2">
-            {filteredCryptos.map((crypto) => (
-              <li key={crypto.symbol} className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <img
-                    src={crypto.iconUrl}
-                    alt={`${crypto.name} icon`}
-                    className="h-6 w-6"
-                  />
-                  <div>
-                    <span className="font-medium">{crypto.name}</span>
-                    <span className="text-xs uppercase text-gray-500 ml-1">({crypto.symbol})</span>
+        {/* Filter Buttons */}
+        <div className="flex space-x-2 mt-4">
+          <button
+            onClick={() => handleFilterChange("all")}
+            className={`
+              px-3 rounded
+              ${filterChange === "all"
+                ? "bg-blue-500 text-white"
+                : darkMode
+                ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
+            `}
+          >
+            All
+          </button>
+          <button
+            onClick={() => handleFilterChange("positive")}
+            className={`
+              px-3 rounded
+              ${filterChange === "positive"
+                ? "bg-green-500 text-white"
+                : darkMode
+                ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
+            `}
+          >
+            Positive
+          </button>
+          <button
+            onClick={() => handleFilterChange("negative")}
+            className={`
+              px-3 py-1 rounded
+              ${filterChange === "negative"
+                ? "bg-red-500 text-white"
+                : darkMode
+                ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
+            `}
+          >
+            Negative
+          </button>
+        </div>
+
+        {/* Crypto List */}
+        <div className="overflow-y-auto flex-grow mt-4">
+          {filteredCryptos.length > 0 ? (
+            <ul className="space-y-2">
+              {filteredCryptos.map((crypto) => (
+                <li key={crypto.symbol} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <img
+                      src={crypto.iconUrl}
+                      alt={`${crypto.name} icon`}
+                      className="h-6 w-6"
+                    />
+                    <div>
+                      <span className="font-medium">{crypto.name}</span>
+                      <span className="text-xs uppercase text-gray-500 ml-1">({crypto.symbol})</span>
+                    </div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <span className="font-semibold">£{crypto.price.toLocaleString()}</span>
-                  <br />
-                  <span
-                    className={`text-xs font-semibold ${
-                      crypto.priceChange24h > 0 ? "text-green-500" : "text-red-500"
-                    }`}
-                  >
-                    {crypto.priceChange24h > 0 ? "+" : ""}
-                    {crypto.priceChange24h}%
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-center text-sm">No cryptocurrencies match your search.</p>
-        )}
+                  <div className="text-right">
+                    <span className="font-semibold">£{crypto.price.toLocaleString()}</span>
+                    <br />
+                    <span
+                      className={`text-xs font-semibold ${
+                        crypto.priceChange24h > 0 ? "text-green-500" : "text-red-500"
+                      }`}
+                    >
+                      {crypto.priceChange24h > 0 ? "+" : ""}
+                      {crypto.priceChange24h}%
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-center text-sm">No cryptocurrencies match your search.</p>
+          )}
+        </div>
       </div>
     </div>
   );
