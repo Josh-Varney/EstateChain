@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../main/Sidebar";
 import HeaderBar from "../main/HeaderBar";
 import Prompts from "../prompts/Prompts";
+import CommunityPage from "./components/Community";
 
 const DummyCommunity: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -60,7 +61,7 @@ const DummyCommunity: React.FC = () => {
           onNotiicationClick={toggleNotificationPrompt}
         />
 
-      
+        <CommunityPage />
 
         <Prompts
           walletConnectPrompt={walletConnectPrompt}

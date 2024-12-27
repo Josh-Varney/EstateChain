@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../main/Sidebar";
 import HeaderBar from "../main/HeaderBar";
 import Prompts from "../prompts/Prompts";
+import TokenizedRealEstateDisplay from "./components/AnalyticsDisplay";
 
 const DummyAnalytics: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -53,6 +54,8 @@ const DummyAnalytics: React.FC = () => {
           onProfileClick={toggleProfilePrompt}
           onNotiicationClick={toggleNotificationPrompt}
         />
+
+        <TokenizedRealEstateDisplay />
 
         <Prompts
           walletConnectPrompt={walletConnectPrompt}

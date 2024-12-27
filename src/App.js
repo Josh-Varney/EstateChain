@@ -23,6 +23,7 @@ import DummyMarket from './components/dummy-portal/components/marketplace/DummyM
 import DummyTransactions from './components/dummy-portal/components/transactions/DummyTransactions.tsx';
 import DummyAnalytics from './components/dummy-portal/components/analytics/DummyAnalytics.tsx';
 import DummyCommunity from './components/dummy-portal/components/community/DummyCommunity.tsx';
+import DummyInformation from './components/dummy-portal/components/info/DummyInfo.tsx';
 
 function App() {
   useEffect(() => {
@@ -95,7 +96,7 @@ function App() {
           path='/simulation/mockinformation'
           element={
             <ProtectedRoute>
-              <DummyCommunity />
+              <DummyInformation />
             </ProtectedRoute>
           }
         />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../main/Sidebar";
 import HeaderBar from "../main/HeaderBar";
 import Prompts from "../prompts/Prompts";
+import TransactionScreen from "./components/Transactions";
 
 const DummyTransactions: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -61,7 +62,7 @@ const DummyTransactions: React.FC = () => {
           onNotiicationClick={toggleNotificationPrompt}
         />
 
-
+        <TransactionScreen />
 
         <Prompts
           walletConnectPrompt={walletConnectPrompt}
