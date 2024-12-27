@@ -38,7 +38,7 @@ const WalletDropdown: React.FC<WalletDropdownProps> = ({ close, address = '0x123
   };
 
   return (
-    <div ref={dropdownRef} className="absolute right-4 mt-14 w-64 bg-white dark:bg-gray-900 shadow-lg rounded-md overflow-hidden z-50 animate-fadeIn">
+    <div ref={dropdownRef} className="absolute right-4 mt-16 w-64 bg-white dark:bg-gray-900 shadow-lg rounded-md overflow-hidden z-50 animate-fadeIn">
       {/* Wallet Summary */}
       <div className="p-4 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
         <p className="text-xs text-gray-600 dark:text-gray-400">Wallet Address</p>

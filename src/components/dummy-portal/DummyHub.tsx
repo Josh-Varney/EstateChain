@@ -4,11 +4,15 @@ import WalletPrompt from "./components/prompts/WalletWarningPrompt";
 import WalletDropdown from "./components/prompts/WalletConnected";
 import CardGrid from "./components/main/CardGrid";
 import HeaderBar from "./components/main/HeaderBar";
+import ProfileDropdown from "./components/prompts/ProfileDropdown";
+import NotificationDropdown from "./components/prompts/NotificationDropdown";
 
 const DummyDashboard: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false);
   const [walletConnectedPrompt, setWalletConnectedPrompt] = useState(false);
+  const [notificationPrompt , setNotificationPrompt] = useState(false); 
+  const [profilePrompt, setProfilePrompt] = useState(false);
 
   const toggleWalletPrompt = () => {
     if (localStorage.getItem("connectedAccount")) {
@@ -18,9 +22,18 @@ const DummyDashboard: React.FC = () => {
     }
   };
 
+  const toggleProfilePrompt = () => {
+    setProfilePrompt((prev) => !prev);
+  };
+
+  const toggleNotificationPrompt = () => {
+    setNotificationPrompt((prev) => !prev);
+  }
+
   const toggleDarkMode = () => {
-    setDarkMode((prev) => !prev);
-    localStorage.setItem("theme", !darkMode ? "dark" : "light");
+    const newTheme = !darkMode ? "dark" : "light";
+    setDarkMode(!darkMode);
+    localStorage.setItem("theme", newTheme);
   };
 
   useEffect(() => {
@@ -41,7 +54,7 @@ const DummyDashboard: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex flex-col w-full h-full ml-20">
-        <HeaderBar darkMode={darkMode} onWalletClick={toggleWalletPrompt}/>
+        <HeaderBar darkMode={darkMode} onWalletClick={toggleWalletPrompt} onProfileClick={toggleProfilePrompt} onNotiicationClick={toggleNotificationPrompt}/>
 
         {/* Main Content Area */}
         <CardGrid darkMode={darkMode} />
@@ -53,7 +66,19 @@ const DummyDashboard: React.FC = () => {
         {walletConnectedPrompt && (
           <WalletDropdown
             close={() => setWalletConnectedPrompt(false)}
-            isOpen={true}
+            isOpen={walletConnectedPrompt}
+          />
+        )}
+
+        {notificationPrompt && (
+          <NotificationDropdown close={() => setNotificationPrompt(false)} isOpen={notificationPrompt} notifications={[]} />
+        )}
+
+        {/* Profile Dropdown */}
+        {profilePrompt && (
+          <ProfileDropdown
+            close={() => setProfilePrompt(false)}
+            isOpen={profilePrompt}
           />
         )}
       </div>

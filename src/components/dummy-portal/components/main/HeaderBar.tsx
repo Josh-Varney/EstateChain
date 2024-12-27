@@ -5,10 +5,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../../../shadcn-componen
 interface HeaderBarProps {
   darkMode: boolean;
   onWalletClick: () => void;
+  onProfileClick: () => void;
+  onNotiicationClick: () => void;
   notificationCount?: number;
 }
 
-const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notificationCount = 0 }) => {
+const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, onProfileClick, onNotiicationClick, notificationCount = 0 }) => {
   const [isBuyer, setIsBuyer] = useState(true);
   const bgColor = darkMode ? "bg-gray-800" : "";
   const textColor = darkMode ? "text-gray-100" : "text-gray-800";
@@ -36,7 +38,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
       </div>
 
       {/* Right Section: Actions */}
-      <div className="flex items-center space-x-4 flex-wrap">
+      <div className="flex items-center space-x-4 flex-wrap relative">
         {/* Buyer and Seller Toggle */}
         <div className="flex items-center justify-between py-2">
           <button
@@ -73,11 +75,12 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
             <FaWallet className={`w-4 h-4 sm:w-5 sm:h-5`} />
           </button>
         </div>
-        
+
         {/* Notifications */}
         <div
           className={`relative p-2 rounded-full cursor-pointer ${hoverColor}`}
           aria-label="Notifications"
+          onClick={onNotiicationClick}
         >
           <FaBell className={`w-5 h-5 sm:w-5 sm:h-5 ${iconColor}`} />
           {notificationCount > 0 && (
@@ -89,8 +92,13 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, notifica
             </span>
           )}
         </div>
-        <div>
-          <Avatar className={`w-7 h-7 rounded-full cursor-pointer`}>
+
+        {/* Profile Avatar */}
+        <div className="relative">
+          <Avatar
+            className={`w-7 h-7 rounded-full cursor-pointer`}
+            onClick={onProfileClick}
+          >
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
