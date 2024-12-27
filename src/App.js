@@ -4,7 +4,7 @@ import './App.css';
 import LoginScreen from './components/form/login-account/login-account.tsx';
 import CreateAccountScreen from "./components/form/create-account/create-account.tsx";
 import ForgotPasswordScreen from './components/form/forgot-password/forgot-password.tsx';
-import HomeScreen from './components/dummy-portal/DummyHub.tsx';
+import DummyDashboard from './components/dummy-portal/DummyHub.tsx';
 import ProtectedRoute from './contexts/authContext/route_context.tsx';
 import LandingPage from './components/landing/landing-page/landing.tsx';
 import FAQPage from './components/landing/faq-page/faq.tsx';
@@ -20,6 +20,9 @@ import TermsOfServicePage from "./components/landing/policy/t&c-page/t&c.tsx";
 import TokenInformation from "./components/landing/info/tokenisation-page/token-guide.tsx";
 import Selector from "./components/portal-selection/selector.tsx";
 import DummyMarket from './components/dummy-portal/components/marketplace/DummyMarketPlace.tsx';
+import DummyTransactions from './components/dummy-portal/components/transactions/DummyTransactions.tsx';
+import DummyAnalytics from './components/dummy-portal/components/analytics/DummyAnalytics.tsx';
+import DummyCommunity from './components/dummy-portal/components/community/DummyCommunity.tsx';
 
 function App() {
   useEffect(() => {
@@ -52,7 +55,7 @@ function App() {
           path="/simulation"
           element={
             <ProtectedRoute>
-              <HomeScreen />
+              <DummyDashboard />
             </ProtectedRoute>
           }
         />
@@ -61,6 +64,38 @@ function App() {
           element={
             <ProtectedRoute>
               <DummyMarket />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/simulation/mocktransactions'
+          element={
+            <ProtectedRoute>
+              <DummyTransactions />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/simulation/mockanalytics'
+          element={
+            <ProtectedRoute>
+              <DummyAnalytics />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/simulation/mockcommunity'
+          element={
+            <ProtectedRoute>
+              <DummyCommunity />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/simulation/mockinformation'
+          element={
+            <ProtectedRoute>
+              <DummyCommunity />
             </ProtectedRoute>
           }
         />

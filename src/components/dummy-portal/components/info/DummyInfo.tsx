@@ -1,38 +1,41 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "./components/main/Sidebar";
-import CardGrid from "./components/main/CardGrid";
-import HeaderBar from "./components/main/HeaderBar";
-import Prompts from "./components/prompts/Prompts";
+import Sidebar from "../main/Sidebar";
+import HeaderBar from "../main/HeaderBar";
+import Prompts from "../prompts/Prompts";
 
-const DummyDashboard: React.FC = () => {
+const DummyInformation: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false);
   const [walletConnectedPrompt, setWalletConnectedPrompt] = useState(false);
-  const [notificationPrompt , setNotificationPrompt] = useState(false); 
   const [profilePrompt, setProfilePrompt] = useState(false);
+  const [notificationPrompt, setNotificationPrompt] = useState(false);
 
+  // Toggle between wallet connect and wallet connected prompts
   const toggleWalletPrompt = () => {
     if (localStorage.getItem("connectedAccount")) {
-      setWalletConnectedPrompt((prev) => !prev); // Toggle connected prompt
+      setWalletConnectedPrompt((prev) => !prev);
     } else {
-      setWalletConnectPrompt((prev) => !prev); // Toggle wallet connect prompt
+      setWalletConnectPrompt((prev) => !prev);
     }
-  };
-
-  const toggleProfilePrompt = () => {
-    setProfilePrompt((prev) => !prev);
   };
 
   const toggleNotificationPrompt = () => {
     setNotificationPrompt((prev) => !prev);
   }
 
-  const toggleDarkMode = () => {
-    const newTheme = !darkMode ? "dark" : "light";
-    setDarkMode(!darkMode);
-    localStorage.setItem("theme", newTheme);
+  // Toggle profile dropdown
+  const toggleProfilePrompt = () => {
+    console.log(profilePrompt)
+    setProfilePrompt((prev) => !prev);
   };
 
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => !prev);
+    localStorage.setItem("theme", !darkMode ? "dark" : "light");
+  };
+
+  // Load saved theme on component mount
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
@@ -51,10 +54,14 @@ const DummyDashboard: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex flex-col w-full h-full ml-20">
-        <HeaderBar darkMode={darkMode} onWalletClick={toggleWalletPrompt} onProfileClick={toggleProfilePrompt} onNotiicationClick={toggleNotificationPrompt}/>
+        <HeaderBar
+          darkMode={darkMode}
+          onWalletClick={toggleWalletPrompt}
+          onProfileClick={toggleProfilePrompt}
+          onNotiicationClick={toggleNotificationPrompt}
+        />
 
-        {/* Main Content Area */}
-        <CardGrid darkMode={darkMode} />
+      
 
         <Prompts
           walletConnectPrompt={walletConnectPrompt}
@@ -71,4 +78,4 @@ const DummyDashboard: React.FC = () => {
   );
 };
 
-export default DummyDashboard;
+export default DummyInformation;

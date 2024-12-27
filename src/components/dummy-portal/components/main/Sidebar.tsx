@@ -7,7 +7,6 @@ import {
   FaInfo,
   FaInnosoft,
   FaChartArea,
-  FaUserCircle,
   FaMoon,
   FaSun,
   FaShoppingBasket,
@@ -95,11 +94,11 @@ const Sidebar: React.FC<SidebarProps> = ({ darkMode, setDarkMode }) => {
         <nav className="mt-8 space-y-4">
           {[
             { location: "/simulation", icon: <FaInnosoft />, label: "Dashboard" },
-            { location: "/analytics", icon: <FaChartArea />, label: "Analytics" },
+            { location: "/simulation/mockanalytics", icon: <FaChartArea />, label: "Analytics" },
             { location: "/simulation/mockmarketplace", icon: <FaShoppingBasket />, label: "Marketplace" },
-            { location: "/history", icon: <FaMoneyCheck />, label: "Transactions" },
-            { location: "/community", icon: <FaUsers />, label: "Community" },
-            { location: "/information", icon: <FaInfo />, label: "Information" },
+            { location: "/simulation/mocktransactions", icon: <FaMoneyCheck />, label: "Transactions" },
+            { location: "/simulation/mockcommunity", icon: <FaUsers />, label: "Community" },
+            { location: "/simulation/mockinformation", icon: <FaInfo />, label: "Information" },
           ].map(({ location, icon, label }) => (
             <SidebarLink
               key={location}

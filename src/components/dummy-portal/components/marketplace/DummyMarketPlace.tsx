@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../main/Sidebar";
-import WalletPrompt from "../prompts/WalletWarningPrompt";
-import WalletDropdown from "../prompts/WalletConnected";
 import HeaderBar from "../main/HeaderBar";
 import HouseDisplay from "./components/HouseSearchForm";
-import ProfileDropdown from "../prompts/ProfileDropdown";
-import NotificationDropdown from "../prompts/NotificationDropdown";
+import Prompts from "../prompts/Prompts";
 
 const DummyMarket: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -67,23 +64,16 @@ const DummyMarket: React.FC = () => {
 
         <HouseDisplay darkMode={darkMode} />
 
-        {/* Wallet Prompts */}
-        {walletConnectPrompt && (
-          <WalletPrompt close={() => setWalletConnectPrompt(false)} />
-        )}
-
-        {walletConnectedPrompt && (
-          <WalletDropdown close={() => setWalletConnectedPrompt(false)} isOpen={false} />
-        )}
-
-        {notificationPrompt &&(
-          <NotificationDropdown close={() => setNotificationPrompt(false)} isOpen={false} notifications={[]} />
-        )}
-
-        {/* Profile Dropdown */}
-        {profilePrompt && (
-          <ProfileDropdown close={() => setProfilePrompt(false)} isOpen={false} />
-        )}
+        <Prompts
+          walletConnectPrompt={walletConnectPrompt}
+          walletConnectedPrompt={walletConnectedPrompt}
+          profilePrompt={profilePrompt}
+          notificationPrompt={notificationPrompt}
+          closeWalletConnectPrompt={() => setWalletConnectPrompt(false)}
+          closeWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
+          closeProfilePrompt={() => setProfilePrompt(false)}
+          closeNotificationPrompt={() => setNotificationPrompt(false)}
+        />
       </div>
     </div>
   );
