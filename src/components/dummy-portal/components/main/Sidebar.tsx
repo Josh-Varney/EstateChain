@@ -10,6 +10,7 @@ import {
   FaUserCircle,
   FaMoon,
   FaSun,
+  FaShoppingBasket,
 } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
@@ -93,8 +94,9 @@ const Sidebar: React.FC<SidebarProps> = ({ darkMode, setDarkMode }) => {
         {/* Navigation Links */}
         <nav className="mt-8 space-y-4">
           {[
-            { location: "/home", icon: <FaInnosoft />, label: "Home" },
-            { location: "/dashboard", icon: <FaChartArea />, label: "Dashboard" },
+            { location: "/simulation", icon: <FaInnosoft />, label: "Dashboard" },
+            { location: "/analytics", icon: <FaChartArea />, label: "Analytics" },
+            { location: "/simulation/mockmarketplace", icon: <FaShoppingBasket />, label: "Marketplace" },
             { location: "/history", icon: <FaMoneyCheck />, label: "Transactions" },
             { location: "/community", icon: <FaUsers />, label: "Community" },
             { location: "/information", icon: <FaInfo />, label: "Information" },

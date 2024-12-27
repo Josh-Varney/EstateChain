@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "./components/main/Sidebar";
-import WalletPrompt from "./components/prompts/WalletWarningPrompt";
-import WalletDropdown from "./components/prompts/WalletConnected";
-import CardGrid from "./components/main/CardGrid";
-import HeaderBar from "./components/main/HeaderBar";
+import Sidebar from "../main/Sidebar";
+import WalletPrompt from "../prompts/WalletWarningPrompt";
+import WalletDropdown from "../prompts/WalletConnected";
+import HeaderBar from "../main/HeaderBar";
+import HouseDisplay from "./components/HouseSearchForm";
 
-const DummyDashboard: React.FC = () => {
+const DummyMarket: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false);
   const [walletConnectedPrompt, setWalletConnectedPrompt] = useState(false);
@@ -43,8 +43,7 @@ const DummyDashboard: React.FC = () => {
       <div className="flex flex-col w-full h-full ml-20">
         <HeaderBar darkMode={darkMode} onWalletClick={toggleWalletPrompt}/>
 
-        {/* Main Content Area */}
-        <CardGrid darkMode={darkMode} />
+        <HouseDisplay darkMode={darkMode} />
 
         {/* Wallet Prompts */}
         {walletConnectPrompt && (
@@ -61,4 +60,4 @@ const DummyDashboard: React.FC = () => {
   );
 };
 
-export default DummyDashboard;
+export default DummyMarket;

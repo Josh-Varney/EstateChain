@@ -113,7 +113,7 @@ const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
         <div
           className="
             col-span-2
-            sm:col-span-1
+            sm:col-span-2
             md:col-span-1
             lg:col-span-2
             xl:col-span-2
@@ -133,7 +133,7 @@ const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
             key={index}
             className="
               col-span-2
-              sm:col-span-1
+              sm:col-span-2
               md:col-span-1
               lg:col-span-2
               xl:col-span-2

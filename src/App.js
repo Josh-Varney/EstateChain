@@ -19,6 +19,7 @@ import PrivacyPolicyPage from "./components/landing/policy/privacy-page/privacy-
 import TermsOfServicePage from "./components/landing/policy/t&c-page/t&c.tsx";
 import TokenInformation from "./components/landing/info/tokenisation-page/token-guide.tsx";
 import Selector from "./components/portal-selection/selector.tsx";
+import DummyMarket from './components/dummy-portal/components/marketplace/DummyMarketPlace.tsx';
 
 function App() {
   useEffect(() => {
@@ -52,6 +53,14 @@ function App() {
           element={
             <ProtectedRoute>
               <HomeScreen />
+            </ProtectedRoute>
+          }
+        />
+        <Route 
+          path='/simulation/mockmarketplace'
+          element={
+            <ProtectedRoute>
+              <DummyMarket />
             </ProtectedRoute>
           }
         />
