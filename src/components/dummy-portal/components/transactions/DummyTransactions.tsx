@@ -6,6 +6,7 @@ import TransactionScreen from "./components/Transactions";
 
 const DummyTransactions: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [isBuyer, setIsBuyer] = useState(true);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false);
   const [walletConnectedPrompt, setWalletConnectedPrompt] = useState(false);
   const [profilePrompt, setProfilePrompt] = useState(false);
@@ -23,6 +24,10 @@ const DummyTransactions: React.FC = () => {
   const toggleNotificationPrompt = () => {
     setNotificationPrompt((prev) => !prev);
   }
+
+  const toggleIsBuyer = () => {
+    setIsBuyer((prevIsBuyer) => !prevIsBuyer);
+  };
 
   // Toggle profile dropdown
   const toggleProfilePrompt = () => {
@@ -56,10 +61,11 @@ const DummyTransactions: React.FC = () => {
       {/* Main Content */}
       <div className="flex flex-col w-full h-full ml-20">
         <HeaderBar
+          onToggleBuyerSeller={toggleIsBuyer}
           darkMode={darkMode}
           onWalletClick={toggleWalletPrompt}
           onProfileClick={toggleProfilePrompt}
-          onNotiicationClick={toggleNotificationPrompt}
+          onNotiicationClick={toggleNotificationPrompt} isBuyer={false}        
         />
 
         <TransactionScreen />
