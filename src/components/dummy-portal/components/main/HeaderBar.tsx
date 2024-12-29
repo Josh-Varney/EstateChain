@@ -5,13 +5,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../../../shadcn-componen
 interface HeaderBarProps {
   darkMode: boolean;
   onWalletClick: () => void;
+  isBuyer: boolean;
+  onToggleBuyerSeller: () => void;
   onProfileClick: () => void;
   onNotiicationClick: () => void;
   notificationCount?: number;
 }
 
-const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, onProfileClick, onNotiicationClick, notificationCount = 0 }) => {
-  const [isBuyer, setIsBuyer] = useState(true);
+const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, onProfileClick, onNotiicationClick, onToggleBuyerSeller, isBuyer, notificationCount = 0 }) => {
   const bgColor = darkMode ? "bg-gray-800" : "";
   const textColor = darkMode ? "text-gray-100" : "text-gray-800";
   const hoverColor = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200";
@@ -46,7 +47,9 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, onProfil
               isBuyer ? "bg-teal-500" : "bg-red-500"
             }`}
             aria-pressed={isBuyer}
-            onClick={() => setIsBuyer(!isBuyer)}
+            onClick={() => {
+              onToggleBuyerSeller();
+            }}
             aria-label={`Toggle to ${isBuyer ? "Seller" : "Buyer"} Mode`}
           >
             <span

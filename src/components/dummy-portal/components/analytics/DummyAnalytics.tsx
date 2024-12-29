@@ -6,6 +6,7 @@ import TokenizedRealEstateDisplay from "./components/AnalyticsDisplay";
 
 const DummyAnalytics: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [isBuyer, setIsBuyer] = useState(true);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false);
   const [walletConnectedPrompt, setWalletConnectedPrompt] = useState(false);
   const [profilePrompt, setProfilePrompt] = useState(false);
@@ -18,6 +19,15 @@ const DummyAnalytics: React.FC = () => {
       setWalletConnectPrompt((prev) => !prev);
     }
   };
+
+  const toggleBuyerSeller = () => {
+    setIsBuyer((prevState) => !prevState);
+  };
+
+  const toggleIsBuyer = () => {
+    setIsBuyer((prevIsBuyer) => !prevIsBuyer); // Update the state
+  };
+
 
   const toggleNotificationPrompt = () => {
     setNotificationPrompt((prev) => !prev);
@@ -50,9 +60,11 @@ const DummyAnalytics: React.FC = () => {
       <div className="flex flex-col w-full h-full ml-20">
         <HeaderBar
           darkMode={darkMode}
+          isBuyer={isBuyer}
           onWalletClick={toggleWalletPrompt}
           onProfileClick={toggleProfilePrompt}
           onNotiicationClick={toggleNotificationPrompt}
+          onToggleBuyerSeller={toggleBuyerSeller}
         />
 
         <TokenizedRealEstateDisplay />

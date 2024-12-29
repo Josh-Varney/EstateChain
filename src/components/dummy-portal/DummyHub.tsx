@@ -6,6 +6,7 @@ import Prompts from "./components/prompts/Prompts";
 
 const DummyDashboard: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [isBuyer, setIsBuyer] = useState(true);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false);
   const [walletConnectedPrompt, setWalletConnectedPrompt] = useState(false);
   const [notificationPrompt , setNotificationPrompt] = useState(false); 
@@ -17,6 +18,14 @@ const DummyDashboard: React.FC = () => {
     } else {
       setWalletConnectPrompt((prev) => !prev); // Toggle wallet connect prompt
     }
+  };
+
+  const toggleBuyerSeller = () => {
+    setIsBuyer((prevState) => !prevState);
+  };
+
+  const toggleIsBuyer = () => {
+    setIsBuyer((prevIsBuyer) => !prevIsBuyer);
   };
 
   const toggleProfilePrompt = () => {
@@ -51,10 +60,10 @@ const DummyDashboard: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex flex-col w-full h-full ml-20">
-        <HeaderBar darkMode={darkMode} onWalletClick={toggleWalletPrompt} onProfileClick={toggleProfilePrompt} onNotiicationClick={toggleNotificationPrompt}/>
+        <HeaderBar darkMode={darkMode} onWalletClick={toggleWalletPrompt} onProfileClick={toggleProfilePrompt} onNotiicationClick={toggleNotificationPrompt} onToggleBuyerSeller={toggleBuyerSeller} isBuyer={isBuyer}/>
 
         {/* Main Con tent Area */}
-        <CardGrid darkMode={darkMode} />
+        <CardGrid darkMode={darkMode} mode={isBuyer ? "buyer" : "seller"} />
 
         <Prompts
           walletConnectPrompt={walletConnectPrompt}

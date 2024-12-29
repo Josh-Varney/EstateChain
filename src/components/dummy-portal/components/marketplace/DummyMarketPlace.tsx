@@ -6,6 +6,7 @@ import Prompts from "../prompts/Prompts";
 
 const DummyMarket: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [isBuyer, setIsBuyer] = useState(true);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false);
   const [walletConnectedPrompt, setWalletConnectedPrompt] = useState(false);
   const [profilePrompt, setProfilePrompt] = useState(false);
@@ -18,6 +19,14 @@ const DummyMarket: React.FC = () => {
     } else {
       setWalletConnectPrompt((prev) => !prev);
     }
+  };
+
+  const toggleBuyerSeller = () => {
+    setIsBuyer((prevState) => !prevState);
+  };
+
+  const toggleIsBuyer = () => {
+    setIsBuyer((prevIsBuyer) => !prevIsBuyer); // Update the state
   };
 
   const toggleNotificationPrompt = () => {
@@ -57,9 +66,11 @@ const DummyMarket: React.FC = () => {
       <div className="flex flex-col w-full h-full ml-20">
         <HeaderBar
           darkMode={darkMode}
+          isBuyer={isBuyer}
           onWalletClick={toggleWalletPrompt}
           onProfileClick={toggleProfilePrompt}
-          onNotiicationClick={toggleNotificationPrompt}
+          onNotiicationClick={toggleNotificationPrompt} 
+          onToggleBuyerSeller={toggleBuyerSeller}    
         />
 
         <HouseDisplay darkMode={darkMode} />

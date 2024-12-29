@@ -9,6 +9,7 @@ import { FaBitcoin, FaEthereum } from "react-icons/fa";
 
 interface CardGridProps {
   darkMode: boolean;
+  mode: "buyer" | "seller";
 }
 
 const accounts = [
@@ -46,7 +47,7 @@ const housingAssets = [
   },
 ];
 
-const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
+const CardGrid: React.FC<CardGridProps> = ({ darkMode, mode }) => {
   return (
     <div
       className={`
@@ -70,115 +71,173 @@ const CardGrid: React.FC<CardGridProps> = ({ darkMode }) => {
           pb-12
         "
       >
-        {/* Wallet Card */}
-        <div
-          className="
-            col-span-2
-            md:col-span-1
-            lg:col-span-2
-            xl:col-span-2
-            w-full
-            overflow-hidden
-            rounded-lg
-            transition-transform
-            duration-300
-          "
-        >
-          <WalletGridCard
-            darkMode={darkMode}
-            accounts={accounts}
-            cryptocurrencies={cryptocurrencies}
-            revenueSources={revenueSources}
-          />
-        </div>
+        {mode === "buyer" && (
+          <>
+            {/* Wallet Card */}
+            <div
+              className="
+                col-span-2
+                md:col-span-1
+                lg:col-span-2
+                xl:col-span-2
+                w-full
+                overflow-hidden
+                rounded-lg
+                transition-transform
+                duration-300
+              "
+            >
+              <WalletGridCard
+                darkMode={darkMode}
+                accounts={accounts}
+                cryptocurrencies={cryptocurrencies}
+                revenueSources={revenueSources}
+              />
+            </div>
 
-        {/* Calendar Card */}
-        <div
-          className="
-            col-span-2
-            md:col-span-1
-            lg:col-span-3
-            xl:col-span-2
-            w-full
-            overflow-hidden
-            rounded-lg
-            transition-transform
-            duration-300
-          "
-        >
-          <CalendarCard darkMode={darkMode} />
-        </div>
+            {/* Calendar Card */}
+            <div
+              className="
+                col-span-2
+                md:col-span-1
+                lg:col-span-3
+                xl:col-span-2
+                w-full
+                overflow-hidden
+                rounded-lg
+                transition-transform
+                duration-300
+              "
+            >
+              <CalendarCard darkMode={darkMode} />
+            </div>
 
-        {/* Crypto Price List Card */}
-        <div
-          className="
-            col-span-2
-            sm:col-span-2
-            md:col-span-1
-            lg:col-span-2
-            xl:col-span-2
-            w-full
-            overflow-hidden
-            rounded-lg
-            transition-transform
-            duration-300
-          "
-        >
-          <FakeCryptoListCard darkMode={darkMode} />
-        </div>
+            {/* Crypto Price List Card */}
+            <div
+              className="
+                col-span-2
+                sm:col-span-2
+                md:col-span-1
+                lg:col-span-2
+                xl:col-span-2
+                w-full
+                overflow-hidden
+                rounded-lg
+                transition-transform
+                duration-300
+              "
+            >
+              <FakeCryptoListCard darkMode={darkMode} />
+            </div>
 
-        {/* Housing Asset Cards */}
-        {housingAssets.map((asset, index) => (
-          <div
-            key={index}
-            className="
-              col-span-2
-              sm:col-span-2
-              md:col-span-1
-              lg:col-span-2
-              xl:col-span-2
-              w-full
-              overflow-hidden
-              rounded-lg
-              transition-transform
-              duration-300
-            "
-          >
-            <HousingAssetCard darkMode={darkMode} asset={asset} />
-          </div>
-        ))}
+            {/* Housing Asset Cards */}
+            {housingAssets.map((asset, index) => (
+              <div
+                key={index}
+                className="
+                  col-span-2
+                  sm:col-span-2
+                  md:col-span-1
+                  lg:col-span-2
+                  xl:col-span-2
+                  w-full
+                  overflow-hidden
+                  rounded-lg
+                  transition-transform
+                  duration-300
+                "
+              >
+                <HousingAssetCard darkMode={darkMode} asset={asset} />
+              </div>
+            ))}
 
-        {/* Latest Asset Card */}
-        <div
-          className="
-            col-span-2
-            lg:col-span-4
-            xl:col-span-4
-            w-full
-            overflow-hidden
-            rounded-lg
-            transition-transform
-            duration-300
-          "
-        >
-          <LatestAssetCard darkMode={darkMode} />
-        </div>
+            {/* Latest Asset Card */}
+            <div
+              className="
+                col-span-2
+                lg:col-span-4
+                xl:col-span-4
+                w-full
+                overflow-hidden
+                rounded-lg
+                transition-transform
+                duration-300
+              "
+            >
+              <LatestAssetCard darkMode={darkMode} />
+            </div>
 
-        {/* Global Transactions Card */}
-        <div
-          className="
-            col-span-2
-            lg:col-span-6
-            xl:col-span-6
-            w-full
-            overflow-hidden
-            rounded-lg
-            transition-transform
-            duration-300
-          "
-        >
-          <GlobalTransactionsCard darkMode={darkMode} />
-        </div>
+            {/* Global Transactions Card */}
+            <div
+              className="
+                col-span-2
+                lg:col-span-6
+                xl:col-span-6
+                w-full
+                overflow-hidden
+                rounded-lg
+                transition-transform
+                duration-300
+              "
+            >
+              <GlobalTransactionsCard darkMode={darkMode} />
+            </div>
+          </>
+        )}
+
+        {mode === "seller" && (
+          <>
+            {/* Seller-Specific Content */}
+            {/* Add content specifically for sellers */}
+            <div
+              className="
+                col-span-2
+                md:col-span-1
+                lg:col-span-3
+                xl:col-span-3
+                w-full
+                overflow-hidden
+                rounded-lg
+                transition-transform
+                duration-300
+              "
+            >
+              <CalendarCard darkMode={darkMode} />
+            </div>
+
+            <div
+              className="
+                col-span-2
+                lg:col-span-4
+                xl:col-span-4
+                w-full
+                overflow-hidden
+                rounded-lg
+                transition-transform
+                duration-300
+              "
+            >
+              <GlobalTransactionsCard darkMode={darkMode} />
+            </div>
+
+            {/* Example for seller mode: analytics */}
+            <div
+              className="
+                col-span-2
+                sm:col-span-1
+                lg:col-span-2
+                xl:col-span-2
+                w-full
+                overflow-hidden
+                rounded-lg
+                transition-transform
+                duration-300
+              "
+            >
+              <LatestAssetCard darkMode={darkMode} />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
