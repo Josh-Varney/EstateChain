@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import FilterControls from "./FilterControl";
 import HouseList from "./HouseList";
+import FilterBar from "./FilterBar";
+import AlertSaveSearchBar from "./AltertSaveSearchBar";
+import ResultsBar from "./ResultsFoundBar";
+import KeywordDropdown from "./KeywordDropdown";
 
 const HouseDisplay = ({ darkMode }) => {
-    // Preset list of houses
     const houses = [
-        { id: 1, name: "Modern Villa", price: 500000, location: "California", size: "3000 sqft", bedrooms: 4, bathrooms: 3, tokenPrice: 50, tokensLeft: 100, type: "Villa", rental: false },
-        { id: 2, name: "Cozy Cottage", price: 150000, location: "Maine", size: "1200 sqft", bedrooms: 2, bathrooms: 1, tokenPrice: 15, tokensLeft: 200, type: "Cottage", rental: true },
-        { id: 3, name: "Urban Apartment", price: 300000, location: "New York", size: "900 sqft", bedrooms: 1, bathrooms: 1, tokenPrice: 30, tokensLeft: 150, type: "Apartment", rental: true },
-        { id: 4, name: "Country House", price: 250000, location: "Texas", size: "2000 sqft", bedrooms: 3, bathrooms: 2, tokenPrice: 25, tokensLeft: 180, type: "House", rental: false },
-        { id: 5, name: "Luxury Estate", price: 1000000, location: "Florida", size: "5000 sqft", bedrooms: 6, bathrooms: 5, tokenPrice: 100, tokensLeft: 50, type: "Estate", rental: false },
+        { id: 1, name: "Modern Villa", price: 500000, location: "California", size: "3000 sqft", bedrooms: 4, bathrooms: 3, tokenPrice: 50, tokensLeft: 100, type: "Villa", rental: false, image: "villa.jpg" },
+        { id: 2, name: "Cozy Cottage", price: 150000, location: "Maine", size: "1200 sqft", bedrooms: 2, bathrooms: 1, tokenPrice: 15, tokensLeft: 200, type: "Cottage", rental: true, image: "cottage.jpg" },
+        { id: 3, name: "Urban Apartment", price: 300000, location: "New York", size: "900 sqft", bedrooms: 1, bathrooms: 1, tokenPrice: 30, tokensLeft: 150, type: "Apartment", rental: true, image: "apartment.jpg" },
+        { id: 4, name: "Country House", price: 250000, location: "Texas", size: "2000 sqft", bedrooms: 3, bathrooms: 2, tokenPrice: 25, tokensLeft: 180, type: "House", rental: false, image: "countryhouse.jpg" },
+        { id: 5, name: "Luxury Estate", price: 1000000, location: "Florida", size: "5000 sqft", bedrooms: 6, bathrooms: 5, tokenPrice: 100, tokensLeft: 50, type: "Estate", rental: false, image: "estate.jpg" },
     ];
 
     const [filters, setFilters] = useState({
@@ -25,6 +28,8 @@ const HouseDisplay = ({ darkMode }) => {
     });
 
     const [filteredHouses, setFilteredHouses] = useState(houses);
+    const [isFilterVisible, setIsFilterVisible] = useState(false);
+    const [activeQuickFilter, setActiveQuickFilter] = useState(null);
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -60,6 +65,18 @@ const HouseDisplay = ({ darkMode }) => {
                 );
             })
         );
+        setIsFilterVisible(false);
+    };
+
+    const handleQuickFilter = (filterType) => {
+        let newFilters = { ...filters };
+        if (filterType === "rental") newFilters.rental = "true";
+        if (filterType === "sale") newFilters.rental = "false";
+        if (filterType === "luxury") newFilters.minPrice = "500000";
+        if (filterType === "apartments") newFilters.type = "Apartment";
+        setFilters(newFilters);
+        setActiveQuickFilter(filterType);
+        applyFilters();
     };
 
     return (
@@ -67,16 +84,21 @@ const HouseDisplay = ({ darkMode }) => {
             className={`
                 min-h-screen
                 w-full
-                p-4
                 transition-colors
                 duration-300
                 overflow-y-auto
-                overflow-x-hidden
-                ${darkMode ? "bg-gradient-to-b from-gray-800 to-gray-900 text-white" : "bg-white text-black"}
+                ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}
             `}
         >
-            <h1 className="text-2xl font-bold mb-4">House Listings</h1>
-            <FilterControls filters={filters} onFilterChange={handleFilterChange} onApplyFilters={applyFilters} />
+            <FilterBar />
+
+            <AlertSaveSearchBar />
+
+            {/* Results bar */}
+            <ResultsBar count={filteredHouses.length} />
+
+            <KeywordDropdown />
+
             <HouseList houses={filteredHouses} />
         </div>
     );

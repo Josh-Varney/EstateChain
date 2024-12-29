@@ -53,7 +53,7 @@ const DummyDashboard: React.FC = () => {
       <div className="flex flex-col w-full h-full ml-20">
         <HeaderBar darkMode={darkMode} onWalletClick={toggleWalletPrompt} onProfileClick={toggleProfilePrompt} onNotiicationClick={toggleNotificationPrompt}/>
 
-        {/* Main Content Area */}
+        {/* Main Con tent Area */}
         <CardGrid darkMode={darkMode} />
 
         <Prompts
