@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import FilterControls from "./FilterControl";
+import { FaSort, FaSortDown } from "react-icons/fa";
 
 const FilterBar = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -129,14 +130,9 @@ const FilterBar = () => {
                 </div>
 
                 {/* Max Price Button */}
-                <div className="px-4 py-2">
-                    <select
-                        value={maxPrice}
-                        onClick={() => setIsFilterVisible(!isFilterVisible)}
-                        onChange={(e) => setMaxPrice(e.target.value)}
-                        className="text-sm border-gray-300 rounded-lg bg-transparent">
-                        <option value="">Max Price</option>
-                    </select>
+                <div onClick={() => setIsFilterVisible(!isFilterVisible)} className="px-4 py-2 flex flex-row space-x-1">
+                    <h1 className="text-sm">Filters</h1>
+                    <FaSortDown />
                 </div>
             </div>
 

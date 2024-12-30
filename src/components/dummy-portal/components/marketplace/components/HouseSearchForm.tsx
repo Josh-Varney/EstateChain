@@ -8,12 +8,83 @@ import KeywordDropdown from "./KeywordDropdown";
 
 const HouseDisplay = ({ darkMode }) => {
     const houses = [
-        { id: 1, name: "Modern Villa", price: 500000, location: "California", size: "3000 sqft", bedrooms: 4, bathrooms: 3, tokenPrice: 50, tokensLeft: 100, type: "Villa", rental: false, image: "villa.jpg" },
-        { id: 2, name: "Cozy Cottage", price: 150000, location: "Maine", size: "1200 sqft", bedrooms: 2, bathrooms: 1, tokenPrice: 15, tokensLeft: 200, type: "Cottage", rental: true, image: "cottage.jpg" },
-        { id: 3, name: "Urban Apartment", price: 300000, location: "New York", size: "900 sqft", bedrooms: 1, bathrooms: 1, tokenPrice: 30, tokensLeft: 150, type: "Apartment", rental: true, image: "apartment.jpg" },
-        { id: 4, name: "Country House", price: 250000, location: "Texas", size: "2000 sqft", bedrooms: 3, bathrooms: 2, tokenPrice: 25, tokensLeft: 180, type: "House", rental: false, image: "countryhouse.jpg" },
-        { id: 5, name: "Luxury Estate", price: 1000000, location: "Florida", size: "5000 sqft", bedrooms: 6, bathrooms: 5, tokenPrice: 100, tokensLeft: 50, type: "Estate", rental: false, image: "estate.jpg" },
+        { 
+            id: 1, 
+            name: "Modern Villa", 
+            price: 500000, 
+            location: "California", 
+            size: "3000 sqft", 
+            bedrooms: 4, 
+            bathrooms: 3, 
+            tokenPrice: 50, 
+            tokensLeft: 100, 
+            type: "Villa", 
+            rental: false, 
+            image: "https://via.placeholder.com/300x200?text=Modern+Villa", 
+            featured: true 
+        },
+        { 
+            id: 2, 
+            name: "Cozy Cottage", 
+            price: 150000, 
+            location: "Maine", 
+            size: "1200 sqft", 
+            bedrooms: 2, 
+            bathrooms: 1, 
+            tokenPrice: 15, 
+            tokensLeft: 200, 
+            type: "Cottage", 
+            rental: true, 
+            image: "https://via.placeholder.com/300x200?text=Cozy+Cottage", 
+            featured: true 
+        },
+        { 
+            id: 3, 
+            name: "Urban Apartment", 
+            price: 300000, 
+            location: "New York", 
+            size: "900 sqft", 
+            bedrooms: 1, 
+            bathrooms: 1, 
+            tokenPrice: 30, 
+            tokensLeft: 150, 
+            type: "Apartment", 
+            rental: true, 
+            image: "https://via.placeholder.com/300x200?text=Urban+Apartment", 
+            featured: false 
+        },
+        { 
+            id: 4, 
+            name: "Country House", 
+            price: 250000, 
+            location: "Texas", 
+            size: "2000 sqft", 
+            bedrooms: 3, 
+            bathrooms: 2, 
+            tokenPrice: 25, 
+            tokensLeft: 180, 
+            type: "House", 
+            rental: false, 
+            image: "https://via.placeholder.com/300x200?text=Country+House", 
+            featured: false 
+        },
+        { 
+            id: 5, 
+            name: "Luxury Estate", 
+            price: 1000000, 
+            location: "Florida", 
+            size: "5000 sqft", 
+            bedrooms: 6, 
+            bathrooms: 5, 
+            tokenPrice: 100, 
+            tokensLeft: 50, 
+            type: "Estate", 
+            rental: false, 
+            image: "https://via.placeholder.com/300x200?text=Luxury+Estate", 
+            featured: false 
+        },
     ];
+    
 
     const [filters, setFilters] = useState({
         minPrice: "",
@@ -103,7 +174,7 @@ const HouseDisplay = ({ darkMode }) => {
                 <div className="p-4">
                     <KeywordDropdown />
                 </div>
-                <div>
+                <div className="px-10">
                     <HouseList houses={filteredHouses} />
                 </div>
             </div>

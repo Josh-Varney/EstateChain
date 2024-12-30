@@ -1,59 +1,77 @@
 import React from "react";
+import { FaCamera, FaPhoneAlt, FaUserTie } from "react-icons/fa"; // Import some icons
+import HouseCarousel from "./HouseCarousel";
 
 const HouseCard = ({ house }) => {
+    const placeholderImages = [
+        "https://via.placeholder.com/300x200?text=Image+1",
+        "https://via.placeholder.com/300x200?text=Image+2",
+        "https://via.placeholder.com/300x200?text=Image+3",
+    ];
+
+    // Use either house.image or placeholders
+    const images = house.image ? [house.image] : placeholderImages;
+
     return (
-        <div className="flex border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            {/* Image Section */}
-            <div className="w-1/3 bg-gray-300 flex items-center justify-center">
-                {house.image ? (
-                    <img
-                        src={house.image}
-                        alt={house.name}
-                        className="object-cover w-full h-full"
-                    />
-                ) : (
-                    <span className="text-gray-500 text-lg font-medium">Image Placeholder</span>
-                )}
-            </div>
-            
-            {/* Info Section */}
-            <div className="w-2/3 p-4">
-                {/* Title */}
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">{house.name || "Unnamed Property"}</h3>
-                
-                {/* Details */}
-                <div className="space-y-2 text-gray-600">
-                    <p>
-                        <span className="font-medium text-gray-700">Price:</span> ${house.price ? house.price.toLocaleString() : "N/A"}
-                    </p>
-                    <p>
-                        <span className="font-medium text-gray-700">Location:</span> {house.location || "Unknown"}
-                    </p>
-                    <p>
-                        <span className="font-medium text-gray-700">Size:</span> {house.size || "N/A"}
-                    </p>
-                    <p>
-                        <span className="font-medium text-gray-700">Bathrooms:</span> {house.bathrooms || "N/A"}
-                    </p>
-                    <p>
-                        <span className="font-medium text-gray-700">Token Price:</span> ${house.tokenPrice || "N/A"}
-                    </p>
-                    <p>
-                        <span className="font-medium text-gray-700">Tokens Left:</span> {house.tokensLeft || "N/A"}
-                    </p>
-                    <p>
-                        <span className="font-medium text-gray-700">Type:</span> {house.type || "N/A"}
-                    </p>
-                    <p>
-                        <span className="font-medium text-gray-700">Rental:</span> {house.rental ? "Yes" : "No"}
-                    </p>
+        <div className="flex flex-col border border-gray-300 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            {/* Featured Badge */}
+            {house.featured && (
+                <div className="flex flex-row items-center bg-yellow-400 text-center space-x-2 p-1 shadow-md">
+                    <FaCamera className="text-xs text-white" />
+                    <span className="text-white text-xs font-bold">
+                        #{house.imageNumber || 1}
+                    </span>
+                    <span className="text-white text-xs font-bold uppercase">
+                        Featured
+                    </span>
                 </div>
-                
-                {/* Action Button */}
-                <div className="mt-4">
-                    <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200">
-                        View Details
-                    </button>
+            )}
+
+            {/* Card Content */}
+            <div className="flex flex-col sm:flex-row">
+                {/* Left Section: Carousel and Price */}
+                <div className="sm:w-1/3 flex flex-col">
+                    {/* Image Carousel */}
+                    <div className="bg-gray-300 flex items-center justify-center h-48">
+                        <HouseCarousel />
+                    </div>
+
+                    {/* Pricing */}
+                    <div className="p-3 bg-gray-100 text-center">
+                        <p className="text-lg font-semibold text-green-600">
+                            {house.price ? `$${house.price} / month` : "Price not available"}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Right Section: Details */}
+                <div className="sm:w-2/3 p-4 flex flex-col justify-between bg-white">
+                    {/* Property Name */}
+                    <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                        {house.name || "Unnamed Property"}
+                    </h3>
+
+                    {/* Property Details */}
+                    <p className="text-sm text-gray-600 mb-2">
+                        {house.details || "Property details not available."}
+                    </p>
+
+                    {/* Agent Information */}
+                    <div className="text-sm text-gray-700 flex items-start space-x-3">
+                        {house.agent ? (
+                            <>
+                                <FaUserTie className="text-gray-500" />
+                                <div>
+                                    <strong>{house.agent.name}</strong> <br />
+                                    <span className="flex items-center gap-1">
+                                        <FaPhoneAlt className="text-gray-500" /> {house.agent.contact}
+                                    </span>
+                                </div>
+                            </>
+                        ) : (
+                            <p>Agent details not available</p>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
