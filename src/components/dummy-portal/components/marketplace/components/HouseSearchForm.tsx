@@ -91,15 +91,23 @@ const HouseDisplay = ({ darkMode }) => {
             `}
         >
             <FilterBar />
+            
+            <div className="bg-gray-800 shadow-lg">
+                <AlertSaveSearchBar />
+                <hr className="border-gray-600 w-[98%] mx-auto my-1" />
+                {/* Results bar */}
+                <ResultsBar count={filteredHouses.length} />
+            </div>
 
-            <AlertSaveSearchBar />
+            <div className="bg-gradient-to-t from-gray-800 to-gray-900">
+                <div className="p-4">
+                    <KeywordDropdown />
+                </div>
+                <div>
+                    <HouseList houses={filteredHouses} />
+                </div>
+            </div>
 
-            {/* Results bar */}
-            <ResultsBar count={filteredHouses.length} />
-
-            <KeywordDropdown />
-
-            <HouseList houses={filteredHouses} />
         </div>
     );
 };

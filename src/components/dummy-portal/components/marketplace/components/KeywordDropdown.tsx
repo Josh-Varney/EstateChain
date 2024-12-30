@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaSort } from 'react-icons/fa';
 
 const KeywordDropdown: React.FC = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -15,7 +16,9 @@ const KeywordDropdown: React.FC = () => {
 
     const saveKeyword = (): void => {
         if (keywords.trim()) {
-            setSavedKeywords([...savedKeywords, keywords.trim()]);
+            setSavedKeywords(prevKeywords => 
+                [...prevKeywords, keywords.trim()].sort((a, b) => a.localeCompare(b))
+            );
             setKeywords("");
             setDropdownOpen(false);
         }
@@ -27,15 +30,18 @@ const KeywordDropdown: React.FC = () => {
 
     return (
         <div>
-            <div className="flex items-center">
-                <div>
-                    <h1>Hello Test</h1>
+            <div className="flex items-center space-x-1 text-sm">
+                <div className='w-4 h-4'>
+                    <FaSort />
                 </div>
-                <div className="flex flex-row flex-wrap">
+                <div className=''>
+                    <h1>Prioritise Properties with...</h1>
+                </div>
+                <div className="flex flex-row flex-wrap items-center p-3">
                     {savedKeywords.map((keyword, index) => (
                         <span
                             key={index}
-                            className="flex items-center px-2 py-1 bg-gray-200 text-gray-800 rounded-full text-sm mr-2 mb-2"
+                            className="flex justify-items-center bg-gray-200 p-2 text-gray-800 border rounded text-sm mr-2"
                         >
                             {keyword}
                             <button
@@ -48,12 +54,12 @@ const KeywordDropdown: React.FC = () => {
                     ))}
                 </div>
 
-                <button 
-                    className="ml-4 flex items-center px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600" 
+                <div 
+                    className="ml-2 font-semibold" 
                     onClick={toggleDropdown}
                 >
                     + Keyword
-                </button>
+                </div>
             </div>
 
             {dropdownOpen && (
