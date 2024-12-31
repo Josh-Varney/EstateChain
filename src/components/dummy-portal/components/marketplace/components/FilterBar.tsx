@@ -1,48 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import FilterControls from "./FilterControl";
-import { FaSort, FaSortDown } from "react-icons/fa";
+import { FaSortDown } from "react-icons/fa";
 
-const FilterBar = () => {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [maxPrice, setMaxPrice] = useState('');
-    const [isFilterVisible, setIsFilterVisible] = useState(false);
-    const [dropdownValue, setDropdownValue] = useState("Option 1");
+type Filters = {
+    minPrice: string;
+    maxPrice: string;
+    location: string;
+    minBedrooms: string;
+    minBathrooms: string;
+    minTokensLeft: string;
+    maxTokenPrice: string;
+    type: string;
+    rental: string;
+};
+
+const FilterBar: React.FC = () => {
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [maxPrice, setMaxPrice] = useState<string>("");
+    const [dropdownValue, setDropdownValue] = useState<string>("Option 1");
+    const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
 
     const clearSearch = () => setSearchQuery("");
 
-    const [filters, setFilters] = useState({
-        minPrice: '',
-        maxPrice: '',
-        location: '',
-        minBedrooms: '',
-        minBathrooms: '',
-        minTokensLeft: '',
-        maxTokenPrice: '',
-        type: '',
-        rental: ''
+    const [filters, setFilters] = useState<Filters>({
+        minPrice: "",
+        maxPrice: "",
+        location: "",
+        minBedrooms: "",
+        minBathrooms: "",
+        minTokensLeft: "",
+        maxTokenPrice: "",
+        type: "",
+        rental: "",
     });
 
-    const handleFilterChange = (e) => {
+    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFilters({ ...filters, [name]: value });
     };
 
     const applyFilters = () => {
-        console.log('Applied Filters:', filters);
+        console.log("Applied Filters:", filters);
         setIsFilterVisible(false);
     };
 
-    const handleFilter = () => {
-        console.log('Search:', searchQuery);
-        console.log('Max Price:', maxPrice);
-        console.log('Filters:', filters);
+    const filterRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+                setIsFilterVisible(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const toggleFilterDropdown = () => {
+        setIsFilterVisible((prev) => !prev);
     };
 
     return (
         <div className="relative">
             <div className="flex flex-wrap items-center gap-3 p-0 bg-gradient-to-b from-gray-800 to-gray-900">
                 {/* Search Bar */}
-                <div className="relative flex-grow  border-gray-600 p-2 pr-4">
+                <div className="relative flex-grow border-gray-600 p-2 pr-4">
                     <div className="relative flex items-center bg-white border border-gray-300 rounded-lg shadow-sm">
                         <input
                             type="text"
@@ -72,26 +96,26 @@ const FilterBar = () => {
                 </div>
 
                 {/* Max Price Dropdown */}
-                <div className="flex flex-row space-x-2 items-center px-4 py-2 border-r  border-gray-600">
+                <div className="flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600">
                     <div className="">
                         <select
                             value={maxPrice}
                             onChange={(e) => setMaxPrice(e.target.value)}
-                            className="text-sm border-gray-300 rounded-lg bg-transparent">
+                            className="text-sm border-gray-300 rounded-lg bg-transparent"
+                        >
                             <option value="">Min Price</option>
                             <option value="100">$100</option>
                             <option value="500">$500</option>
                             <option value="1000">$1000</option>
                         </select>
                     </div>
-                    <div className="text-gray-400 text-sm">
-                        to
-                    </div>
+                    <div className="text-gray-400 text-sm">to</div>
                     <div className="">
                         <select
                             value={maxPrice}
                             onChange={(e) => setMaxPrice(e.target.value)}
-                            className="text-sm border-gray-300 rounded-lg bg-transparent">
+                            className="text-sm border-gray-300 rounded-lg bg-transparent"
+                        >
                             <option value="">Max Price</option>
                             <option value="100">$100</option>
                             <option value="500">$500</option>
@@ -104,62 +128,62 @@ const FilterBar = () => {
                 <div className="flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600">
                     <div className="">
                         <select
-                            value={maxPrice}
-                            onChange={(e) => setMaxPrice(e.target.value)}
-                            className="text-sm border-gray-300 rounded-lg bg-transparent">
+                            value={filters.minBedrooms}
+                            onChange={(e) => handleFilterChange(e)}
+                            name="minBedrooms"
+                            className="text-sm border-gray-300 rounded-lg bg-transparent"
+                        >
                             <option value="">Min Beds</option>
-                            <option value="100">1</option>
-                            <option value="500">2</option>
-                            <option value="1000">3</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
                         </select>
                     </div>
-                    <div className="text-gray-400 text-sm">
-                        to
-                    </div>
+                    <div className="text-gray-400 text-sm">to</div>
                     <div className="">
                         <select
-                            value={maxPrice}
-                            onChange={(e) => setMaxPrice(e.target.value)}
-                            className="text-sm border-gray-300 rounded-lg bg-transparent">
+                            value={filters.minBedrooms}
+                            onChange={(e) => handleFilterChange(e)}
+                            name="minBedrooms"
+                            className="text-sm border-gray-300 rounded-lg bg-transparent"
+                        >
                             <option value="">Max Beds</option>
-                            <option value="100">1</option>
-                            <option value="500">2</option>
-                            <option value="1000">3</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
                         </select>
                     </div>
                 </div>
 
-                {/* Max Price Button */}
-                <div onClick={() => setIsFilterVisible(!isFilterVisible)} className="px-4 py-2 flex flex-row space-x-1">
+                {/* Filter Button */}
+                <div
+                    onClick={toggleFilterDropdown}
+                    className="px-4 py-2 flex flex-row space-x-1 cursor-pointer"
+                >
                     <h1 className="text-sm">Filters</h1>
                     <FaSortDown />
                 </div>
             </div>
 
-            {/* Slide-out Filter Panel */}
-            <div
-                className={`fixed top-0 right-0 h-full w-3/4 max-w-sm bg-white shadow-lg transform transition-transform duration-300 ${
-                    isFilterVisible ? "translate-x-0" : "translate-x-full"
-                }`}
-                style={{ zIndex: 1000 }}
-            >
-                <div className="p-4">
-                    <h2 className="mb-4 text-lg font-bold">Filter Settings</h2>
+            {/* Dropdown Filter Panel */}
+            {isFilterVisible && (
+                <div
+                    ref={filterRef}
+                    className={`absolute top-full left-0 w-full bg-white shadow-lg border border-gray-300 rounded-lg mt-1 p-4 z-50 transition-transform duration-300 ease-in-out transform ${isFilterVisible ? 'scale-y-100' : 'scale-y-0 origin-top'}`}
+                >
+                    <h2 className="mb-4 text-lg font-bold">Filter Properties</h2>
                     <FilterControls
                         filters={filters}
                         onFilterChange={handleFilterChange}
                         onApplyFilters={applyFilters}
                     />
+                    <button
+                        onClick={applyFilters}
+                        className="mt-4 px-4 py-2 text-white bg-blue-500 rounded-lg"
+                    >
+                        Apply Filters
+                    </button>
                 </div>
-            </div>
-
-            {/* Overlay */}
-            {isFilterVisible && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-40"
-                    onClick={() => setIsFilterVisible(false)}
-                    style={{ zIndex: 999 }}
-                ></div>
             )}
         </div>
     );

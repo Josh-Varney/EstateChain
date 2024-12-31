@@ -2,14 +2,14 @@ import React from "react";
 
 const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
     return (
-        <div className="mb-8 bg-white p-8 rounded-lg shadow-lg border border-gray-200">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800">Filter Properties</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="bg-white p-3 rounded-md shadow-md border border-gray-200 max-w-md mx-auto">
+            <h2 className="text-xl font-semibold mb-3 text-gray-800">Filter Properties</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {/* Price Range */}
                 <div className="flex flex-col">
                     <label
                         htmlFor="minPrice"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-xs font-medium text-gray-700"
                     >
                         Min Price
                     </label>
@@ -17,16 +17,16 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                         type="number"
                         id="minPrice"
                         name="minPrice"
-                        placeholder="Enter minimum price"
+                        placeholder="Min price"
                         value={filters.minPrice}
                         onChange={onFilterChange}
-                        className="p-3 border border-gray-300 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="p-1 text-xs border border-gray-300 rounded-md mt-1 focus:ring-1 focus:ring-blue-500"
                     />
                 </div>
                 <div className="flex flex-col">
                     <label
                         htmlFor="maxPrice"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-xs font-medium text-gray-700"
                     >
                         Max Price
                     </label>
@@ -34,10 +34,10 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                         type="number"
                         id="maxPrice"
                         name="maxPrice"
-                        placeholder="Enter maximum price"
+                        placeholder="Max price"
                         value={filters.maxPrice}
                         onChange={onFilterChange}
-                        className="p-3 border border-gray-300 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="p-1 text-xs border border-gray-300 rounded-md mt-1 focus:ring-1 focus:ring-blue-500"
                     />
                 </div>
 
@@ -45,7 +45,7 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                 <div className="flex flex-col">
                     <label
                         htmlFor="location"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-xs font-medium text-gray-700"
                     >
                         Location
                     </label>
@@ -53,10 +53,10 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                         type="text"
                         id="location"
                         name="location"
-                        placeholder="Enter location"
+                        placeholder="Location"
                         value={filters.location}
                         onChange={onFilterChange}
-                        className="p-3 border border-gray-300 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="p-1 text-xs border border-gray-300 rounded-md mt-1 focus:ring-1 focus:ring-blue-500"
                     />
                 </div>
 
@@ -64,7 +64,7 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                 <div className="flex flex-col">
                     <label
                         htmlFor="minBedrooms"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-xs font-medium text-gray-700"
                     >
                         Min Bedrooms
                     </label>
@@ -72,10 +72,10 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                         type="number"
                         id="minBedrooms"
                         name="minBedrooms"
-                        placeholder="Enter minimum bedrooms"
+                        placeholder="Bedrooms"
                         value={filters.minBedrooms}
                         onChange={onFilterChange}
-                        className="p-3 border border-gray-300 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="p-1 text-xs border border-gray-300 rounded-md mt-1 focus:ring-1 focus:ring-blue-500"
                     />
                 </div>
 
@@ -83,7 +83,7 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                 <div className="flex flex-col">
                     <label
                         htmlFor="minBathrooms"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-xs font-medium text-gray-700"
                     >
                         Min Bathrooms
                     </label>
@@ -91,10 +91,10 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                         type="number"
                         id="minBathrooms"
                         name="minBathrooms"
-                        placeholder="Enter minimum bathrooms"
+                        placeholder="Bathrooms"
                         value={filters.minBathrooms}
                         onChange={onFilterChange}
-                        className="p-3 border border-gray-300 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="p-1 text-xs border border-gray-300 rounded-md mt-1 focus:ring-1 focus:ring-blue-500"
                     />
                 </div>
 
@@ -102,7 +102,7 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                 <div className="flex flex-col">
                     <label
                         htmlFor="minTokensLeft"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-xs font-medium text-gray-700"
                     >
                         Min Tokens Left
                     </label>
@@ -110,10 +110,10 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                         type="number"
                         id="minTokensLeft"
                         name="minTokensLeft"
-                        placeholder="Enter minimum tokens left"
+                        placeholder="Tokens left"
                         value={filters.minTokensLeft}
                         onChange={onFilterChange}
-                        className="p-3 border border-gray-300 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="p-1 text-xs border border-gray-300 rounded-md mt-1 focus:ring-1 focus:ring-blue-500"
                     />
                 </div>
 
@@ -121,7 +121,7 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                 <div className="flex flex-col">
                     <label
                         htmlFor="maxTokenPrice"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-xs font-medium text-gray-700"
                     >
                         Max Token Price
                     </label>
@@ -129,10 +129,10 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                         type="number"
                         id="maxTokenPrice"
                         name="maxTokenPrice"
-                        placeholder="Enter maximum token price"
+                        placeholder="Token price"
                         value={filters.maxTokenPrice}
                         onChange={onFilterChange}
-                        className="p-3 border border-gray-300 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="p-1 text-xs border border-gray-300 rounded-md mt-1 focus:ring-1 focus:ring-blue-500"
                     />
                 </div>
 
@@ -140,7 +140,7 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                 <div className="flex flex-col">
                     <label
                         htmlFor="type"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-xs font-medium text-gray-700"
                     >
                         Property Type
                     </label>
@@ -149,7 +149,7 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                         name="type"
                         value={filters.type}
                         onChange={onFilterChange}
-                        className="p-3 border border-gray-300 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="p-1 text-xs border border-gray-300 rounded-md mt-1 focus:ring-1 focus:ring-blue-500"
                     >
                         <option value="">Any Type</option>
                         <option value="Villa">Villa</option>
@@ -164,7 +164,7 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                 <div className="flex flex-col">
                     <label
                         htmlFor="rental"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-xs font-medium text-gray-700"
                     >
                         Rental or Sale
                     </label>
@@ -173,7 +173,7 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
                         name="rental"
                         value={filters.rental}
                         onChange={onFilterChange}
-                        className="p-3 border border-gray-300 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="p-1 text-xs border border-gray-300 rounded-md mt-1 focus:ring-1 focus:ring-blue-500"
                     >
                         <option value="">Both</option>
                         <option value="true">Rental</option>
@@ -184,7 +184,7 @@ const FilterControls = ({ filters, onFilterChange, onApplyFilters }) => {
 
             <button
                 onClick={onApplyFilters}
-                className="mt-8 w-full bg-blue-600 text-white font-semibold py-3 rounded-lg shadow hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-all"
+                className="mt-4 w-full bg-blue-600 text-white text-sm font-medium py-1 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-300"
             >
                 Apply Filters
             </button>
