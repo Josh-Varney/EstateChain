@@ -178,7 +178,7 @@ const FilterBar: React.FC = () => {
                     />
                     <button
                         onClick={applyFilters}
-                        className="px-4 py-2 text-white bg-blue-500 rounded-lg"
+                        className="py-2 text-white bg-blue-500 rounded-lg"
                     >
                         Apply Filters
                     </button>
