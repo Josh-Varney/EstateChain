@@ -169,9 +169,8 @@ const FilterBar: React.FC = () => {
             {isFilterVisible && (
                 <div
                     ref={filterRef}
-                    className={`absolute top-full left-0 w-full bg-white shadow-lg border border-gray-300 rounded-lg mt-1 p-4 z-50 transition-transform duration-300 ease-in-out transform ${isFilterVisible ? 'scale-y-100' : 'scale-y-0 origin-top'}`}
+                    className={`absolute top-full left-0 w-full bg-white shadow-lg border border-gray-300 rounded-lg mt-1 z-50 transition-transform duration-300 ease-in-out transform ${isFilterVisible ? 'scale-y-100' : 'scale-y-0 origin-top'}`}
                 >
-                    <h2 className="mb-4 text-lg font-bold">Filter Properties</h2>
                     <FilterControls
                         filters={filters}
                         onFilterChange={handleFilterChange}
@@ -179,7 +178,7 @@ const FilterBar: React.FC = () => {
                     />
                     <button
                         onClick={applyFilters}
-                        className="mt-4 px-4 py-2 text-white bg-blue-500 rounded-lg"
+                        className="px-4 py-2 text-white bg-blue-500 rounded-lg"
                     >
                         Apply Filters
                     </button>
