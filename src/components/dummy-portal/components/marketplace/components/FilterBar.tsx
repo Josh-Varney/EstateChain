@@ -19,28 +19,16 @@ type Filters = {
 type FilterBarProps = {
     darkMode: string;
     filters: Filters;
-    setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+    onFilterChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement>;
 };
 
-const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, setFilters}) => {
+const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange }) => {
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [maxPrice, setMaxPrice] = useState<string>("");
-    const [dropdownValue, setDropdownValue] = useState<string>("Option 1");
     const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
 
-    const clearSearch = () => setSearchQuery("");
-
-    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFilters({ ...filters, [name]: value });
-    };
-
-    const applyFilters = () => {
-        console.log("Applied Filters:", filters);
-        setIsFilterVisible(false);
-    };
-
     const filterRef = useRef<HTMLDivElement>(null);
+
+    const clearSearch = () => setSearchQuery("");
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -80,8 +68,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, setFilters}) =
                             </button>
                         )}
                         <select
-                            value={dropdownValue}
-                            onChange={(e) => setDropdownValue(e.target.value)}
                             className="px-4 py-2 text-sm bg-white border-l rounded-r-lg border-gray-300 text-gray-400"
                         >
                             <option value="Option 1">Option 1</option>
@@ -91,42 +77,44 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, setFilters}) =
                     </div>
                 </div>
 
-                {/* Max Price Dropdown */}
+                {/* Price Filter */}
                 <div className="flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600">
                     <div className="">
                         <select
-                            value={maxPrice}
-                            onChange={(e) => setMaxPrice(e.target.value)}
+                            name="propertyMinPrice"
+                            value={filters.propertyMinPrice}
+                            onChange={onFilterChange}
                             className="text-sm border-gray-300 rounded-lg bg-transparent"
                         >
                             <option value="">Min Price</option>
-                            <option value="100">$100</option>
-                            <option value="500">$500</option>
-                            <option value="1000">$1000</option>
+                            <option value="100">100</option>
+                            <option value="500">500</option>
+                            <option value="1000">1000</option>
                         </select>
                     </div>
                     <div className="text-gray-400 text-sm">to</div>
                     <div className="">
                         <select
-                            value={maxPrice}
-                            onChange={(e) => setMaxPrice(e.target.value)}
+                            name="propertyMaxPrice"
+                            value={filters.propertyMaxPrice}
+                            onChange={onFilterChange}
                             className="text-sm border-gray-300 rounded-lg bg-transparent"
                         >
                             <option value="">Max Price</option>
-                            <option value="100">$100</option>
-                            <option value="500">$500</option>
-                            <option value="1000">$1000</option>
+                            <option value="100">100</option>
+                            <option value="500">500</option>
+                            <option value="1000">1000</option>
                         </select>
                     </div>
                 </div>
 
-                {/* Bed Filter */}
+                {/* Bedroom Filter */}
                 <div className="flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600">
                     <div className="">
                         <select
+                            name="propertyMinBedrooms"
                             value={filters.propertyMinBedrooms}
-                            onChange={(e) => handleFilterChange(e)}
-                            name="minBedrooms"
+                            onChange={onFilterChange}
                             className="text-sm border-gray-300 rounded-lg bg-transparent"
                         >
                             <option value="">Min Beds</option>
@@ -138,12 +126,12 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, setFilters}) =
                     <div className="text-gray-400 text-sm">to</div>
                     <div className="">
                         <select
+                            name="propertyMinBathrooms"
                             value={filters.propertyMinBathrooms}
-                            onChange={(e) => handleFilterChange(e)}
-                            name="minBedrooms"
+                            onChange={onFilterChange}
                             className="text-sm border-gray-300 rounded-lg bg-transparent"
                         >
-                            <option value="">Max Beds</option>
+                            <option value="">Min Baths</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -165,13 +153,12 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, setFilters}) =
             {isFilterVisible && (
                 <div
                     ref={filterRef}
-                    className={`absolute top-full left-0 w-full bg-white shadow-lg border border-gray-300 rounded-lg mt-1 z-50 transition-transform duration-300 ease-in-out transform ${isFilterVisible ? 'scale-y-100' : 'scale-y-0 origin-top'}`}
+                    className={`absolute top-full left-0 w-full bg-white shadow-lg border border-gray-300 rounded-lg mt-1 z-50 transition-transform duration-300 ease-in-out transform ${isFilterVisible ? "scale-y-100" : "scale-y-0 origin-top"}`}
                 >
                     <FilterControls
                         darkMode={darkMode}
                         filters={filters}
-                        onFilterChange={handleFilterChange}
-                        onApplyFilters={applyFilters}               
+                        onFilterChange={onFilterChange}
                     />
                 </div>
             )}

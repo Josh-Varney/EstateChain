@@ -168,30 +168,52 @@ const HouseDisplay = ({ darkMode }) => {
     const [isFilterVisible, setIsFilterVisible] = useState(false);
     const [activeQuickFilter, setActiveQuickFilter] = useState(null);
 
-    const handleFilterChange = (e) => {
+    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFilters({
+        const updatedFilters = {
             ...filters,
             [name]: value,
-        });
+        };
+        setFilters(updatedFilters);
+        applyFilters(updatedFilters);
     };
 
-    const applyFilters = () => {
+    const applyFilters = (currentFilters = filters) => {
         setFilteredHouses(
             houses.filter((house) => {
-                const meetsMinPrice = filters.propertyMinPrice ? house.propertyPrice >= parseInt(filters.propertyMinPrice, 10) : true;
-                const meetsMaxPrice = filters.propertyMaxPrice ? house.propertyPrice <= parseInt(filters.propertyMaxPrice, 10) : true;
-                const meetsLocation = filters.propertyLocation ? house.propertyLocation.toLowerCase().includes(filters.propertyLocation.toLowerCase()) : true;
-                const meetsBedrooms = filters.propertyMinBedrooms ? house.propertyBedrooms >= parseInt(filters.propertyMinBedrooms, 10) : true;
-                const meetsBathrooms = filters.propertyMinBathrooms ? house.propertyBathrooms >= parseInt(filters.propertyMinBathrooms, 10) : true;
-                const meetsTokensLeft = filters.propertyMinTokensLeft ? house.propertyTokensLeft >= parseInt(filters.propertyMinTokensLeft, 10) : true;
-                const meetsTokenPrice = filters.propertyMaxTokenPrice ? house.propertyTokenPrice <= parseInt(filters.propertyMaxTokenPrice, 10) : true;
-                const meetsType = filters.propertyType ? house.propertyType.toLowerCase() === filters.propertyType.toLowerCase() : true;
-                const meetsSettlement = filters.propertySettlement ? house.propertySettlement.toLowerCase() === filters.propertySettlement.toLowerCase() : true;
-                const meetsRental = filters.propertyRental ? house.propertyRental === (filters.propertyRental === "true") : true;
+                const meetsMinPrice = currentFilters.propertyMinPrice
+                    ? house.propertyPrice >= parseInt(currentFilters.propertyMinPrice, 10)
+                    : true;
+                const meetsMaxPrice = currentFilters.propertyMaxPrice
+                    ? house.propertyPrice <= parseInt(currentFilters.propertyMaxPrice, 10)
+                    : true;
+                const meetsLocation = currentFilters.propertyLocation
+                    ? house.propertyLocation.toLowerCase().includes(currentFilters.propertyLocation.toLowerCase())
+                    : true;
+                const meetsBedrooms = currentFilters.propertyMinBedrooms
+                    ? house.propertyBedrooms >= parseInt(currentFilters.propertyMinBedrooms, 10)
+                    : true;
+                const meetsBathrooms = currentFilters.propertyMinBathrooms
+                    ? house.propertyBathrooms >= parseInt(currentFilters.propertyMinBathrooms, 10)
+                    : true;
+                const meetsTokensLeft = currentFilters.propertyMinTokensLeft
+                    ? house.propertyTokensLeft >= parseInt(currentFilters.propertyMinTokensLeft, 10)
+                    : true;
+                const meetsTokenPrice = currentFilters.propertyMaxTokenPrice
+                    ? house.propertyTokenPrice <= parseInt(currentFilters.propertyMaxTokenPrice, 10)
+                    : true;
+                const meetsType = currentFilters.propertyType
+                    ? house.propertyType.toLowerCase() === currentFilters.propertyType.toLowerCase()
+                    : true;
+                const meetsSettlement = currentFilters.propertySettlement
+                    ? house.propertySettlement.toLowerCase() === currentFilters.propertySettlement.toLowerCase()
+                    : true;
+                const meetsRental = currentFilters.propertyRental
+                    ? house.propertyRental === (currentFilters.propertyRental === "true")
+                    : true;
     
-                const meetsPropertyAdded = filters.propertyAdded
-                    ? new Date(house.propertyAdded || "") >= new Date(filters.propertyAdded)
+                const meetsPropertyAdded = currentFilters.propertyAdded
+                    ? new Date(house.propertyAdded || "") >= new Date(currentFilters.propertyAdded)
                     : true;
     
                 return (
@@ -209,21 +231,8 @@ const HouseDisplay = ({ darkMode }) => {
                 );
             })
         );
-        setIsFilterVisible(false);
     };
     
-
-    const handleQuickFilter = (filterType) => {
-        let newFilters = { ...filters };
-        if (filterType === "rental") newFilters.propertyRental = "true";
-        if (filterType === "sale") newFilters.propertyRental = "false";
-        if (filterType === "luxury") newFilters.propertyMinPrice = "500000";
-        if (filterType === "apartments") newFilters.propertyType = "Apartment";
-        setFilters(newFilters);
-        setActiveQuickFilter(filterType);
-        applyFilters();
-    };
-
     return (
         <div
             className={`
@@ -238,7 +247,7 @@ const HouseDisplay = ({ darkMode }) => {
             <FilterBar
                 darkMode={darkMode}
                 filters={filters}
-                setFilters={setFilters}
+                onFilterChange={handleFilterChange}
             />
             
             <div className="bg-gray-800 shadow-lg">
@@ -253,7 +262,7 @@ const HouseDisplay = ({ darkMode }) => {
                     <KeywordDropdown />
                 </div>
                 <div className="px-10">
-                    <HouseList houses={houses} />
+                    <HouseList houses={filteredHouses} />
                 </div>
             </div>
 
