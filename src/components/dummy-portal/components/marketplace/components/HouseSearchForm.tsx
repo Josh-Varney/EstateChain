@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import HouseList from "./HouseList";
 import FilterBar from "./FilterBar";
 import AlertSaveSearchBar from "./AltertSaveSearchBar";
@@ -165,17 +165,38 @@ const HouseDisplay = ({ darkMode }) => {
     });
 
     const [filteredHouses, setFilteredHouses] = useState(houses);
-    const [isFilterVisible, setIsFilterVisible] = useState(false);
-    const [activeQuickFilter, setActiveQuickFilter] = useState(null);
 
-    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    useEffect(() => {
+        applyFilters(filters);
+    }, [filters]);
+
+    const handleFilterChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+    
+        if (name === "clearAll") {
+            setFilters({
+                propertyMinPrice: "",
+                propertyMaxPrice: "",
+                propertyLocation: "",
+                propertySettlement: "",
+                propertyAdded: "",
+                propertyMinBedrooms: "",
+                propertyMinBathrooms: "",
+                propertyMinTokensLeft: "",
+                propertyMaxTokenPrice: "",
+                propertyType: "",
+                propertyRental: "",
+            });
+            return;
+        }
+    
         const updatedFilters = {
             ...filters,
             [name]: value,
         };
+    
         setFilters(updatedFilters);
-        applyFilters(updatedFilters);
+        applyFilters(updatedFilters); // Apply the updated filters to the list
     };
 
     const applyFilters = (currentFilters = filters) => {

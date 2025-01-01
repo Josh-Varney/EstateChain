@@ -34,10 +34,31 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
     ];
 
     const toggleSelection = (id: string) => {
-        setSelectedItems((prev) =>
-            prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-        );
+        const updatedSelectedItems = selectedItems.includes(id)
+            ? selectedItems.filter((item) => item !== id)
+            : [...selectedItems, id];
+    
+        setSelectedItems(updatedSelectedItems);
+    
+        // Notify the parent about the updated selected items (e.g., property types)
+        onFilterChange({
+            target: {
+                name: "propertyType", // Assuming this represents property types
+                value: updatedSelectedItems.join(","), // Send as a comma-separated string
+            },
+        } as unknown as ChangeEvent<HTMLInputElement>);
     };
+    
+    const clearFilters = () => {
+        setSelectedItems([]);
+        onFilterChange({
+            target: {
+                name: "clearAll", // Use a special name or reset each filter individually
+                value: "",
+            },
+        } as unknown as ChangeEvent<HTMLInputElement>);
+    };
+    
 
     const isSelected = (id: string) => selectedItems.includes(id);
 
@@ -203,7 +224,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                 <div className="flex flex-row items-center justify-between w-full bg-white mb-4 px-6 xl:px-20">
                     {/* Clear Button */}
                     <button
-                        // onClick={clearFilters}
+                        onClick={clearFilters}
                         className="px-4 py-2 bg-red-500 text-white font-bold rounded-lg shadow-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 transform hover:scale-105 transition"
                     >
                         Clear
