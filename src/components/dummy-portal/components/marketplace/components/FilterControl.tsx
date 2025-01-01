@@ -51,7 +51,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
             <select
                 name={name}
                 value={value}
-                className="w-full text-sm border border-gray-300 rounded-lg px-4 py-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="w-full text-sm border border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                 onChange={onChange}
             >
                 {placeholder && (
@@ -94,11 +94,10 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
     const dontShowOptions = ["New Home", "Retirement Home", "Buying Schemes", "High Contributions"];
 
     return (
-        <div className="flex flex-col items-center w-full space-y-8 p-4">
-            <h1 className="text-2xl font-bold text-center">Property Type</h1>
-
+        <div className="flex flex-col items-center w-full space-y-4 px-6 mt-6">
+            <h2 className="font-bold text-center text-gray-500">Property Type</h2>
             {/* Property Types */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-6 w-full max-w-5xl">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-6 w-full max-w-5xl text-gray-500 whitespace-nowrap">
                 {propertyTypes.map(({ id, label, icon }) => (
                     <div
                         key={id}
@@ -116,41 +115,44 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
 
             {/* Filters Section */}
             <div className="w-full max-w-5xl space-y-6">
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <Dropdown
-                        name="timeAdded"
-                        value={filters.minBedrooms || ""}
-                        options={dropdownOptions.timeAdded}
-                        placeholder="Time Added"
-                        onChange={onFilterChange}
-                    />
-                    <Dropdown
-                        name="minBedrooms"
-                        value={filters.minBedrooms || ""}
-                        options={dropdownOptions.bedrooms}
-                        placeholder="Min Bedrooms"
-                        onChange={onFilterChange}
-                    />
-                    <Dropdown
-                        name="minBathrooms"
-                        value={filters.minBathrooms || ""}
-                        options={dropdownOptions.bathrooms}
-                        placeholder="Min Bathrooms"
-                        onChange={onFilterChange}
-                    />
-                    <Dropdown
-                        name="rental"
-                        value={filters.rental || ""}
-                        options={dropdownOptions.rental}
-                        placeholder="Rental Type"
-                        onChange={onFilterChange}
-                    />
-                </div>
+            <div
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6 w-full max-w-5xl"
+                    >
+                        <Dropdown
+                            name="timeAdded"
+                            value={filters.minBedrooms || ""}
+                            options={dropdownOptions.timeAdded}
+                            placeholder="Time Added"
+                            onChange={onFilterChange}
+                        />
+                        <Dropdown
+                            name="minBedrooms"
+                            value={filters.minBedrooms || ""}
+                            options={dropdownOptions.bedrooms}
+                            placeholder="Min Bedrooms"
+                            onChange={onFilterChange}
+                        />
+                        <Dropdown
+                            name="minBathrooms"
+                            value={filters.minBathrooms || ""}
+                            options={dropdownOptions.bathrooms}
+                            placeholder="Min Bathrooms"
+                            onChange={onFilterChange}
+                        />
+                        <Dropdown
+                            name="rental"
+                            value={filters.rental || ""}
+                            options={dropdownOptions.rental}
+                            placeholder="Rental Type"
+                            onChange={onFilterChange}
+                        />
+                    </div>
+
 
                 {/* Must Haves */}
                 <div>
                     <h2 className="text-gray-500 font-semibold text-center mb-4">Must Haves</h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 text-gray-500">
                         {["Garden", "Parking", "New Home", "Retirement Home", "Buying Schemes", "Auction Property"].map(
                             (item) => (
                                 <button
@@ -170,13 +172,13 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                 </div>
 
                 {/* Don't Show */}
-                <div>
+                <div className="">
                     <h2 className="text-gray-500 font-semibold text-center mb-4">Don't Show</h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 text-gray-500 mb-6">
                         {dontShowOptions.map((item) => (
                             <button
                                 key={`dont-${item}`}
-                                className={`border px-4 py-3 rounded-lg shadow-md text-center font-medium hover:shadow-lg transform hover:scale-105 transition ${
+                                className={`flex items-center justify-center border px-4 py-3 rounded-lg shadow-md text-center font-medium hover:shadow-lg transform hover:scale-105 transition ${
                                     isSelected(`dont-${item.toLowerCase().replace(" ", "-")}`)
                                         ? "bg-red-100 border-red-300"
                                         : "bg-white border-gray-300"
@@ -191,14 +193,33 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                     </div>
                 </div>
             </div>
+            
+            <hr className="border-t border-gray-400 w-screen" />
 
-            {/* Apply Filters Button */}
-            <button
-                onClick={onApplyFilters}
-                className="px-6 py-3 bg-blue-500 text-white font-bold rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transform hover:scale-105 transition"
-            >
-                Apply Filters
-            </button>
+            <div className="w-full">
+                
+                {/* Bottom Section */}
+                <div className="flex flex-row items-center justify-between w-full bg-white mb-4 px-6 xl:px-20">
+                    {/* Clear Button */}
+                    <button
+                        // onClick={clearFilters}
+                        className="px-4 py-2 bg-red-500 text-white font-bold rounded-lg shadow-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 transform hover:scale-105 transition"
+                    >
+                        Clear
+                    </button>
+
+                    {/* Results and Done Button */}
+                    <div className="flex flex-row items-center space-x-4">
+                        <h1 className="text-gray-700 font-semibold"> Results</h1>
+                        <button
+                            onClick={onApplyFilters}
+                            className="px-6 py-2 bg-blue-500 text-white font-bold rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transform hover:scale-105 transition"
+                        >
+                            Done
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
