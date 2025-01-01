@@ -176,12 +176,6 @@ const FilterBar: React.FC = () => {
                         onFilterChange={handleFilterChange}
                         onApplyFilters={applyFilters}
                     />
-                    <button
-                        onClick={applyFilters}
-                        className="py-2 text-white bg-blue-500 rounded-lg"
-                    >
-                        Apply Filters
-                    </button>
                 </div>
             )}
         </div>

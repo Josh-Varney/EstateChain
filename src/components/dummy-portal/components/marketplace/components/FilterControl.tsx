@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { FaHome, FaBuilding, FaTree, FaWarehouse } from "react-icons/fa";
 
-interface PropertyType {
-    id: string;
-    label: string;
-    icon: JSX.Element;
+interface Filters {
+    minPrice: string;
+    maxPrice: string;
+    location: string;
+    minBedrooms: string;
+    minBathrooms: string;
+    minTokensLeft: string;
+    maxTokenPrice: string;
+    type: string;
+    rental: string;
 }
 
-const FilterControls: React.FC = () => {
+interface FilterControlsProps {
+    filters: Filters;
+    onFilterChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+    onApplyFilters: () => void;
+}
+
+const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange, onApplyFilters }) => {
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-    const propertyTypes: PropertyType[] = [
+    const propertyTypes = [
         { id: "detached", label: "Detached", icon: <FaHome size={30} /> },
         { id: "semi-detached", label: "Semi-Detached", icon: <FaHome size={30} /> },
         { id: "terraced", label: "Terraced", icon: <FaWarehouse size={30} /> },
@@ -20,33 +32,173 @@ const FilterControls: React.FC = () => {
         { id: "park-home", label: "Park Home", icon: <FaHome size={30} /> },
     ];
 
-    const handleItemClick = (id: string) => {
-        setSelectedItems((prevSelected) =>
-            prevSelected.includes(id)
-                ? prevSelected.filter((item) => item !== id) // Deselect if already selected
-                : [...prevSelected, id] // Add to selected items
+    const toggleSelection = (id: string) => {
+        setSelectedItems((prev) =>
+            prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
         );
     };
 
+    const isSelected = (id: string) => selectedItems.includes(id);
+
+    const Dropdown: React.FC<{
+        name: string;
+        value: string;
+        options: { value: string; label: string }[];
+        placeholder?: string;
+        onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+    }> = ({ name, value, options, placeholder, onChange }) => (
+        <div className="relative w-full">
+            <select
+                name={name}
+                value={value}
+                className="w-full text-sm border border-gray-300 rounded-lg px-4 py-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                onChange={onChange}
+            >
+                {placeholder && (
+                    <option value="" disabled>
+                        {placeholder}
+                    </option>
+                )}
+                {options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                        {option.label}
+                    </option>
+                ))}
+            </select>
+        </div>
+    );
+
+    const dropdownOptions = {
+        timeAdded: [
+            { value: "anytime", label: "Anytime" },
+            { value: "last-24-hours", label: "Last 24 Hours" },
+            { value: "last-7-days", label: "Last 7 Days" },
+        ],
+        bedrooms: [
+            { value: "any", label: "Any" },
+            { value: "1", label: "1+" },
+            { value: "2", label: "2+" },
+            { value: "3", label: "3+" },
+        ],
+        bathrooms: [
+            { value: "any", label: "Any" },
+            { value: "1", label: "1+" },
+            { value: "2", label: "2+" },
+        ],
+        rental: [
+            { value: "buy", label: "Buy" },
+            { value: "rent", label: "Rent" },
+        ],
+    };
+
+    const dontShowOptions = ["New Home", "Retirement Home", "Buying Schemes", "High Contributions"];
+
     return (
-        <div className="flex flex-col items-center w-full">
-            <h1 className="text-lg font-bold mb-6 text-center">Property Type</h1>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 divide-x divide-dotted text-gray-500 divide-gray-300 w-full max-w-5xl">
-                {propertyTypes.map((property) => (
+        <div className="flex flex-col items-center w-full space-y-8 p-4">
+            <h1 className="text-2xl font-bold text-center">Property Type</h1>
+
+            {/* Property Types */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-6 w-full max-w-5xl">
+                {propertyTypes.map(({ id, label, icon }) => (
                     <div
-                        key={property.id}
-                        className={`flex flex-col items-center space-y-2 px-4 py-2 cursor-pointer ${
-                            selectedItems.includes(property.id) ? "bg-blue-100" : ""
+                        key={id}
+                        className={`flex flex-col items-center space-y-2 px-4 py-3 cursor-pointer border rounded-lg shadow-md transition transform hover:scale-105 ${
+                            isSelected(id) ? "bg-blue-100 border-blue-300" : "bg-white border-gray-300"
                         }`}
-                        onClick={() => handleItemClick(property.id)}
+                        onClick={() => toggleSelection(id)}
+                        aria-pressed={isSelected(id)}
                     >
-                        {property.icon}
-                        <h1 className="text-sm text-center whitespace-nowrap">
-                            {property.label}
-                        </h1>
+                        {icon}
+                        <h1 className="text-sm font-medium text-center">{label}</h1>
                     </div>
                 ))}
             </div>
+
+            {/* Filters Section */}
+            <div className="w-full max-w-5xl space-y-6">
+                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <Dropdown
+                        name="timeAdded"
+                        value={filters.minBedrooms || ""}
+                        options={dropdownOptions.timeAdded}
+                        placeholder="Time Added"
+                        onChange={onFilterChange}
+                    />
+                    <Dropdown
+                        name="minBedrooms"
+                        value={filters.minBedrooms || ""}
+                        options={dropdownOptions.bedrooms}
+                        placeholder="Min Bedrooms"
+                        onChange={onFilterChange}
+                    />
+                    <Dropdown
+                        name="minBathrooms"
+                        value={filters.minBathrooms || ""}
+                        options={dropdownOptions.bathrooms}
+                        placeholder="Min Bathrooms"
+                        onChange={onFilterChange}
+                    />
+                    <Dropdown
+                        name="rental"
+                        value={filters.rental || ""}
+                        options={dropdownOptions.rental}
+                        placeholder="Rental Type"
+                        onChange={onFilterChange}
+                    />
+                </div>
+
+                {/* Must Haves */}
+                <div>
+                    <h2 className="text-gray-500 font-semibold text-center mb-4">Must Haves</h2>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        {["Garden", "Parking", "New Home", "Retirement Home", "Buying Schemes", "Auction Property"].map(
+                            (item) => (
+                                <button
+                                    key={item}
+                                    className={`border px-4 py-3 rounded-lg shadow-md text-center font-medium hover:shadow-lg transform hover:scale-105 transition ${
+                                        isSelected(item.toLowerCase().replace(" ", "-"))
+                                            ? "bg-blue-100 border-blue-300"
+                                            : "bg-white border-gray-300"
+                                    }`}
+                                    onClick={() => toggleSelection(item.toLowerCase().replace(" ", "-"))}
+                                >
+                                    {item}
+                                </button>
+                            )
+                        )}
+                    </div>
+                </div>
+
+                {/* Don't Show */}
+                <div>
+                    <h2 className="text-gray-500 font-semibold text-center mb-4">Don't Show</h2>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        {dontShowOptions.map((item) => (
+                            <button
+                                key={`dont-${item}`}
+                                className={`border px-4 py-3 rounded-lg shadow-md text-center font-medium hover:shadow-lg transform hover:scale-105 transition ${
+                                    isSelected(`dont-${item.toLowerCase().replace(" ", "-")}`)
+                                        ? "bg-red-100 border-red-300"
+                                        : "bg-white border-gray-300"
+                                }`}
+                                onClick={() =>
+                                    toggleSelection(`dont-${item.toLowerCase().replace(" ", "-")}`)
+                                }
+                            >
+                                {item}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Apply Filters Button */}
+            <button
+                onClick={onApplyFilters}
+                className="px-6 py-3 bg-blue-500 text-white font-bold rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transform hover:scale-105 transition"
+            >
+                Apply Filters
+            </button>
         </div>
     );
 };
