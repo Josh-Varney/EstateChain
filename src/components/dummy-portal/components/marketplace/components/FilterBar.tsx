@@ -3,36 +3,32 @@ import FilterControls from "./FilterControl";
 import { FaSortDown } from "react-icons/fa";
 
 type Filters = {
-    minPrice: string;
-    maxPrice: string;
-    location: string;
-    minBedrooms: string;
-    minBathrooms: string;
-    minTokensLeft: string;
-    maxTokenPrice: string;
-    type: string;
-    rental: string;
+    propertyMinPrice: string;
+    propertyMaxPrice: string;
+    propertyLocation: string;
+    propertySettlement: string;
+    propertyMinBedrooms: string;
+    propertyMinBathrooms: string;
+    propertyMinTokensLeft: string;
+    propertyMaxTokenPrice: string;
+    propertyAdded: string;
+    propertyType: string;
+    propertyRental: string;
 };
 
-const FilterBar: React.FC = () => {
+type FilterBarProps = {
+    darkMode: string;
+    filters: Filters;
+    setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+};
+
+const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, setFilters}) => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [maxPrice, setMaxPrice] = useState<string>("");
     const [dropdownValue, setDropdownValue] = useState<string>("Option 1");
     const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
 
     const clearSearch = () => setSearchQuery("");
-
-    const [filters, setFilters] = useState<Filters>({
-        minPrice: "",
-        maxPrice: "",
-        location: "",
-        minBedrooms: "",
-        minBathrooms: "",
-        minTokensLeft: "",
-        maxTokenPrice: "",
-        type: "",
-        rental: "",
-    });
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -128,7 +124,7 @@ const FilterBar: React.FC = () => {
                 <div className="flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600">
                     <div className="">
                         <select
-                            value={filters.minBedrooms}
+                            value={filters.propertyMinBedrooms}
                             onChange={(e) => handleFilterChange(e)}
                             name="minBedrooms"
                             className="text-sm border-gray-300 rounded-lg bg-transparent"
@@ -142,7 +138,7 @@ const FilterBar: React.FC = () => {
                     <div className="text-gray-400 text-sm">to</div>
                     <div className="">
                         <select
-                            value={filters.minBedrooms}
+                            value={filters.propertyMinBathrooms}
                             onChange={(e) => handleFilterChange(e)}
                             name="minBedrooms"
                             className="text-sm border-gray-300 rounded-lg bg-transparent"
@@ -172,9 +168,10 @@ const FilterBar: React.FC = () => {
                     className={`absolute top-full left-0 w-full bg-white shadow-lg border border-gray-300 rounded-lg mt-1 z-50 transition-transform duration-300 ease-in-out transform ${isFilterVisible ? 'scale-y-100' : 'scale-y-0 origin-top'}`}
                 >
                     <FilterControls
+                        darkMode={darkMode}
                         filters={filters}
                         onFilterChange={handleFilterChange}
-                        onApplyFilters={applyFilters}
+                        onApplyFilters={applyFilters}               
                     />
                 </div>
             )}

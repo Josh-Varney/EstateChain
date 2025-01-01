@@ -2,21 +2,23 @@ import React, { ChangeEvent, useState } from "react";
 import { FaHome, FaBuilding, FaTree, FaWarehouse } from "react-icons/fa";
 
 interface Filters {
-    minPrice: string;
-    maxPrice: string;
-    location: string;
-    minBedrooms: string;
-    minBathrooms: string;
-    minTokensLeft: string;
-    maxTokenPrice: string;
-    type: string;
-    rental: string;
+    propertyMinPrice: string;
+    propertyMaxPrice: string;
+    propertyLocation: string;
+    propertyAdded: string;
+    propertyMinBedrooms: string;
+    propertyMinBathrooms: string;
+    propertyMinTokensLeft: string;
+    propertyMaxTokenPrice: string;
+    propertyType: string;
+    propertyRental: string;
 }
 
 interface FilterControlsProps {
     filters: Filters;
     onFilterChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     onApplyFilters: () => void;
+    darkMode: string
 }
 
 const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange, onApplyFilters }) => {
@@ -120,28 +122,28 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                     >
                         <Dropdown
                             name="timeAdded"
-                            value={filters.minBedrooms || ""}
+                            value={filters.propertyAdded || ""}
                             options={dropdownOptions.timeAdded}
                             placeholder="Time Added"
                             onChange={onFilterChange}
                         />
                         <Dropdown
                             name="minBedrooms"
-                            value={filters.minBedrooms || ""}
+                            value={filters.propertyMinBedrooms || ""}
                             options={dropdownOptions.bedrooms}
                             placeholder="Min Bedrooms"
                             onChange={onFilterChange}
                         />
                         <Dropdown
                             name="minBathrooms"
-                            value={filters.minBathrooms || ""}
+                            value={filters.propertyMinBathrooms || ""}
                             options={dropdownOptions.bathrooms}
                             placeholder="Min Bathrooms"
                             onChange={onFilterChange}
                         />
                         <Dropdown
                             name="rental"
-                            value={filters.rental || ""}
+                            value={filters.propertyRental || ""}
                             options={dropdownOptions.rental}
                             placeholder="Rental Type"
                             onChange={onFilterChange}

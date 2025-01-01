@@ -1,10 +1,24 @@
 import React, { useState } from "react";
-import FilterControls from "./FilterControl";
 import HouseList from "./HouseList";
 import FilterBar from "./FilterBar";
 import AlertSaveSearchBar from "./AltertSaveSearchBar";
 import ResultsBar from "./ResultsFoundBar";
 import KeywordDropdown from "./KeywordDropdown";
+
+
+type Filters = {
+    propertyMinPrice: string;
+    propertyMaxPrice: string;
+    propertyLocation: string;
+    propertySettlement: string;
+    propertyMinBedrooms: string;
+    propertyMinBathrooms: string;
+    propertyMinTokensLeft: string;
+    propertyMaxTokenPrice: string;
+    propertyAdded: string;
+    propertyType: string;
+    propertyRental: string;
+};
 
 const HouseDisplay = ({ darkMode }) => {
     const houses = [
@@ -15,23 +29,24 @@ const HouseDisplay = ({ darkMode }) => {
             propertyDescription: "Experience the pinnacle of city living in this sleek, 2-bedroom, 2-bathroom luxury apartment in the heart of downtown. Boasting floor-to-ceiling windows with panoramic skyline views, a state-of-the-art kitchen with quartz countertops, and access to exclusive amenities including a rooftop pool, fitness center, and concierge services.",
             propertyAdded: "07/05/2024",
             propertyAddedBy: "Jackson-Stops",
-            propertyAgent : {
-                agentName : "Jackson-Stops",
-                agentIcon : "",
-                agentNumber : "07469751962",
-                agentEmail : "jrv123756@gmail.com",
+            propertyAgent: {
+                agentName: "Jackson-Stops",
+                agentIcon: "",
+                agentNumber: "07469751962",
+                agentEmail: "jrv123756@gmail.com",
             },
-            price: 500000, 
-            location: "California", 
-            size: "3000 sqft", 
-            bedrooms: 4, 
-            bathrooms: 3, 
-            tokenPrice: 50, 
-            tokensLeft: 100, 
-            type: "Villa", 
-            rental: false, 
-            image: "https://via.placeholder.com/300x200?text=Modern+Villa", 
-            featured: true 
+            propertyWords: ["pool"],
+            propertyPrice: 500000, 
+            propertyLocation: "California", 
+            propertySize: "3000 sqft", 
+            propertyBedrooms: 4, 
+            propertyBathrooms: 3, 
+            propertyTokenPrice: 50, 
+            propertyTokensLeft: 100, 
+            propertyType: "Villa", 
+            propertyRental: false, 
+            propertyImage: "https://via.placeholder.com/300x200?text=Modern+Villa", 
+            propertyFeatured: true 
         },
         { 
             id: 2, 
@@ -40,23 +55,23 @@ const HouseDisplay = ({ darkMode }) => {
             propertyDescription: "Escape to tranquility with this enchanting 4-bedroom, 3-bathroom country home situated on 10 sprawling acres. Featuring a cozy stone fireplace, hardwood floors throughout, and a wraparound porch with breathtaking views of rolling hills",
             propertyAdded: "07/05/2024",
             propertyAddedBy: "Jackson-Stops",
-            propertyAgent : {
-                agentName : "Jackson-Stops",
-                agentIcon : "",
-                agentNumber : "07469751962",
-                agentEmail : "jrv123756@gmail.com",
+            propertyAgent: {
+                agentName: "Jackson-Stops",
+                agentIcon: "",
+                agentNumber: "07469751962",
+                agentEmail: "jrv123756@gmail.com",
             },
-            price: 150000, 
-            location: "Maine", 
-            size: "1200 sqft", 
-            bedrooms: 2, 
-            bathrooms: 1, 
-            tokenPrice: 15, 
-            tokensLeft: 200, 
-            type: "Cottage", 
-            rental: true, 
-            image: "https://via.placeholder.com/300x200?text=Cozy+Cottage", 
-            featured: true 
+            propertyPrice: 150000, 
+            propertyLocation: "Maine", 
+            propertySize: "1200 sqft", 
+            propertyBedrooms: 2, 
+            propertyBathrooms: 1, 
+            propertyTokenPrice: 15, 
+            propertyTokensLeft: 200, 
+            propertyType: "Cottage", 
+            propertyRental: true, 
+            propertyImage: "https://via.placeholder.com/300x200?text=Cozy+Cottage", 
+            propertyFeatured: true 
         },
         { 
             id: 3, 
@@ -65,23 +80,23 @@ const HouseDisplay = ({ darkMode }) => {
             propertyDescription: "Wake up to the sound of waves in this delightful 2-bedroom, 1-bathroom beachfront bungalow. With its bright and airy design, this home features a fully equipped kitchen, a sun-soaked living room, and a private deck overlooking the ocean.",
             propertyAdded: "07/05/2024",
             propertyAddedBy: "Jackson-Stops",
-            propertyAgent : {
-                agentName : "Jackson-Stops",
-                agentIcon : "",
-                agentNumber : "07469751962",
-                agentEmail : "jrv123756@gmail.com",
+            propertyAgent: {
+                agentName: "Jackson-Stops",
+                agentIcon: "",
+                agentNumber: "07469751962",
+                agentEmail: "jrv123756@gmail.com",
             },
-            price: 300000, 
-            location: "New York", 
-            size: "900 sqft", 
-            bedrooms: 1, 
-            bathrooms: 1, 
-            tokenPrice: 30, 
-            tokensLeft: 150, 
-            type: "Apartment", 
-            rental: true, 
-            image: "https://via.placeholder.com/300x200?text=Urban+Apartment", 
-            featured: false 
+            propertyPrice: 300000, 
+            propertyLocation: "New York", 
+            propertySize: "900 sqft", 
+            propertyBedrooms: 1, 
+            propertyBathrooms: 1, 
+            propertyTokenPrice: 30, 
+            propertyTokensLeft: 150, 
+            propertyType: "Apartment", 
+            propertyRental: true, 
+            propertyImage: "https://via.placeholder.com/300x200?text=Urban+Apartment", 
+            propertyFeatured: false 
         },
         { 
             id: 4, 
@@ -89,23 +104,23 @@ const HouseDisplay = ({ darkMode }) => {
             propertySettlement: "Terrace",
             propertyDescription: "Discover the perfect blend of style and convenience in this 3-bedroom, 2.5-bathroom modern townhouse.",
             propertyAddedBy: "Jackson-Stops",
-            propertyAgent : {
-                agentName : "Jackson-Stops",
-                agentIcon : "",
-                agentNumber : "07469751962",
-                agentEmail : "jrv123756@gmail.com",
+            propertyAgent: {
+                agentName: "Jackson-Stops",
+                agentIcon: "",
+                agentNumber: "07469751962",
+                agentEmail: "jrv123756@gmail.com",
             },
-            price: 250000, 
-            location: "Texas", 
-            size: "2000 sqft", 
-            bedrooms: 3, 
-            bathrooms: 2, 
-            tokenPrice: 25, 
-            tokensLeft: 180, 
-            type: "House", 
-            rental: false, 
-            image: "https://via.placeholder.com/300x200?text=Country+House", 
-            featured: false 
+            propertyPrice: 250000, 
+            propertyLocation: "Texas", 
+            propertySize: "2000 sqft", 
+            propertyBedrooms: 3, 
+            propertyBathrooms: 2, 
+            propertyTokenPrice: 25, 
+            propertyTokensLeft: 180, 
+            propertyType: "House", 
+            propertyRental: false, 
+            propertyImage: "https://via.placeholder.com/300x200?text=Country+House", 
+            propertyFeatured: false 
         },
         { 
             id: 5, 
@@ -114,37 +129,39 @@ const HouseDisplay = ({ darkMode }) => {
             propertyDescription: "Discover the perfect blend of style and convenience in this 3-bedroom, 2.5-bathroom modern townhouse.",
             propertyAdded: "07/05/2024",
             propertyAddedBy: "Jackson-Stops",
-            propertyAgent : {
-                agentName : "Jackson-Stops",
-                agentIcon : "",
-                agentNumber : "07469751962",
-                agentEmail : "jrv123756@gmail.com",
+            propertyAgent: {
+                agentName: "Jackson-Stops",
+                agentIcon: "",
+                agentNumber: "07469751962",
+                agentEmail: "jrv123756@gmail.com",
             },
-            price: 1000000, 
-            location: "Florida", 
-            size: "5000 sqft", 
-            bedrooms: 6, 
-            bathrooms: 5, 
-            tokenPrice: 100, 
-            tokensLeft: 50, 
-            type: "Estate", 
-            rental: false, 
-            image: "https://via.placeholder.com/300x200?text=Luxury+Estate", 
-            featured: false 
+            propertyPrice: 1000000, 
+            propertyLocation: "Florida", 
+            propertySize: "5000 sqft", 
+            propertyBedrooms: 6, 
+            propertyBathrooms: 5, 
+            propertyTokenPrice: 100, 
+            propertyTokensLeft: 50, 
+            propertyType: "Estate", 
+            propertyRental: false, 
+            propertyImage: "https://via.placeholder.com/300x200?text=Luxury+Estate", 
+            propertyFeatured: false 
         },
     ];
     
 
-    const [filters, setFilters] = useState({
-        minPrice: "",
-        maxPrice: "",
-        location: "",
-        minBedrooms: "",
-        minBathrooms: "",
-        minTokensLeft: "",
-        maxTokenPrice: "",
-        type: "",
-        rental: "",
+    const [filters, setFilters] = useState<Filters>({
+        propertyMinPrice: "",
+        propertyMaxPrice: "",
+        propertyLocation: "",
+        propertySettlement: "",
+        propertyAdded: "",
+        propertyMinBedrooms: "",
+        propertyMinBathrooms: "",
+        propertyMinTokensLeft: "",
+        propertyMaxTokenPrice: "",
+        propertyType: "",
+        propertyRental: "",
     });
 
     const [filteredHouses, setFilteredHouses] = useState(houses);
@@ -162,16 +179,21 @@ const HouseDisplay = ({ darkMode }) => {
     const applyFilters = () => {
         setFilteredHouses(
             houses.filter((house) => {
-                const meetsMinPrice = filters.minPrice ? house.price >= parseInt(filters.minPrice, 10) : true;
-                const meetsMaxPrice = filters.maxPrice ? house.price <= parseInt(filters.maxPrice, 10) : true;
-                const meetsLocation = filters.location ? house.location.toLowerCase().includes(filters.location.toLowerCase()) : true;
-                const meetsBedrooms = filters.minBedrooms ? house.bedrooms >= parseInt(filters.minBedrooms, 10) : true;
-                const meetsBathrooms = filters.minBathrooms ? house.bathrooms >= parseInt(filters.minBathrooms, 10) : true;
-                const meetsTokensLeft = filters.minTokensLeft ? house.tokensLeft >= parseInt(filters.minTokensLeft, 10) : true;
-                const meetsTokenPrice = filters.maxTokenPrice ? house.tokenPrice <= parseInt(filters.maxTokenPrice, 10) : true;
-                const meetsType = filters.type ? house.type.toLowerCase() === filters.type.toLowerCase() : true;
-                const meetsRental = filters.rental ? house.rental === (filters.rental === "true") : true;
-
+                const meetsMinPrice = filters.propertyMinPrice ? house.propertyPrice >= parseInt(filters.propertyMinPrice, 10) : true;
+                const meetsMaxPrice = filters.propertyMaxPrice ? house.propertyPrice <= parseInt(filters.propertyMaxPrice, 10) : true;
+                const meetsLocation = filters.propertyLocation ? house.propertyLocation.toLowerCase().includes(filters.propertyLocation.toLowerCase()) : true;
+                const meetsBedrooms = filters.propertyMinBedrooms ? house.propertyBedrooms >= parseInt(filters.propertyMinBedrooms, 10) : true;
+                const meetsBathrooms = filters.propertyMinBathrooms ? house.propertyBathrooms >= parseInt(filters.propertyMinBathrooms, 10) : true;
+                const meetsTokensLeft = filters.propertyMinTokensLeft ? house.propertyTokensLeft >= parseInt(filters.propertyMinTokensLeft, 10) : true;
+                const meetsTokenPrice = filters.propertyMaxTokenPrice ? house.propertyTokenPrice <= parseInt(filters.propertyMaxTokenPrice, 10) : true;
+                const meetsType = filters.propertyType ? house.propertyType.toLowerCase() === filters.propertyType.toLowerCase() : true;
+                const meetsSettlement = filters.propertySettlement ? house.propertySettlement.toLowerCase() === filters.propertySettlement.toLowerCase() : true;
+                const meetsRental = filters.propertyRental ? house.propertyRental === (filters.propertyRental === "true") : true;
+    
+                const meetsPropertyAdded = filters.propertyAdded
+                    ? new Date(house.propertyAdded || "") >= new Date(filters.propertyAdded)
+                    : true;
+    
                 return (
                     meetsMinPrice &&
                     meetsMaxPrice &&
@@ -181,19 +203,22 @@ const HouseDisplay = ({ darkMode }) => {
                     meetsTokensLeft &&
                     meetsTokenPrice &&
                     meetsType &&
-                    meetsRental
+                    meetsSettlement &&
+                    meetsRental &&
+                    meetsPropertyAdded
                 );
             })
         );
         setIsFilterVisible(false);
     };
+    
 
     const handleQuickFilter = (filterType) => {
         let newFilters = { ...filters };
-        if (filterType === "rental") newFilters.rental = "true";
-        if (filterType === "sale") newFilters.rental = "false";
-        if (filterType === "luxury") newFilters.minPrice = "500000";
-        if (filterType === "apartments") newFilters.type = "Apartment";
+        if (filterType === "rental") newFilters.propertyRental = "true";
+        if (filterType === "sale") newFilters.propertyRental = "false";
+        if (filterType === "luxury") newFilters.propertyMinPrice = "500000";
+        if (filterType === "apartments") newFilters.propertyType = "Apartment";
         setFilters(newFilters);
         setActiveQuickFilter(filterType);
         applyFilters();
@@ -210,7 +235,11 @@ const HouseDisplay = ({ darkMode }) => {
                 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}
             `}
         >
-            <FilterBar />
+            <FilterBar
+                darkMode={darkMode}
+                filters={filters}
+                setFilters={setFilters}
+            />
             
             <div className="bg-gray-800 shadow-lg">
                 <AlertSaveSearchBar />
