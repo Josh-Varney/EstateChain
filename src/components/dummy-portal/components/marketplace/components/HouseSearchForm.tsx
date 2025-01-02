@@ -183,6 +183,7 @@ const HouseDisplay = ({ darkMode }) => {
         applyFilters(filters);
     }, [filters]);
 
+    // Debug if necessary 
     const handleFilterChange: OnKeyWordChange = (e, optionalParam ) => {
         const { name, value } = e.target;
         
@@ -243,9 +244,6 @@ const HouseDisplay = ({ darkMode }) => {
                     (keyword) => !newValues.includes(keyword) && removableKeywords.includes(keyword)
                 );
 
-                // Log removed items for debugging
-                console.log("Removed Items:", removedItems);
-
                 // Update the array by adding new values and removing deselected items
                 let updatedKeywords = [...existingKeywords];
 
@@ -266,9 +264,6 @@ const HouseDisplay = ({ darkMode }) => {
                     ...filters,
                     propertyKeywords: updatedKeywords, // Ensure it's always an array of valid strings
                 };
-
-                // Log the final updated keywords for debugging
-                console.log("Final Updated Keywords:", updatedKeywords);
 
                 // Update the filters state and apply the filters
                 setFilters(updatedFilters);

@@ -27,6 +27,8 @@ interface FilterControlsProps {
     handleDontHave: (item: string) => void;
 }
 
+
+
 const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange, selectFilterChange }) => {
     // const DEBUG = true;
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -44,22 +46,13 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
     ];
 
     useEffect(() => {
-        const savedFilters = localStorage.getItem("selectedFilters");
-        if (savedFilters) setSelectedItems(JSON.parse(savedFilters));
-    
-        const savedMustHaves = localStorage.getItem("selectedMustHaves");
-        if (savedMustHaves) setMustHaveItems(JSON.parse(savedMustHaves));
-    
-        const savedDontShow = localStorage.getItem("selectedDontShow");
-        if (savedDontShow) setDontShowItems(JSON.parse(savedDontShow));
-    
-        // if (DEBUG) {
-        //     console.group("Initial State");
-        //     console.log("Selected Property Types:", savedFilters ? JSON.parse(savedFilters) : []);
-        //     console.log("Must Have Items:", savedMustHaves ? JSON.parse(savedMustHaves) : []);
-        //     console.log("Don't Show Items:", savedDontShow ? JSON.parse(savedDontShow) : []);
-        //     console.groupEnd();
-        // }
+        // Clear specific localStorage items on window reload
+        window.onload = () => {
+            localStorage.removeItem("selectedFilters");
+            localStorage.removeItem("selectedMustHaves");
+            localStorage.removeItem("selectedDontShow");
+            localStorage.removeItem("filters");
+        };
     }, []);
 
 
