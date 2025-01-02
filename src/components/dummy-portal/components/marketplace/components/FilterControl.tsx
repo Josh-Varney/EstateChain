@@ -10,6 +10,8 @@ interface Filters {
     propertyMinBathrooms: string;
     propertyMinTokensLeft: string;
     propertyMaxTokenPrice: string;
+    propertyKeywords: string[]; 
+    dontShowKeywords: string[]; 
     propertyType: string;
     propertyRental: string;
 }
@@ -17,13 +19,19 @@ interface Filters {
 interface FilterControlsProps {
     filters: Filters;
     onFilterChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+    selectFilterChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     darkMode: string;
     selectedItems: string[]; // Added this prop
     setSelectedItems: (items: string[]) => void; // Added this prop
+    handleMustHave: (item: string) => void;
+    handleDontHave: (item: string) => void;
 }
 
-const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange }) => {
+const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange, selectFilterChange }) => {
+    const DEBUG = true;
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
+    const [mustHaveItems, setMustHaveItems] = useState<string[]>([]);
+    const [dontShowItems, setDontShowItems] = useState<string[]>([]);
 
     const propertyTypes = [
         { id: "detatched", label: "Detatched", icon: <FaHome size={30} /> },
@@ -36,34 +44,88 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
     ];
 
     useEffect(() => {
-        // Initialize `selectedItems` state from localStorage
-        const savedItems = localStorage.getItem("selectedFilters");
-        if (savedItems) {
-            setSelectedItems(JSON.parse(savedItems));
+        const savedFilters = localStorage.getItem("selectedFilters");
+        if (savedFilters) setSelectedItems(JSON.parse(savedFilters));
+    
+        const savedMustHaves = localStorage.getItem("selectedMustHaves");
+        if (savedMustHaves) setMustHaveItems(JSON.parse(savedMustHaves));
+    
+        const savedDontShow = localStorage.getItem("selectedDontShow");
+        if (savedDontShow) setDontShowItems(JSON.parse(savedDontShow));
+    
+        if (DEBUG) {
+            console.group("Initial State");
+            console.log("Selected Property Types:", savedFilters ? JSON.parse(savedFilters) : []);
+            console.log("Must Have Items:", savedMustHaves ? JSON.parse(savedMustHaves) : []);
+            console.log("Don't Show Items:", savedDontShow ? JSON.parse(savedDontShow) : []);
+            console.groupEnd();
         }
-    }, [setSelectedItems]);
+    }, []);
 
-    const toggleSelection = (id: string) => {
-        const updatedSelectedItems = selectedItems.includes(id)
-            ? selectedItems.filter((item) => item !== id)
-            : [...selectedItems, id];
+
+    const toggleSelection = (
+        id: string,
+        category: "mustHave" | "dontShow" | "propertyType"
+    ) => {
+        let updatedSelections: string[];
     
-        setSelectedItems(updatedSelectedItems);
-        localStorage.setItem("selectedFilters", JSON.stringify(updatedSelectedItems));
+        if (category === "mustHave") {
+            updatedSelections = mustHaveItems.includes(id)
+                ? mustHaveItems.filter((item) => item !== id) // Remove item if already selected
+                : [...mustHaveItems, id]; // Add item if not selected
+            setMustHaveItems(updatedSelections);
+            localStorage.setItem("selectedMustHaves", JSON.stringify(updatedSelections));
     
-        // Notify the parent about the updated selected items
+            if (DEBUG) {
+                console.log(`Must Have Item Clicked: ${id}`);
+                console.log("Updated Must Have Items:", updatedSelections);
+            }
+        } else if (category === "dontShow") {
+            updatedSelections = dontShowItems.includes(id)
+                ? dontShowItems.filter((item) => item !== id) // Remove item if already selected
+                : [...dontShowItems, id]; // Add item if not selected
+            setDontShowItems(updatedSelections);
+            localStorage.setItem("selectedDontShow", JSON.stringify(updatedSelections));
+    
+            if (DEBUG) {
+                console.log(`Don't Show Item Clicked: ${id}`);
+                console.log("Updated Don't Show Items:", updatedSelections);
+            }
+        } else {
+            updatedSelections = selectedItems.includes(id)
+                ? selectedItems.filter((item) => item !== id) // Remove item if already selected
+                : [...selectedItems, id]; // Add item if not selected
+            setSelectedItems(updatedSelections);
+            localStorage.setItem("selectedFilters", JSON.stringify(updatedSelections));
+    
+            if (DEBUG) {
+                console.log(`Property Type Clicked: ${id}`);
+                console.log("Updated Property Types:", updatedSelections);
+            }
+        }
+    
+        // Notify parent component of the changes
         onFilterChange({
             target: {
-                name: "propertySettlement",
-                value: updatedSelectedItems.join(","), // Comma-separated string
+                name:
+                    category === "mustHave"
+                        ? "propertyKeywords"
+                        : category === "dontShow"
+                        ? "dontShowKeywords"
+                        : "propertySettlement",
+                value: updatedSelections,
             },
         } as unknown as ChangeEvent<HTMLInputElement>);
     };
 
     const clearFilters = () => {
         setSelectedItems([]);
+        setMustHaveItems([]);
+        setDontShowItems([]);
         localStorage.removeItem("selectedFilters");
-    
+        localStorage.removeItem("selectedMustHaves");
+        localStorage.removeItem("selectedDontShow");
+
         onFilterChange({
             target: {
                 name: "clearAll",
@@ -86,7 +148,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                 name={name}
                 value={value}
                 className="w-full text-sm border border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                onChange={onChange}
+                onChange={onChange} 
             >
                 {placeholder && (
                     <option value="" disabled>
@@ -109,13 +171,11 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
             { value: "last-7-days", label: "Last 7 Days" },
         ],
         bedrooms: [
-            { value: "any", label: "Any" },
             { value: "1", label: "1+" },
             { value: "2", label: "2+" },
             { value: "3", label: "3+" },
         ],
         bathrooms: [
-            { value: "any", label: "Any" },
             { value: "1", label: "1+" },
             { value: "2", label: "2+" },
         ],
@@ -138,7 +198,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                         className={`flex flex-col items-center space-y-2 px-4 py-3 cursor-pointer border rounded-lg shadow-md transition transform hover:scale-105 ${
                             isSelected(id) ? "bg-blue-100 border-blue-300" : "bg-white border-gray-300"
                         }`}
-                        onClick={() => toggleSelection(id)}
+                        onClick={() =>  toggleSelection(id, "propertyType")}
                         aria-pressed={isSelected(id)}
                     >
                         {icon}
@@ -154,31 +214,31 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                     >
                         <Dropdown
                             name="timeAdded"
-                            value={filters.propertyAdded || ""}
+                            value={filters.propertyAdded}
                             options={dropdownOptions.timeAdded}
                             placeholder="Time Added"
-                            onChange={onFilterChange}
+                            onChange={selectFilterChange}
                         />
                         <Dropdown
-                            name="minBedrooms"
-                            value={filters.propertyMinBedrooms || ""}
+                            name="propertyMinBedrooms"
+                            value={filters.propertyMinBedrooms}
                             options={dropdownOptions.bedrooms}
                             placeholder="Min Bedrooms"
-                            onChange={onFilterChange}
+                            onChange={selectFilterChange}
                         />
                         <Dropdown
-                            name="minBathrooms"
-                            value={filters.propertyMinBathrooms || ""}
+                            name="propertyMinBathrooms"
+                            value={filters.propertyMinBathrooms}
                             options={dropdownOptions.bathrooms}
                             placeholder="Min Bathrooms"
-                            onChange={onFilterChange}
+                            onChange={selectFilterChange}
                         />
                         <Dropdown
-                            name="rental"
-                            value={filters.propertyRental || ""}
+                            name="propertyRental"
+                            value={filters.propertyRental}
                             options={dropdownOptions.rental}
                             placeholder="Rental Type"
-                            onChange={onFilterChange}
+                            onChange={selectFilterChange}
                         />
                     </div>
 
@@ -192,11 +252,11 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                                 <button
                                     key={item}
                                     className={`border px-4 py-3 rounded-lg shadow-md text-center font-medium hover:shadow-lg transform hover:scale-105 transition ${
-                                        isSelected(item.toLowerCase().replace(" ", "-"))
+                                        mustHaveItems.includes(item.toLowerCase().replace(" ", "-"))
                                             ? "bg-blue-100 border-blue-300"
                                             : "bg-white border-gray-300"
                                     }`}
-                                    onClick={() => toggleSelection(item.toLowerCase().replace(" ", "-"))}
+                                    onClick={() => toggleSelection(item.toLowerCase().replace(" ", "-"), "mustHave")}
                                 >
                                     {item}
                                 </button>
@@ -213,13 +273,11 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                             <button
                                 key={`dont-${item}`}
                                 className={`flex items-center justify-center border px-4 py-3 rounded-lg shadow-md text-center font-medium hover:shadow-lg transform hover:scale-105 transition ${
-                                    isSelected(`dont-${item.toLowerCase().replace(" ", "-")}`)
+                                    dontShowItems.includes(item.toLowerCase().replace(" ", "-"))
                                         ? "bg-red-100 border-red-300"
                                         : "bg-white border-gray-300"
                                 }`}
-                                onClick={() =>
-                                    toggleSelection(`dont-${item.toLowerCase().replace(" ", "-")}`)
-                                }
+                                onClick={() => toggleSelection(item.toLowerCase().replace(" ", "-"), "dontShow")}
                             >
                                 {item}
                             </button>

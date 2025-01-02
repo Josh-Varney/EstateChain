@@ -1,7 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { FaSort } from 'react-icons/fa';
 
-const KeywordDropdown: React.FC = () => {
+interface KeywordDropdownProps {
+    onKeyWordChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+
+const KeywordDropdown: React.FC<KeywordDropdownProps> = ({ onKeyWordChange }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [keywords, setKeywords] = useState<string>("");
     const [savedKeywords, setSavedKeywords] = useState<string[]>([]);
@@ -24,6 +28,7 @@ const KeywordDropdown: React.FC = () => {
 
     const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setKeywords(e.target.value);
+
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
@@ -34,16 +39,39 @@ const KeywordDropdown: React.FC = () => {
 
     const saveKeyword = (): void => {
         if (keywords.trim()) {
-            setSavedKeywords((prevKeywords) => 
-                [...prevKeywords, keywords.trim()].sort((a, b) => a.localeCompare(b))
-            );
+            const newKeyword = keywords.trim();
+    
+            // Combine current keywords with the parent's `propertyKeywords` while avoiding duplicates
+            const parentKeywords = savedKeywords; // You can pass existingKeywords if needed
+            const updatedKeywords = parentKeywords.includes(newKeyword)
+                ? parentKeywords.filter((k) => k !== newKeyword) // Remove if exists
+                : [...new Set([...parentKeywords, newKeyword])]; // Combine arrays and remove duplicates
+    
+            setSavedKeywords(updatedKeywords);
             setKeywords("");
             setDropdownOpen(false);
+    
+            // Notify parent about the updated combined keywords
+            onKeyWordChange({
+                target: {
+                    name: "propertyKeywords",
+                    value: updatedKeywords, // Send updated array to parent
+                },
+            } as unknown as ChangeEvent<HTMLInputElement>);
         }
     };
 
     const removeKeyword = (index: number): void => {
-        setSavedKeywords(savedKeywords.filter((_, i) => i !== index));
+        const updatedKeywords = savedKeywords.filter((_, i) => i !== index);
+        setSavedKeywords(updatedKeywords);
+    
+        // Notify parent about the updated keywords
+        onKeyWordChange({
+            target: {
+                name: "propertyKeywords",
+                value: updatedKeywords.join(","), // Pass updated keywords as a comma-separated string
+            },
+        } as unknown as ChangeEvent<HTMLInputElement>);
     };
 
     return (

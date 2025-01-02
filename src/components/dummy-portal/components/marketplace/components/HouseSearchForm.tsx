@@ -11,6 +11,8 @@ type Filters = {
     propertyMaxPrice: string;
     propertyLocation: string;
     propertySettlement: string;
+    propertyKeywords: string[]; // Must Haves
+    dontShowKeywords: string[]; // Don't Show
     propertyMinBedrooms: string;
     propertyMinBathrooms: string;
     propertyMinTokensLeft: string;
@@ -35,7 +37,7 @@ const HouseDisplay = ({ darkMode }) => {
                 agentNumber: "07469751962",
                 agentEmail: "jrv123756@gmail.com",
             },
-            propertyWords: ["pool"],
+            propertyKeywords: ["pool", "parking", "retirement-home"],
             propertyPrice: 500000, 
             propertyLocation: "California", 
             propertySize: "3000 sqft", 
@@ -44,7 +46,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyTokenPrice: 50, 
             propertyTokensLeft: 100, 
             propertyType: "Villa", 
-            propertyRental: false, 
+            propertyRental: true, 
             propertyImage: "https://via.placeholder.com/300x200?text=Modern+Villa", 
             propertyFeatured: true 
         },
@@ -62,6 +64,7 @@ const HouseDisplay = ({ darkMode }) => {
                 agentEmail: "jrv123756@gmail.com",
             },
             propertyPrice: 150000, 
+            propertyWords: ["pool"],
             propertyLocation: "Maine", 
             propertySize: "1200 sqft", 
             propertyBedrooms: 2, 
@@ -69,7 +72,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyTokenPrice: 15, 
             propertyTokensLeft: 200, 
             propertyType: "Cottage", 
-            propertyRental: true, 
+            propertyRental: false, 
             propertyImage: "https://via.placeholder.com/300x200?text=Cozy+Cottage", 
             propertyFeatured: true 
         },
@@ -87,6 +90,7 @@ const HouseDisplay = ({ darkMode }) => {
                 agentEmail: "jrv123756@gmail.com",
             },
             propertyPrice: 300000, 
+            propertyKeywords: ["retirement-home"],
             propertyLocation: "New York", 
             propertySize: "900 sqft", 
             propertyBedrooms: 1, 
@@ -94,7 +98,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyTokenPrice: 30, 
             propertyTokensLeft: 150, 
             propertyType: "Apartment", 
-            propertyRental: true, 
+            propertyRental: false, 
             propertyImage: "https://via.placeholder.com/300x200?text=Urban+Apartment", 
             propertyFeatured: false 
         },
@@ -111,6 +115,7 @@ const HouseDisplay = ({ darkMode }) => {
                 agentEmail: "jrv123756@gmail.com",
             },
             propertyPrice: 250000, 
+            propertyKeywords: ["buying-schemes"],
             propertyLocation: "Texas", 
             propertySize: "2000 sqft", 
             propertyBedrooms: 3, 
@@ -136,6 +141,7 @@ const HouseDisplay = ({ darkMode }) => {
                 agentEmail: "jrv123756@gmail.com",
             },
             propertyPrice: 1000000, 
+            propertyKeywords: ["action-property"],
             propertyLocation: "Florida", 
             propertySize: "5000 sqft", 
             propertyBedrooms: 6, 
@@ -162,6 +168,8 @@ const HouseDisplay = ({ darkMode }) => {
         propertyMaxTokenPrice: "",
         propertyType: "",
         propertyRental: "",
+        propertyKeywords: [], // Must Haves
+        dontShowKeywords: [], // Don't Show
     });
 
     const [filteredHouses, setFilteredHouses] = useState(houses);
@@ -172,8 +180,25 @@ const HouseDisplay = ({ darkMode }) => {
 
     const handleFilterChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-    
-        if (name === "clearAll") {
+        if (name == "propertyKeywords"){
+            // Ensure immutability by creating a new array
+            const updatedKeywords = Array.isArray(filters.propertyKeywords)
+            ? [...filters.propertyKeywords]
+            : [];
+
+            if (!updatedKeywords.includes(value)) {
+            updatedKeywords.push(value);
+            }
+
+            const updatedFilters = {
+            ...filters,
+            propertyKeywords: updatedKeywords,
+            };
+
+            setFilters(updatedFilters);
+            applyFilters(updatedFilters); // Apply the updated filters to the list
+            return;
+        } else if (name === "clearAll") {
             setFilters({
                 propertyMinPrice: "",
                 propertyMaxPrice: "",
@@ -186,6 +211,8 @@ const HouseDisplay = ({ darkMode }) => {
                 propertyMaxTokenPrice: "",
                 propertyType: "",
                 propertyRental: "",
+                propertyKeywords: [], // Reset Must Haves
+                dontShowKeywords: [], // Reset Don't Show
             });
             return;
         }
@@ -198,6 +225,7 @@ const HouseDisplay = ({ darkMode }) => {
         setFilters(updatedFilters);
         applyFilters(updatedFilters); // Apply the updated filters to the list
     };
+    
 
     const applyFilters = (currentFilters = filters) => {
         setFilteredHouses(
@@ -205,44 +233,55 @@ const HouseDisplay = ({ darkMode }) => {
                 const meetsMinPrice = currentFilters.propertyMinPrice
                     ? house.propertyPrice >= parseInt(currentFilters.propertyMinPrice, 10)
                     : true;
+    
                 const meetsMaxPrice = currentFilters.propertyMaxPrice
                     ? house.propertyPrice <= parseInt(currentFilters.propertyMaxPrice, 10)
                     : true;
+    
                 const meetsLocation = currentFilters.propertyLocation
-                    ? house.propertyLocation.toLowerCase().includes(currentFilters.propertyLocation.toLowerCase())
+                    ? house.propertyLocation
+                          ?.toLowerCase()
+                          .includes(currentFilters.propertyLocation.toLowerCase())
                     : true;
+    
                 const meetsBedrooms = currentFilters.propertyMinBedrooms
                     ? house.propertyBedrooms >= parseInt(currentFilters.propertyMinBedrooms, 10)
                     : true;
+    
                 const meetsBathrooms = currentFilters.propertyMinBathrooms
                     ? house.propertyBathrooms >= parseInt(currentFilters.propertyMinBathrooms, 10)
                     : true;
+    
                 const meetsTokensLeft = currentFilters.propertyMinTokensLeft
                     ? house.propertyTokensLeft >= parseInt(currentFilters.propertyMinTokensLeft, 10)
                     : true;
+    
                 const meetsTokenPrice = currentFilters.propertyMaxTokenPrice
                     ? house.propertyTokenPrice <= parseInt(currentFilters.propertyMaxTokenPrice, 10)
                     : true;
+    
                 const meetsRental = currentFilters.propertyRental
-                    ? house.propertyRental === (currentFilters.propertyRental === "true")
+                    ? (currentFilters.propertyRental.toLowerCase() === "rent" && house.propertyRental) ||
+                      (currentFilters.propertyRental.toLowerCase() === "buy" && !house.propertyRental)
                     : true;
+    
                 const meetsPropertyAdded = currentFilters.propertyAdded
                     ? new Date(house.propertyAdded || "") >= new Date(currentFilters.propertyAdded)
                     : true;
     
-                const meetsType = currentFilters.propertySettlement
-                ? currentFilters.propertySettlement
-                        .toLowerCase()
-                        .split(",")
-                        .includes(house.propertySettlement.toLowerCase())
-                : true;
+                // const meetsType = currentFilters.propertySettlement
+                //     ? currentFilters.propertySettlement
+                //           ?.toLowerCase()
+                //           .split(",")
+                //           .includes(house.propertySettlement?.toLowerCase())
+                //     : true;
 
-                console.log( currentFilters.propertySettlement
-                    .toLowerCase()
-                    .split(","));
-                console.log(house.propertySettlement.toLowerCase())
-                console.log(meetsType);
+                // Do the filters for here (All works well)
+                console.log("Here", currentFilters.dontShowKeywords);
+                console.log("Here", currentFilters.propertyKeywords);
+                console.log("Here", currentFilters.propertySettlement);
     
+                
                 return (
                     meetsMinPrice &&
                     meetsMaxPrice &&
@@ -251,13 +290,15 @@ const HouseDisplay = ({ darkMode }) => {
                     meetsBathrooms &&
                     meetsTokensLeft &&
                     meetsTokenPrice &&
-                    meetsType &&
+                    // meetsType &&
                     meetsRental &&
-                    meetsPropertyAdded
+                    meetsPropertyAdded 
                 );
             })
         );
     };
+    
+    
     
     return (
         <div
@@ -287,7 +328,7 @@ const HouseDisplay = ({ darkMode }) => {
 
             <div className="pb-16">
                 <div className="p-4">
-                    <KeywordDropdown />
+                    <KeywordDropdown onKeyWordChange={handleFilterChange} />
                 </div>
                 <div className="px-10">
                     <HouseList houses={filteredHouses} />

@@ -11,6 +11,8 @@ type Filters = {
     propertyMinBathrooms: string;
     propertyMinTokensLeft: string;
     propertyMaxTokenPrice: string;
+    propertyKeywords: string[]; 
+    dontShowKeywords: string[]; 
     propertyAdded: string;
     propertyType: string;
     propertyRental: string;
@@ -30,6 +32,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
         return saved ? JSON.parse(saved) : [];
     });
 
+    // Local states for Must Haves and Don't Show selections
+    const [mustHaveSelections, setMustHaveSelections] = useState<string[]>(filters.propertyKeywords || []);
+    const [dontShowSelections, setDontShowSelections] = useState<string[]>(filters.dontShowKeywords || []);
+
     const filterRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -39,11 +45,41 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
     const handleFilterChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
 
-        if (name === "propertySettlement") {
-            setSelectedItems(value.split(","));
-        }
-
         onFilterChange(event); // Notify the parent handler
+    };
+
+     // Handle Must Haves selection toggle
+     const handleMustHaveToggle = (item: string) => {
+        const updatedSelections = mustHaveSelections.includes(item)
+            ? mustHaveSelections.filter((i) => i !== item)
+            : [...mustHaveSelections, item];
+
+        setMustHaveSelections(updatedSelections);
+
+        // Update parent filters state via onFilterChange
+        onFilterChange({
+            target: {
+                name: "propertyKeywords",
+                value: updatedSelections.join(","), // Pass as a comma-separated string
+            },
+        } as unknown as ChangeEvent<HTMLInputElement>);
+    };
+
+    // Handle Don't Show selection toggle
+    const handleDontShowToggle = (item: string) => {
+        const updatedSelections = dontShowSelections.includes(item)
+            ? dontShowSelections.filter((i) => i !== item)
+            : [...dontShowSelections, item];
+
+        setDontShowSelections(updatedSelections);
+
+        // Update parent filters state via onFilterChange
+        onFilterChange({
+            target: {
+                name: "dontShowKeywords",
+                value: updatedSelections.join(","), // Pass as a comma-separated string
+            },
+        } as unknown as ChangeEvent<HTMLInputElement>);
     };
 
     const clearSearch = () => setSearchQuery("");
@@ -177,8 +213,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                         darkMode={darkMode}
                         filters={filters}
                         onFilterChange={handleFilterChange}
+                        selectFilterChange={onFilterChange}
                         selectedItems={selectedItems}
                         setSelectedItems={setSelectedItems}
+                        handleMustHave={handleMustHaveToggle}
+                        handleDontHave={handleDontShowToggle}
                     />
                 </div>
             )}
