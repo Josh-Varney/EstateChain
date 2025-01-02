@@ -55,7 +55,7 @@ const DummyMarket: React.FC = () => {
 
   return (
     <div
-      className={`flex w-screen h-screen overflow-hidden ${
+      className={`flex w-screen h-screen ${
         darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
       }`}
     >

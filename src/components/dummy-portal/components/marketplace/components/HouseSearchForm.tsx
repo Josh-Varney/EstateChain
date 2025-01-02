@@ -266,7 +266,6 @@ const HouseDisplay = ({ darkMode }) => {
                 w-full
                 transition-colors
                 duration-300
-                overflow-y-auto
                 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}
             `}
         >
@@ -283,7 +282,7 @@ const HouseDisplay = ({ darkMode }) => {
                 <ResultsBar count={houses.length} />
             </div>
 
-            <div className="bg-gradient-to-t from-gray-800 to-gray-900">
+            <div className="bg-gradient-to-t from-gray-800 to-gray-900 pb-16">
                 <div className="p-4">
                     <KeywordDropdown />
                 </div>
