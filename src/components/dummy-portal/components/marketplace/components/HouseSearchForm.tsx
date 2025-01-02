@@ -22,6 +22,11 @@ type Filters = {
     propertyRental: string;
 };
 
+type OnKeyWordChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    optionalParam?: string
+) => void;
+
 const HouseDisplay = ({ darkMode }) => {
     const houses = [
         { 
@@ -178,26 +183,78 @@ const HouseDisplay = ({ darkMode }) => {
         applyFilters(filters);
     }, [filters]);
 
-    const handleFilterChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleFilterChange: OnKeyWordChange = (e, optionalParam ) => {
         const { name, value } = e.target;
-        if (name == "propertyKeywords"){
-            // Ensure immutability by creating a new array
-            const updatedKeywords = Array.isArray(filters.propertyKeywords)
-            ? [...filters.propertyKeywords]
-            : [];
-
-            if (!updatedKeywords.includes(value)) {
-            updatedKeywords.push(value);
+        
+        if (name === "propertyKeywords") {
+            if (optionalParam === "saveKeyword") {
+                // Save the keyword if it doesn't already exist in the array
+                if (!filters.propertyKeywords.includes(value)) {
+                    const updatedFilters = {
+                        ...filters,
+                        propertyKeywords: [...filters.propertyKeywords, value],
+                    };
+                    setFilters(updatedFilters);
+                    applyFilters(updatedFilters);
+                }
+                console.log(value, "Keyword Saved");
+                return;
+            } 
+            else if (optionalParam === "removeKeyword") {
+                // Remove the keyword from the array
+                const updatedFilters = {
+                    ...filters,
+                    propertyKeywords: filters.propertyKeywords.filter(
+                        (keyword) => keyword !== value
+                    ),
+                };
+                setFilters(updatedFilters);
+                applyFilters(updatedFilters);
+                console.log(value, "Keyword Removed");
+                return;
+            } 
+            else {
+                // Via Filter Controls
+            
+                // Ensure immutability by creating a new array and normalize to an array of strings
+                const updatedKeywords = Array.isArray(filters.propertyKeywords)
+                    ? [...filters.propertyKeywords.map((keyword) => String(keyword))]
+                    : [];
+            
+                // Ensure the incoming value is treated as a single string or split if it's a CSV
+                const newValues = String(value).split(',').map((item) => item.trim());
+            
+                // Detect removed items
+                const removedItems = updatedKeywords.filter(
+                    (keyword) => !newValues.includes(keyword)
+                );
+            
+                // Add only new unique values to the array, excluding empty strings
+                newValues.forEach((newValue) => {
+                    if (newValue && !updatedKeywords.includes(newValue)) {
+                        updatedKeywords.push(newValue);
+                    }
+                });
+            
+                // Update the array to remove any removed items
+                const finalKeywords = updatedKeywords.filter(
+                    (keyword) => !removedItems.includes(keyword) && keyword !== "" // Exclude empty strings
+                );
+            
+                // Create the updated filters object
+                const updatedFilters = {
+                    ...filters,
+                    propertyKeywords: finalKeywords, // Ensure it's always an array of valid strings
+                };
+            
+                // Log removed items for debugging
+                console.log("Removed Items:", removedItems);
+            
+                // Update the filters state and apply the filters
+                setFilters(updatedFilters);
+                applyFilters(updatedFilters); // Apply the updated filters to the list
+                return;
             }
-
-            const updatedFilters = {
-            ...filters,
-            propertyKeywords: updatedKeywords,
-            };
-
-            setFilters(updatedFilters);
-            applyFilters(updatedFilters); // Apply the updated filters to the list
-            return;
         } else if (name === "clearAll") {
             setFilters({
                 propertyMinPrice: "",
@@ -276,10 +333,7 @@ const HouseDisplay = ({ darkMode }) => {
                 //           .includes(house.propertySettlement?.toLowerCase())
                 //     : true;
 
-                // Do the filters for here (All works well)
-                console.log("Here", currentFilters.dontShowKeywords);
-                console.log("Here", currentFilters.propertyKeywords);
-                console.log("Here", currentFilters.propertySettlement);
+                console.log(filters.propertyKeywords);
     
                 
                 return (
