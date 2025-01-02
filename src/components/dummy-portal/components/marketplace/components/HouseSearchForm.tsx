@@ -51,7 +51,7 @@ const HouseDisplay = ({ darkMode }) => {
         { 
             id: 2, 
             propertyAddress: "Vowels Lane, East Grinstead, West Sussex, RH19", 
-            propertySettlement: "Semi-Detatched",
+            propertySettlement: "Detatched",
             propertyDescription: "Escape to tranquility with this enchanting 4-bedroom, 3-bathroom country home situated on 10 sprawling acres. Featuring a cozy stone fireplace, hardwood floors throughout, and a wraparound porch with breathtaking views of rolling hills",
             propertyAdded: "07/05/2024",
             propertyAddedBy: "Jackson-Stops",
@@ -125,7 +125,7 @@ const HouseDisplay = ({ darkMode }) => {
         { 
             id: 5, 
             propertyAddress: "Dormans Park", 
-            propertySettlement: "Detatched",
+            propertySettlement: "Flat",
             propertyDescription: "Discover the perfect blend of style and convenience in this 3-bedroom, 2.5-bathroom modern townhouse.",
             propertyAdded: "07/05/2024",
             propertyAddedBy: "Jackson-Stops",
@@ -223,19 +223,25 @@ const HouseDisplay = ({ darkMode }) => {
                 const meetsTokenPrice = currentFilters.propertyMaxTokenPrice
                     ? house.propertyTokenPrice <= parseInt(currentFilters.propertyMaxTokenPrice, 10)
                     : true;
-                const meetsType = currentFilters.propertyType
-                    ? house.propertyType.toLowerCase() === currentFilters.propertyType.toLowerCase()
-                    : true;
-                const meetsSettlement = currentFilters.propertySettlement
-                    ? house.propertySettlement.toLowerCase() === currentFilters.propertySettlement.toLowerCase()
-                    : true;
                 const meetsRental = currentFilters.propertyRental
                     ? house.propertyRental === (currentFilters.propertyRental === "true")
                     : true;
-    
                 const meetsPropertyAdded = currentFilters.propertyAdded
                     ? new Date(house.propertyAdded || "") >= new Date(currentFilters.propertyAdded)
                     : true;
+    
+                const meetsType = currentFilters.propertySettlement
+                ? currentFilters.propertySettlement
+                        .toLowerCase()
+                        .split(",")
+                        .includes(house.propertySettlement.toLowerCase())
+                : true;
+
+                console.log( currentFilters.propertySettlement
+                    .toLowerCase()
+                    .split(","));
+                console.log(house.propertySettlement.toLowerCase())
+                console.log(meetsType);
     
                 return (
                     meetsMinPrice &&
@@ -246,7 +252,6 @@ const HouseDisplay = ({ darkMode }) => {
                     meetsTokensLeft &&
                     meetsTokenPrice &&
                     meetsType &&
-                    meetsSettlement &&
                     meetsRental &&
                     meetsPropertyAdded
                 );

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { FaHome, FaBuilding, FaTree, FaWarehouse } from "react-icons/fa";
 
 interface Filters {
@@ -17,21 +17,31 @@ interface Filters {
 interface FilterControlsProps {
     filters: Filters;
     onFilterChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-    darkMode: string
+    darkMode: string;
+    selectedItems: string[]; // Added this prop
+    setSelectedItems: (items: string[]) => void; // Added this prop
 }
 
 const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange }) => {
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
     const propertyTypes = [
-        { id: "detached", label: "Detached", icon: <FaHome size={30} /> },
-        { id: "semi-detached", label: "Semi-Detached", icon: <FaHome size={30} /> },
-        { id: "terraced", label: "Terraced", icon: <FaWarehouse size={30} /> },
+        { id: "detatched", label: "Detatched", icon: <FaHome size={30} /> },
+        { id: "semi-detached", label: "Semi-Detatched", icon: <FaHome size={30} /> },
+        { id: "terrace", label: "Terraced", icon: <FaWarehouse size={30} /> },
         { id: "flat", label: "Flat", icon: <FaBuilding size={30} /> },
         { id: "bungalow", label: "Bungalow", icon: <FaHome size={30} /> },
         { id: "land", label: "Land", icon: <FaTree size={30} /> },
         { id: "park-home", label: "Park Home", icon: <FaHome size={30} /> },
     ];
+
+    useEffect(() => {
+        // Initialize `selectedItems` state from localStorage
+        const savedItems = localStorage.getItem("selectedFilters");
+        if (savedItems) {
+            setSelectedItems(JSON.parse(savedItems));
+        }
+    }, [setSelectedItems]);
 
     const toggleSelection = (id: string) => {
         const updatedSelectedItems = selectedItems.includes(id)
@@ -39,26 +49,28 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
             : [...selectedItems, id];
     
         setSelectedItems(updatedSelectedItems);
+        localStorage.setItem("selectedFilters", JSON.stringify(updatedSelectedItems));
     
-        // Notify the parent about the updated selected items (e.g., property types)
+        // Notify the parent about the updated selected items
         onFilterChange({
             target: {
-                name: "propertyType", // Assuming this represents property types
-                value: updatedSelectedItems.join(","), // Send as a comma-separated string
+                name: "propertySettlement",
+                value: updatedSelectedItems.join(","), // Comma-separated string
             },
         } as unknown as ChangeEvent<HTMLInputElement>);
     };
-    
+
     const clearFilters = () => {
         setSelectedItems([]);
+        localStorage.removeItem("selectedFilters");
+    
         onFilterChange({
             target: {
-                name: "clearAll", // Use a special name or reset each filter individually
+                name: "clearAll",
                 value: "",
             },
         } as unknown as ChangeEvent<HTMLInputElement>);
     };
-    
 
     const isSelected = (id: string) => selectedItems.includes(id);
 

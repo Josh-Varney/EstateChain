@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import FilterControls from "./FilterControl";
 import { FaSortDown } from "react-icons/fa";
 
@@ -25,8 +25,26 @@ type FilterBarProps = {
 const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange }) => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
+    const [selectedItems, setSelectedItems] = useState<string[]>(() => {
+        const saved = localStorage.getItem("selectedItems");
+        return saved ? JSON.parse(saved) : [];
+    });
 
     const filterRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        localStorage.setItem("selectedItems", JSON.stringify(selectedItems));
+    }, [selectedItems]);
+
+    const handleFilterChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = event.target;
+
+        if (name === "propertySettlement") {
+            setSelectedItems(value.split(","));
+        }
+
+        onFilterChange(event); // Notify the parent handler
+    };
 
     const clearSearch = () => setSearchQuery("");
 
@@ -158,7 +176,9 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                     <FilterControls
                         darkMode={darkMode}
                         filters={filters}
-                        onFilterChange={onFilterChange}
+                        onFilterChange={handleFilterChange}
+                        selectedItems={selectedItems}
+                        setSelectedItems={setSelectedItems}
                     />
                 </div>
             )}
