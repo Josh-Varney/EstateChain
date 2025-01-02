@@ -28,7 +28,7 @@ interface FilterControlsProps {
 }
 
 const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange, selectFilterChange }) => {
-    const DEBUG = true;
+    // const DEBUG = true;
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const [mustHaveItems, setMustHaveItems] = useState<string[]>([]);
     const [dontShowItems, setDontShowItems] = useState<string[]>([]);
@@ -53,13 +53,13 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
         const savedDontShow = localStorage.getItem("selectedDontShow");
         if (savedDontShow) setDontShowItems(JSON.parse(savedDontShow));
     
-        if (DEBUG) {
-            console.group("Initial State");
-            console.log("Selected Property Types:", savedFilters ? JSON.parse(savedFilters) : []);
-            console.log("Must Have Items:", savedMustHaves ? JSON.parse(savedMustHaves) : []);
-            console.log("Don't Show Items:", savedDontShow ? JSON.parse(savedDontShow) : []);
-            console.groupEnd();
-        }
+        // if (DEBUG) {
+        //     console.group("Initial State");
+        //     console.log("Selected Property Types:", savedFilters ? JSON.parse(savedFilters) : []);
+        //     console.log("Must Have Items:", savedMustHaves ? JSON.parse(savedMustHaves) : []);
+        //     console.log("Don't Show Items:", savedDontShow ? JSON.parse(savedDontShow) : []);
+        //     console.groupEnd();
+        // }
     }, []);
 
 
@@ -76,10 +76,10 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
             setMustHaveItems(updatedSelections);
             localStorage.setItem("selectedMustHaves", JSON.stringify(updatedSelections));
     
-            if (DEBUG) {
-                console.log(`Must Have Item Clicked: ${id}`);
-                console.log("Updated Must Have Items:", updatedSelections);
-            }
+            // if (DEBUG) {
+            //     console.log(`Must Have Item Clicked: ${id}`);
+            //     console.log("Updated Must Have Items:", updatedSelections);
+            // }
         } else if (category === "dontShow") {
             updatedSelections = dontShowItems.includes(id)
                 ? dontShowItems.filter((item) => item !== id) // Remove item if already selected
@@ -87,10 +87,10 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
             setDontShowItems(updatedSelections);
             localStorage.setItem("selectedDontShow", JSON.stringify(updatedSelections));
     
-            if (DEBUG) {
-                console.log(`Don't Show Item Clicked: ${id}`);
-                console.log("Updated Don't Show Items:", updatedSelections);
-            }
+            // if (DEBUG) {
+            //     console.log(`Don't Show Item Clicked: ${id}`);
+            //     console.log("Updated Don't Show Items:", updatedSelections);
+            // }
         } else {
             updatedSelections = selectedItems.includes(id)
                 ? selectedItems.filter((item) => item !== id) // Remove item if already selected
@@ -98,10 +98,10 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
             setSelectedItems(updatedSelections);
             localStorage.setItem("selectedFilters", JSON.stringify(updatedSelections));
     
-            if (DEBUG) {
-                console.log(`Property Type Clicked: ${id}`);
-                console.log("Updated Property Types:", updatedSelections);
-            }
+            // if (DEBUG) {
+            //     console.log(`Property Type Clicked: ${id}`);
+            //     console.log("Updated Property Types:", updatedSelections);
+            // }
         }
     
         // Notify parent component of the changes

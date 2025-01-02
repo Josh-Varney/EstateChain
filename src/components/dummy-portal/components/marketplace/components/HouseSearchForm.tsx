@@ -214,66 +214,68 @@ const HouseDisplay = ({ darkMode }) => {
                 return;
             } 
             else {
-                // Via Filter Controls
-            
-                // Ensure immutability by creating a new array and normalize to an array of strings
-                const updatedKeywords = Array.isArray(filters.propertyKeywords)
-                    ? [...filters.propertyKeywords.map((keyword) => String(keyword))]
-                    : [];
-            
-                // Ensure the incoming value is treated as a single string or split if it's a CSV
-                const newValues = String(value).split(',').map((item) => item.trim());
-            
-                // Detect removed items
-                const removedItems = updatedKeywords.filter(
-                    (keyword) => !newValues.includes(keyword)
+                // Log the current state of keywords for debugging
+            console.log("Current Keywords:", filters.propertyKeywords);
+
+            // Normalize existing keywords to an array of strings
+            const existingKeywords = Array.isArray(filters.propertyKeywords)
+                ? [...filters.propertyKeywords.map((keyword) => String(keyword).trim())]
+                : [];
+
+            // Split and normalize incoming values (CSV or single string)
+            const newValues = String(value)
+                .split(',')
+                .map((item) => item.trim())
+                .filter((item) => item !== ""); // Exclude empty strings
+
+                // Define the list of removable keywords
+                const removableKeywords = [
+                    "garden",
+                    "parking",
+                    "new-home",
+                    "retirement-home",
+                    "buying-schemes",
+                    "auction-property",
+                ];
+
+                // Detect removed items only if they are part of the removableKeywords list
+                const removedItems = existingKeywords.filter(
+                    (keyword) => !newValues.includes(keyword) && removableKeywords.includes(keyword)
                 );
-            
-                // Add only new unique values to the array, excluding empty strings
+
+                // Log removed items for debugging
+                console.log("Removed Items:", removedItems);
+
+                // Update the array by adding new values and removing deselected items
+                let updatedKeywords = [...existingKeywords];
+
+                // Add only new unique values
                 newValues.forEach((newValue) => {
                     if (newValue && !updatedKeywords.includes(newValue)) {
                         updatedKeywords.push(newValue);
                     }
                 });
-            
-                // Update the array to remove any removed items
-                const finalKeywords = updatedKeywords.filter(
-                    (keyword) => !removedItems.includes(keyword) && keyword !== "" // Exclude empty strings
+
+                // Remove deselected items, but only from the removableKeywords list
+                updatedKeywords = updatedKeywords.filter(
+                    (keyword) => !removedItems.includes(keyword)
                 );
-            
+
                 // Create the updated filters object
                 const updatedFilters = {
                     ...filters,
-                    propertyKeywords: finalKeywords, // Ensure it's always an array of valid strings
+                    propertyKeywords: updatedKeywords, // Ensure it's always an array of valid strings
                 };
-            
-                // Log removed items for debugging
-                console.log("Removed Items:", removedItems);
-            
+
+                // Log the final updated keywords for debugging
+                console.log("Final Updated Keywords:", updatedKeywords);
+
                 // Update the filters state and apply the filters
                 setFilters(updatedFilters);
-                applyFilters(updatedFilters); // Apply the updated filters to the list
+                applyFilters(updatedFilters);
                 return;
             }
-        } else if (name === "clearAll") {
-            setFilters({
-                propertyMinPrice: "",
-                propertyMaxPrice: "",
-                propertyLocation: "",
-                propertySettlement: "",
-                propertyAdded: "",
-                propertyMinBedrooms: "",
-                propertyMinBathrooms: "",
-                propertyMinTokensLeft: "",
-                propertyMaxTokenPrice: "",
-                propertyType: "",
-                propertyRental: "",
-                propertyKeywords: [], // Reset Must Haves
-                dontShowKeywords: [], // Reset Don't Show
-            });
-            return;
         }
-    
         const updatedFilters = {
             ...filters,
             [name]: value,
