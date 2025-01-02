@@ -263,10 +263,13 @@ const HouseDisplay = ({ darkMode }) => {
         <div
             className={`
                 min-h-screen
+                h-screen
                 w-full
                 transition-colors
                 duration-300
-                ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}
+                overflow-y-auto
+                pb-12
+                ${darkMode ? "bg-gradient-to-t from-gray-800 to-gray-900 text-white" : "bg-gray-100 text-black"}
             `}
         >
             <FilterBar
@@ -279,10 +282,10 @@ const HouseDisplay = ({ darkMode }) => {
                 <AlertSaveSearchBar />
                 <hr className="border-gray-600 w-[98%] mx-auto my-1" />
                 {/* Results bar */}
-                <ResultsBar count={houses.length} />
+                <ResultsBar count={filteredHouses.length} />
             </div>
 
-            <div className="bg-gradient-to-t from-gray-800 to-gray-900 pb-16">
+            <div className="pb-16">
                 <div className="p-4">
                     <KeywordDropdown />
                 </div>
