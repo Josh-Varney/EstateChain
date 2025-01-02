@@ -180,6 +180,12 @@ const HouseDisplay = ({ darkMode }) => {
     const [filteredHouses, setFilteredHouses] = useState(houses);
 
     useEffect(() => {
+        window.localStorage.getItem("selectedFilters")
+        window.localStorage.getItem("selectedMustHaves")
+        window.localStorage.getItem("selectedDontShow")
+    })
+
+    useEffect(() => {
         applyFilters(filters);
     }, [filters]);
 
@@ -297,7 +303,6 @@ const HouseDisplay = ({ darkMode }) => {
                           ?.toLowerCase()
                           .includes(currentFilters.propertyLocation.toLowerCase())
                     : true;
-    
                 const meetsBedrooms = currentFilters.propertyMinBedrooms
                     ? house.propertyBedrooms >= parseInt(currentFilters.propertyMinBedrooms, 10)
                     : true;
@@ -323,15 +328,14 @@ const HouseDisplay = ({ darkMode }) => {
                     ? new Date(house.propertyAdded || "") >= new Date(currentFilters.propertyAdded)
                     : true;
     
-                // const meetsType = currentFilters.propertySettlement
-                //     ? currentFilters.propertySettlement
-                //           ?.toLowerCase()
-                //           .split(",")
-                //           .includes(house.propertySettlement?.toLowerCase())
-                //     : true;
-
-                console.log(filters.propertyKeywords);
-    
+                
+                const meetsType = Array.isArray(currentFilters.propertySettlement) && currentFilters.propertySettlement.length > 0
+                    ? currentFilters.propertySettlement
+                          .map((type: string) => type.toLowerCase().trim()) // Normalize filter array items
+                          .includes(house.propertySettlement?.toLowerCase() || "") // Normalize house property for comparison
+                    : true; // Show all if no filters are selected
+                    
+                
                 
                 return (
                     meetsMinPrice &&
@@ -341,7 +345,7 @@ const HouseDisplay = ({ darkMode }) => {
                     meetsBathrooms &&
                     meetsTokensLeft &&
                     meetsTokenPrice &&
-                    // meetsType &&
+                    meetsType &&
                     meetsRental &&
                     meetsPropertyAdded 
                 );
