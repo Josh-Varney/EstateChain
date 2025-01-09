@@ -69,7 +69,7 @@ const HouseDisplay = ({ darkMode }) => {
                 agentEmail: "jrv123756@gmail.com",
             },
             propertyPrice: 150000, 
-            propertyWords: ["pool"],
+            propertyKeywords: ["pool"],
             propertyLocation: "Maine", 
             propertySize: "1200 sqft", 
             propertyBedrooms: 2, 
@@ -334,7 +334,19 @@ const HouseDisplay = ({ darkMode }) => {
                           .map((type: string) => type.toLowerCase().trim()) // Normalize filter array items
                           .includes(house.propertySettlement?.toLowerCase() || "") // Normalize house property for comparison
                     : true; // Show all if no filters are selected
-                    
+
+                
+                const meetsKeywords = currentFilters.propertyKeywords && Array.isArray(house.propertyKeywords)
+                    ? currentFilters.propertyKeywords.every((keyword) =>
+                          (house.propertyKeywords || []).map((kw) => kw.toLowerCase().trim()).includes(keyword.toLowerCase().trim())
+                      )
+                    : true; // Show all if no keywords are provided
+
+                const avoidsDontShowKeywords = currentFilters.dontShowKeywords && Array.isArray(house.propertyKeywords)
+                    ? currentFilters.dontShowKeywords.every((keyword) =>
+                          !(house.propertyKeywords || []).map((kw) => kw.toLowerCase().trim()).includes(keyword.toLowerCase().trim())
+                      )
+                    : true; // Show all if no "dontShowKeywords" are provided
                 
                 
                 return (
@@ -347,13 +359,13 @@ const HouseDisplay = ({ darkMode }) => {
                     meetsTokenPrice &&
                     meetsType &&
                     meetsRental &&
-                    meetsPropertyAdded 
+                    meetsPropertyAdded &&
+                    meetsKeywords &&
+                    avoidsDontShowKeywords
                 );
             })
         );
     };
-    
-    
     
     return (
         <div
