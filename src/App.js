@@ -24,6 +24,7 @@ import DummyTransactions from './components/dummy-portal/components/transactions
 import DummyAnalytics from './components/dummy-portal/components/analytics/DummyAnalytics.tsx';
 import DummyCommunity from './components/dummy-portal/components/community/DummyCommunity.tsx';
 import DummyInformation from './components/dummy-portal/components/info/DummyInfo.tsx';
+import DisplayProperty from './components/dummy-portal/components/marketplace/components/PropertyDisplayPopUp.tsx';
 
 function App() {
   useEffect(() => {
@@ -67,6 +68,15 @@ function App() {
               <DummyMarket />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path='/simulation/mockmarketplace/display-property'
+          element={
+            <ProtectedRoute>
+              <DisplayProperty />
+            </ProtectedRoute>
+          }
+         
         />
         <Route
           path='/simulation/mocktransactions'

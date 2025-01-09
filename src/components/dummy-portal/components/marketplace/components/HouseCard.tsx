@@ -12,7 +12,11 @@ const HouseCard = ({ house }: { house: any }) => {
     const images = house.image ? [house.image] : placeholderImages;
 
     return (
-        <div className="w-full flex flex-col border border-gray-300 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        <div className="w-full flex flex-col border border-gray-300 rounded-lg shadow-md overflow-hidden transform transition duration-200 hover:scale-95 hover:shadow-2xl cursor-pointer"
+            onClick={() => {
+                window.location.href = "/simulation/mockmarketplace/display-property"
+            }}
+        >
             {/* Featured Badge */}
             {house.featured && (
                 <div className="flex items-center bg-yellow-500 text-white px-3 py-1 text-xs font-bold uppercase">
