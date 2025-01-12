@@ -1,8 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { FaLuggageCart } from "react-icons/fa";
 
+const PropertyMapDisplayContainer = ({ title, latitude, longitude }) => {
+//   const mapRef = useRef(null);
 
-const PropertyMapDisplayContainer = ({ title }) => {
+//   useEffect(() => {
+//     // Initialize the map
+//     if (mapRef.current) {
+//       const map = new window.google.maps.Map(mapRef.current, {
+//         center: { lat: latitude, lng: longitude },
+//         zoom: 15,
+//       });
+
+//       // Add a marker
+//       new window.google.maps.Marker({
+//         position: { lat: latitude, lng: longitude },
+//         map,
+//         title: "Property Location",
+//       });
+//     }
+//   }, [latitude, longitude]);
 
   return (
     <div className="mb-4 border rounded-md shadow-md">
@@ -17,9 +34,9 @@ const PropertyMapDisplayContainer = ({ title }) => {
       </button>
 
       {/* Card Content */}
-      <div>
-        <h1>Nas</h1>
-      </div>
+      {/* <div>
+        <div ref={mapRef} style={{ height: "300px", width: "100%" }} />
+      </div> */}
     </div>
   );
 };
