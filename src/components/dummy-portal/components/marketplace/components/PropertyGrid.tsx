@@ -8,7 +8,13 @@ import {
   FaShare,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import CardDropdown from "./PropertyDetailDropdown";
+import EPCDropdown from "./EnergyPerformanceDropdown";
+import UtilitiesDropdown from "./UtilitiesRightsDropdown";
+import FunctionActivatedDropdown from "./ButtonActivatedDropdown";
+import PropertyMapDisplayContainer from "./PropertyMapDisplayContainer";
+import PropertyAgentDisplayCard from "./PropertyAgentDisplayCard";
+import PropertyNotesWritten from "./PropertyNotes";
+import PropertyStampDutyCalculator from "./PropertyStampDutyCalculator";
 
 // PropertyDetails Component
 const PropertyDetails = ({ title, value }) => (
@@ -50,26 +56,26 @@ const PropertyGrid = ({ darkMode }) => {
       {/* Main Content Section */}
       <main className="px-6 grid gap-8 grid-cols-1 md:grid-cols-5">
         {/* Property Information */}
-        <section className="col-span-4 space-y-8">
+        <section className="col-span-4 space-y-6">
           {/* Title and Navigation */}
-          <div className="space-y-4">
-            <h1 className="text-sm font-bold">New Home</h1>
+          <div className="space-y-2">
+            <h1 className="text-xs font-bold border rounded-full w-fit p-1">New Home</h1>
             <div className="flex justify-between items-center">
               <h2 className="text-lg font-semibold">Whittaker House</h2>
               <div className="flex space-x-4 text-lg">
-                <FaHeart className="cursor-pointer" />
-                <FaShare className="cursor-pointer" />
+                <FaHeart className="cursor-pointer hover:text-red-700" />
+                <FaShare className="cursor-pointer hover:text-green-600"/>
               </div>
             </div>
-          </div>
-
-          {/* Price and Info */}
-          <div className="flex justify-between items-center space-y-4">
-            <div className="flex items-center space-x-2 text-lg">
-              <span className="font-medium">$10,000</span>
-              <FaInfoCircle />
+            {/* Price and Info */}
+            <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-2 text-lg">
+                <span className="font-medium">$10,000</span>
+                <FaInfoCircle />
+                </div>
+                <button className="border rounded-full p-1 text-sm font-medium">Invest Now</button>
             </div>
-            <button className="border p-1 font-medium">Buy Token</button>
+
           </div>
 
           {/* Additional Info */}
@@ -106,7 +112,7 @@ const PropertyGrid = ({ darkMode }) => {
           <section className="space-y-6">
             
             <div>
-                <div>
+                <div className="mb-4">
                     <h1 className="text-lg font-semibold">Key Features</h1>
                 </div>
                 <div className="flex flex-row justify-between">
@@ -138,19 +144,25 @@ const PropertyGrid = ({ darkMode }) => {
           </section>
 
           {/* Description */}
-          <section className="space-y-6">
-            <h1 className="text-lg font-semibold">Description</h1>
-            <p>
-              Discover Whittaker House, a visionary new development that sets the
-              standard for modern living. Ideally situated in a prime location, this
-              exquisite collection of residences seamlessly blends cutting-edge
-              contemporary design with timeless elegance. Whether you're searching for
-              your dream home or a premier investment opportunity, Whittaker House
-              promises unparalleled quality and style tailored to every need.
-            </p>
-            <a href="#" className="text-blue-500 hover:underline">
-              Explore the Full Description
-            </a>
+          <section className="space-y-4">
+            <div>
+                <h1 className="text-lg font-semibold">Description</h1>
+            </div>
+            <div>
+                <p>
+                Discover Whittaker House, a visionary new development that sets the
+                standard for modern living. Ideally situated in a prime location, this
+                exquisite collection of residences seamlessly blends cutting-edge
+                contemporary design with timeless elegance. Whether you're searching for
+                your dream home or a premier investment opportunity, Whittaker House
+                promises unparalleled quality and style tailored to every need.
+                </p>
+            </div>
+            <div>
+                <a href="#" className="text-blue-500 hover:underline">
+                Explore the Full Description
+                </a>
+            </div>
           </section>
 
           {/* Additional Details */}
@@ -165,48 +177,34 @@ const PropertyGrid = ({ darkMode }) => {
             <hr className="border-b border-gray-300" />
           </section>
 
-          {/* Additional Sections */}
-          {[
-            {
-              title: "Lease Hold Card Dropdown",
-              details: "Details about leasehold options.",
-            },
-            {
-              title: "Energy Performance Certificate",
-              details: "Details about the energy performance certificate.",
-            },
-            {
-              title: "Utilities, Rights & Restrictions",
-              details: "Details about utilities, rights, and restrictions.",
-            },
-            {
-              title: "Broadband Speed",
-              details: "Details about broadband speeds available in the area.",
-            },
-            {
-              title: "Recently Sold & Under Offer",
-              details: "Details about recently sold and under offer properties.",
-            },
-          ].map(({ title, details }, idx) => (
-            <section key={idx} className="space-y-6">
-              <h1 className="text-lg font-semibold mb-2">{title}</h1>
-              <CardDropdown title={title} details={details} />
-            </section>
-          ))}
-
           <section className="space-y-6">
-            <h1 className="text-lg font-semibold mb-2">Google Maps</h1>
-            <p>Interactive map container here.</p>
+              <EPCDropdown title={"EPC Certification"} imageSrc={undefined} />
           </section>
 
-          <section className="space-y-6">
-            <h1 className="text-lg font-semibold mb-2">Estate Agent</h1>
+          <section>
+            <UtilitiesDropdown title={"Utilities, rights & restrictions "} />
           </section>
 
-          <section className="space-y-6">
-            <h1 className="text-lg font-semibold mb-2">Stamp Duty Calculator</h1>
-            <p>Interactive calculator here.</p>
+          <section>
+            <FunctionActivatedDropdown title={"Recently sold & under offer"} />
           </section>
+
+          <section>
+            <PropertyMapDisplayContainer title={"House Name"}/>
+          </section>
+
+          <section>
+            <PropertyAgentDisplayCard title={"Agent Card"} />
+          </section>
+
+          <section>
+            <PropertyStampDutyCalculator title={"Stamp Duty Calculator"} />
+          </section>
+
+          <section>
+            <PropertyNotesWritten title={"Teake Notes"}/>
+          </section>
+
         </section>
 
         {/* Agent Information */}
