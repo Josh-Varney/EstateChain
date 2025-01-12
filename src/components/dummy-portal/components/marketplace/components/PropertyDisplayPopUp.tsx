@@ -2,41 +2,48 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../../main/Sidebar";
 import HeaderBar from "../../main/HeaderBar";
 import Prompts from "../../prompts/Prompts";
+import { useParams, useNavigate } from "react-router-dom";
+import PropertyGrid from "./PropertyGrid";
 
-const DisplayProperty: React.FC = () => {
+interface DisplayPropertyProps {}
+
+const DisplayProperty: React.FC<DisplayPropertyProps> = () => {
+  const { propertyID } = useParams<{ propertyID: string }>();
+
   const [darkMode, setDarkMode] = useState(false);
   const [isBuyer, setIsBuyer] = useState(true);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false);
   const [walletConnectedPrompt, setWalletConnectedPrompt] = useState(false);
-  const [notificationPrompt , setNotificationPrompt] = useState(false); 
+  const [notificationPrompt, setNotificationPrompt] = useState(false);
   const [profilePrompt, setProfilePrompt] = useState(false);
 
+  // Toggle wallet prompts
   const toggleWalletPrompt = () => {
     if (localStorage.getItem("connectedAccount")) {
-      setWalletConnectedPrompt((prev) => !prev); // Toggle connected prompt
+      setWalletConnectedPrompt((prev) => !prev);
     } else {
-      setWalletConnectPrompt((prev) => !prev); // Toggle wallet connect prompt
+      setWalletConnectPrompt((prev) => !prev);
     }
   };
 
+  // Toggle Buyer/Seller mode
   const toggleBuyerSeller = () => {
     setIsBuyer((prevState) => !prevState);
   };
 
-  const toggleIsBuyer = () => {
-    setIsBuyer((prevIsBuyer) => !prevIsBuyer);
-  };
-
+  // Toggle profile prompt
   const toggleProfilePrompt = () => {
     setProfilePrompt((prev) => !prev);
   };
 
+  // Toggle notification prompt
   const toggleNotificationPrompt = () => {
     setNotificationPrompt((prev) => !prev);
-  }
+  };
 
+  // Toggle dark mode
   const toggleDarkMode = () => {
-    const newTheme = !darkMode ? "dark" : "light";
+    const newTheme = darkMode ? "light" : "dark";
     setDarkMode(!darkMode);
     localStorage.setItem("theme", newTheme);
   };
@@ -59,21 +66,28 @@ const DisplayProperty: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex flex-col w-full h-full ml-20">
-        <HeaderBar darkMode={darkMode} onWalletClick={toggleWalletPrompt} onProfileClick={toggleProfilePrompt} onNotiicationClick={toggleNotificationPrompt} onToggleBuyerSeller={toggleBuyerSeller} isBuyer={isBuyer}/>
-
-        
-
-        <Prompts
-          walletConnectPrompt={walletConnectPrompt}
-          walletConnectedPrompt={walletConnectedPrompt}
-          profilePrompt={profilePrompt}
-          notificationPrompt={notificationPrompt}
-          closeWalletConnectPrompt={() => setWalletConnectPrompt(false)}
-          closeWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
-          closeProfilePrompt={() => setProfilePrompt(false)}
-          closeNotificationPrompt={() => setNotificationPrompt(false)}
+        <HeaderBar
+          darkMode={darkMode}
+          onWalletClick={toggleWalletPrompt}
+          onProfileClick={toggleProfilePrompt}
+          onNotiicationClick={toggleNotificationPrompt}
+          onToggleBuyerSeller={toggleBuyerSeller}
+          isBuyer={isBuyer}
         />
+
+        <PropertyGrid darkMode={darkMode} />
       </div>
+
+      <Prompts
+        walletConnectPrompt={walletConnectPrompt}
+        walletConnectedPrompt={walletConnectedPrompt}
+        profilePrompt={profilePrompt}
+        notificationPrompt={notificationPrompt}
+        closeWalletConnectPrompt={() => setWalletConnectPrompt(false)}
+        closeWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
+        closeProfilePrompt={() => setProfilePrompt(false)}
+        closeNotificationPrompt={() => setNotificationPrompt(false)}
+      />
     </div>
   );
 };

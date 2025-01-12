@@ -14,7 +14,8 @@ const HouseCard = ({ house }: { house: any }) => {
     return (
         <div className="w-full flex flex-col border border-gray-300 rounded-lg shadow-md overflow-hidden transform transition duration-200 hover:scale-95 hover:shadow-2xl cursor-pointer"
             onClick={() => {
-                window.location.href = "/simulation/mockmarketplace/display-property"
+                const houseID = house.id
+                window.location.href = `/simulation/mockmarketplace/display-property?propertyID=${houseID}`
             }}
         >
             {/* Featured Badge */}
