@@ -16,6 +16,7 @@ import PropertyAgentDisplayCard from "./PropertyAgentDisplayCard";
 import PropertyNotesWritten from "./PropertyNotes";
 import PropertyStampDutyCalculator from "./PropertyStampDutyCalculator";
 import PropertyInvestPopup from "./PropertyInvestPopUp";
+import CryptoTaxCalculator from "./PropertyCryptoTaxCalculator";
 
 // PropertyDetails Component
 const PropertyDetails = ({ title, value }) => (
@@ -33,9 +34,18 @@ const PropertyGrid = ({ darkMode }) => {
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
 
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  const description = `
+    Discover Whittaker House, a visionary new development that sets the standard
+    for modern living. Ideally situated in a prime location, this exquisite 
+    collection of residences seamlessly blends cutting-edge contemporary design 
+    with timeless elegance.
+  `;
+  const charLimit = 100; // Set the character limit for truncation
+
   return (
     <div
-      className={`min-h-screen w-full transition-colors duration-300 ${
+      className={`min-h-screen w-full transition-colors duration-300 pb-12 ${
         darkMode
           ? "bg-gradient-to-t from-gray-800 to-gray-900 text-white"
           : "bg-gray-100 text-black"
@@ -91,7 +101,15 @@ const PropertyGrid = ({ darkMode }) => {
                 </button>
 
                 {/* PropertyInvestPopup component */}
-                <PropertyInvestPopup isOpen={isPopupOpen} onClose={closePopup} />
+                <PropertyInvestPopup 
+                  isOpen={isPopupOpen} 
+                  onClose={closePopup} 
+                  tokenPrice={50}
+                  propertyName="Oceanview Apartments"
+                  totalTokens={1000}
+                  tokensSold={600}
+                  isProject={true}
+                />
               </div>
             </div>
 
@@ -146,18 +164,22 @@ const PropertyGrid = ({ darkMode }) => {
               </div>
             </section>
 
-            {/* Description */}
+            {/* Description Section */}
             <section className="space-y-4">
               <h1 className="text-lg font-semibold">Description</h1>
               <p>
-                Discover Whittaker House, a visionary new development that sets
-                the standard for modern living. Ideally situated in a prime
-                location, this exquisite collection of residences seamlessly
-                blends cutting-edge contemporary design with timeless elegance.
+                {descriptionExpanded || description.length <= charLimit
+                  ? description
+                  : description.slice(0, charLimit) + '...'}
               </p>
-              <a href="#" className="text-blue-500 hover:underline">
-                Explore the Full Description
-              </a>
+              {description.length > charLimit && (
+                <button
+                  onClick={() => setDescriptionExpanded(!descriptionExpanded)}
+                  className="text-blue-500 hover:underline"
+                >
+                  {descriptionExpanded ? 'Show Less' : 'Explore the Full Description'}
+                </button>
+              )}
             </section>
 
             {/* Additional Details */}
@@ -193,6 +215,10 @@ const PropertyGrid = ({ darkMode }) => {
 
             <section>
               <PropertyNotesWritten title={"Take Notes"} />
+            </section>
+
+            <section>
+              <CryptoTaxCalculator title={"Crypto TaxCalculator"}/>
             </section>
           </section>
 
