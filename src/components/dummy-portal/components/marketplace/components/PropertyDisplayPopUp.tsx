@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../../main/Sidebar";
 import HeaderBar from "../../main/HeaderBar";
 import Prompts from "../../prompts/Prompts";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import PropertyGrid from "./PropertyGrid";
 
 interface DisplayPropertyProps {}
@@ -75,9 +75,13 @@ const DisplayProperty: React.FC<DisplayPropertyProps> = () => {
           isBuyer={isBuyer}
         />
 
-        <PropertyGrid darkMode={darkMode} />
+        {/* Scrollable Content */}
+        <div className="flex-grow h-full overflow-y-auto">
+          <PropertyGrid darkMode={darkMode} />
+        </div>
       </div>
 
+      {/* Prompts */}
       <Prompts
         walletConnectPrompt={walletConnectPrompt}
         walletConnectedPrompt={walletConnectedPrompt}

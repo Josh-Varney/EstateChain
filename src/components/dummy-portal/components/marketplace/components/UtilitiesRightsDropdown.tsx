@@ -1,19 +1,64 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaLuggageCart } from "react-icons/fa";
 
 // Modal Component
 const Modal = ({ isOpen, onClose, title, description }) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-md shadow-lg p-6 max-w-md w-full">
-        <h2 className="text-lg font-bold mb-4">{title}</h2>
-        <p className="text-sm text-gray-700 dark:text-gray-300">{description}</p>
-        <div className="mt-4 text-right">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-gray-800 rounded-lg shadow-xl p-6 max-w-lg w-full transform transition-all duration-300"
+      >
+        {/* Modal header */}
+        <div className="flex justify-between items-start mb-4">
+          <h2 className="text-xl font-bold text-white">{title}</h2>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            className="text-gray-400 hover:text-gray-300 focus:outline-none"
+            aria-label="Close modal"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        {/* Modal description */}
+        <p className="text-gray-300">{description}</p>
+
+        {/* Footer button */}
+        <div className="mt-6 text-right">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-700"
           >
             Close
           </button>
@@ -27,7 +72,7 @@ const Modal = ({ isOpen, onClose, title, description }) => {
 const UtilityList = ({ items, bold }) => (
   <ul>
     {items.map((item, index) => (
-      <li key={index} className={`mb-2 text-sm ${bold ? "font-bold" : ""}`}>
+      <li key={index} className={`mb-2 text-sm ${bold ? "font-bold" : ""} text-gray-300`}>
         {item}
       </li>
     ))}
@@ -35,11 +80,18 @@ const UtilityList = ({ items, bold }) => (
 );
 
 // Reusable Section Component
-const Section = ({ title, description, fullDescription, leftItems, rightItems, onTitleClick }) => (
+const Section = ({
+  title,
+  description,
+  fullDescription,
+  leftItems,
+  rightItems,
+  onTitleClick,
+}) => (
   <div>
-    <h2 className="text-md font-bold mb-1">{title}</h2>
+    <h2 className="text-md font-bold mb-1 text-white">{title}</h2>
     <h2
-      className="text-md mb-4 cursor-pointer text-blue-500 hover:underline"
+      className="text-md mb-4 cursor-pointer text-blue-400 hover:underline"
       onClick={() => onTitleClick(title, fullDescription)}
     >
       {description}
@@ -60,19 +112,16 @@ const UtilitiesDropdown = ({ title }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({ title: "", description: "" });
 
-  // Open Modal with Section Data
   const handleTitleClick = (title, description) => {
     setModalData({ title, description });
     setIsModalOpen(true);
   };
 
-  // Close Modal
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setModalData({ title: "", description: "" });
   };
 
-  // Section Data
   const sections = [
     {
       title: "Utility Supply",
@@ -101,21 +150,19 @@ const UtilitiesDropdown = ({ title }) => {
   ];
 
   return (
-    <div className="mb-4 border rounded-md shadow-md">
-      {/* Card Header */}
+    <div className="mb-4 border border-gray-700 shadow-md rounded-b-lg">
       <button
-        className="w-full px-4 py-2 text-left bg-gray-200 dark:bg-gray-700 text-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+        className="w-full px-4 py-2 text-left bg-gray-700 hover:bg-gray-600 text-lg font-semibold text-white transition"
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
       >
         <div className="flex flex-row items-center space-x-2">
-          <FaLuggageCart />
+          <FaLuggageCart className="text-blue-400" />
           <span>{title}</span>
         </div>
       </button>
 
-      {/* Dropdown Content */}
       {isDropdownOpen && (
-        <div className="px-6 py-6 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 border-t">
+        <div className="px-6 py-6 bg-gray-900 text-gray-300 border-t rounded-b-lg border-gray-700">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {sections.map((section, index) => (
               <Section
@@ -132,7 +179,6 @@ const UtilitiesDropdown = ({ title }) => {
         </div>
       )}
 
-      {/* Modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
