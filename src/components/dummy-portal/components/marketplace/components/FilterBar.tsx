@@ -26,6 +26,7 @@ type FilterBarProps = {
 
 const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange }) => {
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [distanceFilter, setDistanceFilter] = useState<string>('10'); // Default to 10 miles
     const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
     const [selectedItems, setSelectedItems] = useState<string[]>(() => {
         const saved = localStorage.getItem("selectedItems");
@@ -84,6 +85,27 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
 
     const clearSearch = () => setSearchQuery("");
 
+    const handleSearch = () => {
+        if (!searchQuery) {
+            alert('Please enter a location!');
+            return;
+        }
+        // Pass the search query and selected filter to the parent or backend
+
+        console.log(searchQuery, distanceFilter)
+        // onSearch(searchQuery, distanceFilter);
+    };
+
+    const handleDistanceChange = (event: { target: { value: any; }; }) => {
+        const newDistance = event.target.value;
+        setDistanceFilter(newDistance);
+
+        // If there's an active search, automatically execute it
+        if (searchQuery) {
+            handleSearch();
+        }
+    };
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
@@ -100,6 +122,13 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
         setIsFilterVisible((prev) => !prev);
     };
 
+    const handleKeyPress = (e: { key: string; preventDefault: () => void; }) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent default form submission behavior
+            handleSearch();
+        }
+    };
+
     return (
         <div className="relative">
             <div className="flex flex-wrap items-center gap-3 p-0 bg-gradient-to-b from-gray-800 to-gray-900">
@@ -110,7 +139,8 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search location..."
+                            onKeyDown={handleKeyPress} // Listen for Enter key press
+                            placeholder="Search a location..."
                             className="flex-grow px-4 py-1 text-sm rounded-l-lg focus:outline-none text-gray-400"
                         />
                         {searchQuery && (
@@ -122,18 +152,23 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                             </button>
                         )}
                         <select
-                            className="px-4 py-2 text-sm bg-white border-l rounded-r-lg border-gray-300 text-gray-400"
+                            className="px-4 py-2 text-sm bg-white border-l rounded-r-lg border-gray-300 text-gray-400 text-center"
+                            value={distanceFilter}
+                            onChange={handleDistanceChange}
                         >
-                            <option value="Option 1">Option 1</option>
-                            <option value="Option 2">Option 2</option>
-                            <option value="Option 3">Option 3</option>
+                            <option value="Option 1">+10 Miles</option>
+                            <option value="Option 2">+20 Miles</option>
+                            <option value="Option 3">+30 Miles</option>
+                            <option value="Option 4">+50 Miles</option>
+                            <option value="Option 5">Within Country</option>
+                            <option value="Option 6">All Locations</option>
                         </select>
                     </div>
                 </div>
 
                 {/* Price Filter */}
-                <div className="flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600">
-                    <div className="">
+                <div className="hidden md:flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600">
+                    <div>
                         <select
                             name="propertyMinPrice"
                             value={filters.propertyMinPrice}
@@ -147,7 +182,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                         </select>
                     </div>
                     <div className="text-gray-400 text-sm">to</div>
-                    <div className="">
+                    <div>
                         <select
                             name="propertyMaxPrice"
                             value={filters.propertyMaxPrice}
@@ -163,7 +198,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                 </div>
 
                 {/* Bedroom Filter */}
-                <div className="flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600">
+                <div className="hidden lg:flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600">
                     <div className="">
                         <select
                             name="propertyMinBedrooms"

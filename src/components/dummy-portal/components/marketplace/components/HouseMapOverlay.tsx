@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import FilterBar from "./FilterBar";
+import { FaCrosshairs } from "react-icons/fa";
 
 interface OverlayProps {
   isOpen: boolean;
@@ -40,23 +41,37 @@ const Overlay: React.FC<OverlayProps> = ({ isOpen, closeOverlay }) => {
 
     const initializeMap = () => {
       if (mapRef.current) {
-        const position = { lat: 37.7749, lng: -122.4194 }; // Example: San Francisco
-
         const map = new window.google.maps.Map(mapRef.current, {
-          center: position,
+          center: { lat: 37.7749, lng: -122.4194 }, // Center the map
           zoom: 12,
           mapId: "87d7c47084b9320e",
         });
-
-        new window.google.maps.marker.AdvancedMarkerElement({
-          map,
-          position,
-          title: "Overlay Map Location",
+    
+        // Example marker data
+        const markersData = [
+          { id: 1, lat: 37.7749, lng: -122.4194, title: "San Francisco" },
+          { id: 2, lat: 37.7849, lng: -122.4294, title: "Location 2" },
+          { id: 3, lat: 37.7649, lng: -122.4094, title: "Location 3" },
+        ];
+    
+        // Create markers
+        markersData.forEach((data) => {
+          const marker = new window.google.maps.Marker({
+            position: { lat: data.lat, lng: data.lng },
+            map: map,
+            title: data.title, // Tooltip when hovering over the pin
+          });
+    
+          // Add click event listener
+          marker.addListener("click", () => {
+            console.log(`Pin clicked: ID=${data.id}, Title=${data.title}`);
+          });
         });
       } else {
         console.error("Map container (ref) is not available.");
       }
     };
+    
 
     loadGoogleMapsScript();
   }, []);
@@ -100,7 +115,7 @@ const Overlay: React.FC<OverlayProps> = ({ isOpen, closeOverlay }) => {
           onClick={closeOverlay}
           aria-label="Close Overlay"
         >
-          Close
+          <FaCrosshairs />
         </button>
       </div>
 
