@@ -21,7 +21,7 @@ type Filters = {
 type FilterBarProps = {
     darkMode: string;
     filters: Filters;
-    onFilterChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement>;
+    onFilterChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>, optionalParam?: string) => void;
 };
 
 const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange }) => {
@@ -85,15 +85,43 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
 
     const clearSearch = () => setSearchQuery("");
 
-    const handleSearch = () => {
+    const handlePostCodeSearch = async () => {
         if (!searchQuery) {
-            alert('Please enter a location!');
+            alert("Please enter a location!");
             return;
         }
-        // Pass the search query and selected filter to the parent or backend
 
-        console.log(searchQuery, distanceFilter)
-        // onSearch(searchQuery, distanceFilter);
+        const postcode = searchQuery.trim().toUpperCase().replace(/\s+/g, "");
+
+        const selectedMetric = "miles";
+
+        try {
+            if (!searchQuery) {
+                alert("Please enter a location!");
+                return;
+            }
+        
+            const response = await fetch(
+                `http://localhost:3001/geoencode/search?postcode=${encodeURIComponent(searchQuery.trim())}`
+            );
+        
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const { longitude, latitude } = await response.json();
+
+            console.log(longitude, latitude);
+
+            // Update both longitude and latitude
+            onFilterChange(
+                { target: { name: "searchLocation", value: {longitude: longitude, latitude: latitude, selectedMetric: selectedMetric} } } as unknown as ChangeEvent<HTMLInputElement>
+            );
+            
+        } catch (error) {
+            console.error("Error fetching location data:", error);
+            alert("Failed to fetch location data. Please try again.");
+        }
     };
 
     const handleDistanceChange = (event: { target: { value: any; }; }) => {
@@ -102,7 +130,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
 
         // If there's an active search, automatically execute it
         if (searchQuery) {
-            handleSearch();
+            handlePostCodeSearch();
         }
     };
 
@@ -125,7 +153,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
     const handleKeyPress = (e: { key: string; preventDefault: () => void; }) => {
         if (e.key === 'Enter') {
             e.preventDefault(); // Prevent default form submission behavior
-            handleSearch();
+            handlePostCodeSearch();
         }
     };
 

@@ -5,6 +5,11 @@ import AlertSaveSearchBar from "./AltertSaveSearchBar";
 import ResultsBar from "./ResultsFoundBar";
 import KeywordDropdown from "./KeywordDropdown";
 
+type SearchLocation = {
+    latitude: number;
+    longitude: number;
+    metric: "miles" | "kilometres";
+};
 
 type Filters = {
     propertyMinPrice: string;
@@ -20,6 +25,7 @@ type Filters = {
     propertyAdded: string;
     propertyType: string;
     propertyRental: string;
+    searchLocation: SearchLocation | null;
 };
 
 type OnKeyWordChange = (
@@ -28,6 +34,7 @@ type OnKeyWordChange = (
 ) => void;
 
 const HouseDisplay = ({ darkMode }) => {
+
     const houses = [
         { 
             id: 1, 
@@ -44,13 +51,14 @@ const HouseDisplay = ({ darkMode }) => {
             },
             propertyKeywords: ["pool", "parking", "retirement-home"],
             propertyPrice: 500000, 
-            propertyLocation: "California", 
+            propertyLocation: { latitude: 50.79899, longitude: -1.09125 },
             propertySize: "3000 sqft", 
             propertyBedrooms: 4, 
             propertyBathrooms: 3, 
             propertyTokenPrice: 50, 
             propertyTokensLeft: 100, 
             propertyType: "Villa", 
+            propertyPostcode: "P05 1HD",
             propertyRental: true, 
             propertyImage: "https://via.placeholder.com/300x200?text=Modern+Villa", 
             propertyFeatured: true 
@@ -70,13 +78,14 @@ const HouseDisplay = ({ darkMode }) => {
             },
             propertyPrice: 150000, 
             propertyKeywords: ["pool"],
-            propertyLocation: "Maine", 
+            propertyLocation: { latitude: 51.123, longitude: -0.014 },
             propertySize: "1200 sqft", 
             propertyBedrooms: 2, 
             propertyBathrooms: 1, 
             propertyTokenPrice: 15, 
             propertyTokensLeft: 200, 
             propertyType: "Cottage", 
+            propertyPostcode: "RH19 1HD",
             propertyRental: false, 
             propertyImage: "https://via.placeholder.com/300x200?text=Cozy+Cottage", 
             propertyFeatured: true 
@@ -96,12 +105,13 @@ const HouseDisplay = ({ darkMode }) => {
             },
             propertyPrice: 300000, 
             propertyKeywords: ["retirement-home"],
-            propertyLocation: "New York", 
+            propertyLocation: { latitude: 51.122, longitude: -0.013 },
             propertySize: "900 sqft", 
             propertyBedrooms: 1, 
             propertyBathrooms: 1, 
             propertyTokenPrice: 30, 
             propertyTokensLeft: 150, 
+            propertyPostcode: "RH19 3RR",
             propertyType: "Apartment", 
             propertyRental: false, 
             propertyImage: "https://via.placeholder.com/300x200?text=Urban+Apartment", 
@@ -121,8 +131,9 @@ const HouseDisplay = ({ darkMode }) => {
             },
             propertyPrice: 250000, 
             propertyKeywords: ["buying-schemes"],
-            propertyLocation: "Texas", 
+            propertyLocation: { latitude: 51.127, longitude: -0.012 },
             propertySize: "2000 sqft", 
+            propertyPostcode: "RH19 2ND",
             propertyBedrooms: 3, 
             propertyBathrooms: 2, 
             propertyTokenPrice: 25, 
@@ -147,9 +158,10 @@ const HouseDisplay = ({ darkMode }) => {
             },
             propertyPrice: 1000000, 
             propertyKeywords: ["action-property"],
-            propertyLocation: "Florida", 
+            propertyLocation: { latitude: 50.79899, longitude: -1.09125 },
             propertySize: "5000 sqft", 
             propertyBedrooms: 6, 
+            propertyPostcode: "P05 4HD",
             propertyBathrooms: 5, 
             propertyTokenPrice: 100, 
             propertyTokensLeft: 50, 
@@ -173,6 +185,7 @@ const HouseDisplay = ({ darkMode }) => {
         propertyMaxTokenPrice: "",
         propertyType: "",
         propertyRental: "",
+        searchLocation: null,
         propertyKeywords: [], // Must Haves
         dontShowKeywords: [], // Don't Show
     });
@@ -219,7 +232,7 @@ const HouseDisplay = ({ darkMode }) => {
                 applyFilters(updatedFilters);
                 console.log(value, "Keyword Removed");
                 return;
-            } 
+            }
             else {
                 // Log the current state of keywords for debugging
             console.log("Current Keywords:", filters.propertyKeywords);
@@ -285,7 +298,66 @@ const HouseDisplay = ({ darkMode }) => {
         setFilters(updatedFilters);
         applyFilters(updatedFilters); // Apply the updated filters to the list
     };
+
+    function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number, unit: 'miles' | 'km' = 'miles'): number {
+        /**
+         * Calculate the great-circle distance between two points
+         * on the Earth's surface using the Haversine formula.
+         *
+         * Parameters:
+         *     lat1, lon1: Latitude and longitude of point 1 (in degrees)
+         *     lat2, lon2: Latitude and longitude of point 2 (in degrees)
+         *     unit: Unit of distance ('miles' or 'km'). Defaults to 'miles'.
+         *
+         * Returns:
+         *     Distance between the two points in the specified unit.
+         */
     
+        // Convert latitude and longitude from degrees to radians
+        const toRadians = (degrees: number) => degrees * (Math.PI / 180);
+        lat1 = toRadians(lat1);
+        lon1 = toRadians(lon1);
+        lat2 = toRadians(lat2);
+        lon2 = toRadians(lon2);
+    
+        // Haversine formula
+        const dlat = lat2 - lat1;
+        const dlon = lon2 - lon1;
+        const a = Math.sin(dlat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    
+        // Radius of Earth
+        const radiusOfEarthInMiles = 3958.8;
+        const radiusOfEarthInKm = 6371.0;
+        const radiusOfEarth = unit === 'miles' ? radiusOfEarthInMiles : radiusOfEarthInKm;
+    
+        return radiusOfEarth * c;
+    }
+    
+    function arePointsWithinDistance(
+        point1: { latitude: number; longitude: number },
+        point2: { latitude: number; longitude: number },
+        distance: number,
+        unit: 'miles' | 'km' = 'miles'
+    ): boolean {
+        /**
+         * Determine if two points are within a given distance.
+         *
+         * Parameters:
+         *     point1: Object with 'latitude' and 'longitude' keys for the first point.
+         *     point2: Object with 'latitude' and 'longitude' keys for the second point.
+         *     distance: Distance to check.
+         *     unit: Unit of distance ('miles' or 'km'). Defaults to 'miles'.
+         *
+         * Returns:
+         *     True if the points are within the specified distance, False otherwise.
+         */
+        const { latitude: lat1, longitude: lon1 } = point1;
+        const { latitude: lat2, longitude: lon2 } = point2;
+    
+        const calculatedDistance = haversineDistance(lat1, lon1, lat2, lon2, unit);
+        return calculatedDistance <= distance;
+    }
 
     const applyFilters = (currentFilters = filters) => {
         setFilteredHouses(
@@ -297,12 +369,7 @@ const HouseDisplay = ({ darkMode }) => {
                 const meetsMaxPrice = currentFilters.propertyMaxPrice
                     ? house.propertyPrice <= parseInt(currentFilters.propertyMaxPrice, 10)
                     : true;
-    
-                const meetsLocation = currentFilters.propertyLocation
-                    ? house.propertyLocation
-                          ?.toLowerCase()
-                          .includes(currentFilters.propertyLocation.toLowerCase())
-                    : true;
+
                 const meetsBedrooms = currentFilters.propertyMinBedrooms
                     ? house.propertyBedrooms >= parseInt(currentFilters.propertyMinBedrooms, 10)
                     : true;
@@ -347,12 +414,35 @@ const HouseDisplay = ({ darkMode }) => {
                           !(house.propertyKeywords || []).map((kw) => kw.toLowerCase().trim()).includes(keyword.toLowerCase().trim())
                       )
                     : true; // Show all if no "dontShowKeywords" are provided
+
+                // Check if the property is within the desired distance
+                const withinDistance = currentFilters.searchLocation &&
+                    currentFilters.searchLocation.latitude !== null &&
+                    currentFilters.searchLocation.longitude !== null &&
+                    house.propertyLocation &&
+                    house.propertyLocation.latitude !== null &&
+                    house.propertyLocation.longitude !== null
+                    ? arePointsWithinDistance(
+                        { 
+                            latitude: currentFilters.searchLocation.latitude, 
+                            longitude: currentFilters.searchLocation.longitude 
+                        },
+                        { 
+                            latitude: house.propertyLocation.latitude, 
+                            longitude: house.propertyLocation.longitude 
+                        },
+                        50, // Example distance in miles
+                        "miles" // Adjust to 'km' if metric is required
+                    )
+                    : true; // If any location is invalid, show all properties
                 
+                console.log("Search Location:", currentFilters.searchLocation);
+                console.log("House Location:", house.propertyLocation);
+                console.log("Within Distance:", withinDistance);
                 
                 return (
                     meetsMinPrice &&
                     meetsMaxPrice &&
-                    meetsLocation &&
                     meetsBedrooms &&
                     meetsBathrooms &&
                     meetsTokensLeft &&
@@ -361,7 +451,8 @@ const HouseDisplay = ({ darkMode }) => {
                     meetsRental &&
                     meetsPropertyAdded &&
                     meetsKeywords &&
-                    avoidsDontShowKeywords
+                    avoidsDontShowKeywords && 
+                    withinDistance
                 );
             })
         );
@@ -383,7 +474,7 @@ const HouseDisplay = ({ darkMode }) => {
             <FilterBar
                 darkMode={darkMode}
                 filters={filters}
-                onFilterChange={handleFilterChange}
+                onFilterChange={handleFilterChange} 
             />
             
             <div className="bg-gray-800 shadow-lg">

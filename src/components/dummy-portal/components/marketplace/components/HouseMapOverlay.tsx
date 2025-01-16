@@ -105,8 +105,7 @@ const Overlay: React.FC<OverlayProps> = ({ isOpen, closeOverlay }) => {
             }}
             onFilterChange={(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
               console.log("Filter change detected:", event.target.value);
-            }}
-          />
+            } }    />
         </div>
 
         {/* Close Button */}

@@ -1,4 +1,4 @@
-import express, { Request, Response} from 'express';
+import express, { Request, response, Response} from 'express';
 import path from 'path';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -128,6 +128,38 @@ app.get("/api/getCryptoPrices", async (req: Request, res: Response) =>{
     console.log("getCryptoPrices: ", error); // 401
   }
 });
+
+app.get("/geoencode/search", async (req: Request, res: Response) => {
+  const { postcode } = req.query; // Get the postcode from the query string
+
+  if (!postcode) {
+      return res.status(400).json({ error: "Postcode is required" });
+  }
+
+  const BASE_URL = `https://maps.googleapis.com/maps/api/geocode/json`;
+
+  try {
+      // Make a request to Google Geocoding API
+      const response = await axios.get(BASE_URL, {
+          params: {
+              address: postcode,
+              key: process.env.REACT_APP_API_KEY, 
+          },
+      });
+
+      // Handle the response from Google API
+      if (response.data.status === "OK") {
+          const { lat, lng } = response.data.results[0].geometry.location;
+          return res.status(200).json({ latitude: lat, longitude: lng });
+      } else {
+          return res.status(404).json({ error: "Location not found", status: response.data.status });
+      }
+  } catch (error) {
+      console.error("Error fetching geocode data:", error);
+      return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 
 // Start the server
