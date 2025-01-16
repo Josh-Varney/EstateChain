@@ -8,7 +8,8 @@ import KeywordDropdown from "./KeywordDropdown";
 type SearchLocation = {
     latitude: number;
     longitude: number;
-    metric: "miles" | "kilometres";
+    metric: "miles" | "km";
+    distance: number | "Within Country" | "All Locations";
 };
 
 type Filters = {
@@ -422,18 +423,33 @@ const HouseDisplay = ({ darkMode }) => {
                     house.propertyLocation &&
                     house.propertyLocation.latitude !== null &&
                     house.propertyLocation.longitude !== null
-                    ? arePointsWithinDistance(
-                        { 
-                            latitude: currentFilters.searchLocation.latitude, 
-                            longitude: currentFilters.searchLocation.longitude 
-                        },
-                        { 
-                            latitude: house.propertyLocation.latitude, 
-                            longitude: house.propertyLocation.longitude 
-                        },
-                        50, // Example distance in miles
-                        "miles" // Adjust to 'km' if metric is required
-                    )
+                    ? (() => {
+                        if (currentFilters.searchLocation.distance === "All Locations") {
+                            // Display all properties
+                            return true;
+                        } else if (currentFilters.searchLocation.distance === "Within Country") {
+                            // Logic for "Within Country" (currently same as displaying all for now)
+                            // Future implementation could include country-level filtering
+                            return true;
+                        } else if (typeof currentFilters.searchLocation.distance === "number") {
+                            // Use the selected distance in miles or km
+                            return arePointsWithinDistance(
+                                {
+                                    latitude: currentFilters.searchLocation.latitude,
+                                    longitude: currentFilters.searchLocation.longitude,
+                                },
+                                {
+                                    latitude: house.propertyLocation.latitude,
+                                    longitude: house.propertyLocation.longitude,
+                                },
+                                currentFilters.searchLocation.distance, // Dynamic distance value
+                                currentFilters.searchLocation.metric, // Default to miles if metric not specified
+                            );
+                        } else {
+                            // If distance is invalid, default to displaying all
+                            return true;
+                        }
+                    })()
                     : true; // If any location is invalid, show all properties
                 
                 console.log("Search Location:", currentFilters.searchLocation);

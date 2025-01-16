@@ -91,10 +91,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
             return;
         }
 
-        const postcode = searchQuery.trim().toUpperCase().replace(/\s+/g, "");
-
-        const selectedMetric = "miles";
-
         try {
             if (!searchQuery) {
                 alert("Please enter a location!");
@@ -111,11 +107,44 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
 
             const { longitude, latitude } = await response.json();
 
-            console.log(longitude, latitude);
-
+            // Ensure distanceFilter is valid before passing it
+            let selectedDistance: string | number | null;
+            if (typeof distanceFilter === "string") {
+                const trimmedFilter = distanceFilter.trim();
+    
+                if (trimmedFilter === "All Locations" || trimmedFilter === "Within Country") {
+                    selectedDistance = trimmedFilter;
+                } else {
+                    const parsedDistance = parseInt(trimmedFilter, 10);
+                    if (!isNaN(parsedDistance)) {
+                        selectedDistance = parsedDistance;
+                    } else {
+                        throw new Error(
+                            "Invalid distance value. Distance must be 'All Locations', 'Within Country', or a valid integer."
+                        );
+                    }
+                }
+            } else if (distanceFilter === null || distanceFilter === undefined) {
+                selectedDistance = null; // Explicitly set to null if undefined or null
+            } else {
+                throw new Error(
+                    "Invalid distance value. Distance must be 'All Locations', 'Within Country', or a valid integer."
+                );
+            }
+            
             // Update both longitude and latitude
             onFilterChange(
-                { target: { name: "searchLocation", value: {longitude: longitude, latitude: latitude, selectedMetric: selectedMetric} } } as unknown as ChangeEvent<HTMLInputElement>
+                {
+                    target: {
+                        name: "searchLocation",
+                        value: {
+                            longitude: longitude,
+                            latitude: latitude,
+                            metric: "miles",
+                            distance: selectedDistance,
+                        },
+                    },
+                } as unknown as ChangeEvent<HTMLInputElement>
             );
             
         } catch (error) {
@@ -184,12 +213,12 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                             value={distanceFilter}
                             onChange={handleDistanceChange}
                         >
-                            <option value="Option 1">+10 Miles</option>
-                            <option value="Option 2">+20 Miles</option>
-                            <option value="Option 3">+30 Miles</option>
-                            <option value="Option 4">+50 Miles</option>
-                            <option value="Option 5">Within Country</option>
-                            <option value="Option 6">All Locations</option>
+                            <option value="10">+10 Miles</option>
+                            <option value="20">+20 Miles</option>
+                            <option value="30">+30 Miles</option>
+                            <option value="50">+50 Miles</option>
+                            <option value="Within Country">Within Country</option>
+                            <option value="All Locations">All Locations</option>
                         </select>
                     </div>
                 </div>
