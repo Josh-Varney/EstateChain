@@ -83,85 +83,83 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
         } as unknown as ChangeEvent<HTMLInputElement>);
     };
 
-    const clearSearch = () => setSearchQuery("");
+    const clearSearch = () => {
+        setSearchQuery(""); // Clear the search query
+        setDistanceFilter("10"); // Reset the distance filter to its default value
+    
+        // Reset the search location filter in the parent component
+        onFilterChange({
+            target: {
+                name: "searchLocation",
+                value: {
+                    longitude: null,
+                    latitude: null,
+                    metric: null,
+                    distance: "10", // Reset distance to default value
+                },
+            },
+        } as unknown as ChangeEvent<HTMLInputElement>);
+    };
 
-    const handlePostCodeSearch = async () => {
+    const handlePostCodeSearch = async (overrideDistance?: string) => {
         if (!searchQuery) {
             alert("Please enter a location!");
             return;
         }
-
+    
         try {
-            if (!searchQuery) {
-                alert("Please enter a location!");
-                return;
-            }
-        
             const response = await fetch(
                 `http://localhost:3001/geoencode/search?postcode=${encodeURIComponent(searchQuery.trim())}`
             );
-        
+    
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText}`);
             }
-
-            const { longitude, latitude } = await response.json();
-
-            // Ensure distanceFilter is valid before passing it
-            let selectedDistance: string | number | null;
-            if (typeof distanceFilter === "string") {
-                const trimmedFilter = distanceFilter.trim();
     
-                if (trimmedFilter === "All Locations" || trimmedFilter === "Within Country") {
-                    selectedDistance = trimmedFilter;
-                } else {
-                    const parsedDistance = parseInt(trimmedFilter, 10);
-                    if (!isNaN(parsedDistance)) {
-                        selectedDistance = parsedDistance;
-                    } else {
-                        throw new Error(
-                            "Invalid distance value. Distance must be 'All Locations', 'Within Country', or a valid integer."
-                        );
-                    }
-                }
-            } else if (distanceFilter === null || distanceFilter === undefined) {
-                selectedDistance = null; // Explicitly set to null if undefined or null
+            const { longitude, latitude } = await response.json();
+    
+            // Use the overrideDistance if provided, otherwise fallback to the current distanceFilter
+            const effectiveDistance = overrideDistance || distanceFilter;
+            let selectedDistance: string | number | null;
+    
+            if (effectiveDistance === "All Locations" || effectiveDistance === "Within Country") {
+                selectedDistance = effectiveDistance;
             } else {
-                throw new Error(
-                    "Invalid distance value. Distance must be 'All Locations', 'Within Country', or a valid integer."
-                );
+                const parsedDistance = parseInt(effectiveDistance, 10);
+                if (!isNaN(parsedDistance)) {
+                    selectedDistance = parsedDistance;
+                } else {
+                    throw new Error(
+                        "Invalid distance value. Distance must be 'All Locations', 'Within Country', or a valid integer."
+                    );
+                }
             }
-            
-            // Update both longitude and latitude
-            onFilterChange(
-                {
-                    target: {
-                        name: "searchLocation",
-                        value: {
-                            longitude: longitude,
-                            latitude: latitude,
-                            metric: "miles",
-                            distance: selectedDistance,
-                        },
+    
+            // Update the parent component's filters
+            onFilterChange({
+                target: {
+                    name: "searchLocation",
+                    value: {
+                        longitude,
+                        latitude,
+                        metric: "miles",
+                        distance: selectedDistance,
                     },
-                } as unknown as ChangeEvent<HTMLInputElement>
-            );
-            
+                },
+            } as unknown as ChangeEvent<HTMLInputElement>);
         } catch (error) {
             console.error("Error fetching location data:", error);
             alert("Failed to fetch location data. Please try again.");
         }
     };
+    
 
-    const handleDistanceChange = (event: { target: { value: any; }; }) => {
+    const handleDistanceChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const newDistance = event.target.value;
         setDistanceFilter(newDistance);
-
-        // If there's an active search, automatically execute it
-        if (searchQuery) {
-            handlePostCodeSearch();
-        }
+        handlePostCodeSearch(newDistance); // Use the updated distance immediately
     };
+
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
