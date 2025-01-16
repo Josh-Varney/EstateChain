@@ -101,6 +101,28 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
         } as unknown as ChangeEvent<HTMLInputElement>);
     };
 
+    async function getCountryFromLatLng(lat: any, lng: any) {
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_API_KEY}`;
+        
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+      
+          if (data.results && data.results.length > 0) {
+            const countryComponent = data.results
+              .flatMap((result: { address_components: any; }) => result.address_components)
+              .find((component: { types: string | string[]; }) => component.types.includes('country'));
+            
+            return countryComponent ? countryComponent.long_name : 'Country not found';
+          } else {
+            return 'No results found';
+          }
+        } catch (error) {
+          console.error('Error fetching country:', error);
+          return 'Error fetching country';
+        }
+    }
+
     const handlePostCodeSearch = async (overrideDistance?: string) => {
         if (!searchQuery) {
             alert("Please enter a location!");
@@ -117,6 +139,13 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
             }
     
             const { longitude, latitude } = await response.json();
+
+            // Fetch the country name using the getCountryFromLatLng function
+            const countryName = await getCountryFromLatLng(latitude, longitude);
+
+            if (!countryName || countryName === 'Country not found') {
+                throw new Error("Country could not be determined from the given coordinates.");
+            }
     
             // Use the overrideDistance if provided, otherwise fallback to the current distanceFilter
             const effectiveDistance = overrideDistance || distanceFilter;
@@ -144,6 +173,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                         latitude,
                         metric: "miles",
                         distance: selectedDistance,
+                        country_from_search: countryName,
                     },
                 },
             } as unknown as ChangeEvent<HTMLInputElement>);
@@ -228,12 +258,23 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                             name="propertyMinPrice"
                             value={filters.propertyMinPrice}
                             onChange={onFilterChange}
-                            className="text-sm border-gray-300 rounded-lg bg-transparent"
+                            className="text-sm border-gray-300 rounded-lg bg-transparent w-24"
                         >
                             <option value="">Min Price</option>
-                            <option value="100">100</option>
-                            <option value="500">500</option>
-                            <option value="1000">1000</option>
+                            <option value="100000">£100,000+</option>
+                            <option value="200000">£200,000+</option>
+                            <option value="300000">£300,000+</option>
+                            <option value="300000">£400,000+</option>
+                            <option value="500000">£500,000+</option>
+                            <option value="600000">£600,000+</option>
+                            <option value="700000">£700,000+</option>
+                            <option value="800000">£800,000+</option>
+                            <option value="900000">£900,000+</option>
+                            <option value="1000000">£1,000,000+</option>
+                            <option value="1500000">£1,500,000+</option>
+                            <option value="2000000">£2,000,000+</option>
+                            <option value="5000000">£5,000,000+</option>
+                            <option value="10000000">£10,000,000+</option>
                         </select>
                     </div>
                     <div className="text-gray-400 text-sm">to</div>
@@ -242,12 +283,23 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                             name="propertyMaxPrice"
                             value={filters.propertyMaxPrice}
                             onChange={onFilterChange}
-                            className="text-sm border-gray-300 rounded-lg bg-transparent"
+                            className="text-sm border-gray-300 rounded-lg bg-transparent w-24"
                         >
                             <option value="">Max Price</option>
-                            <option value="100">100</option>
-                            <option value="500">500</option>
-                            <option value="1000">1000</option>
+                            <option value="100000">£100,000+</option>
+                            <option value="200000">£200,000+</option>
+                            <option value="300000">£300,000+</option>
+                            <option value="300000">£400,000+</option>
+                            <option value="500000">£500,000+</option>
+                            <option value="600000">£600,000+</option>
+                            <option value="700000">£700,000+</option>
+                            <option value="800000">£800,000+</option>
+                            <option value="900000">£900,000+</option>
+                            <option value="1000000">£1,000,000+</option>
+                            <option value="1500000">£1,500,000+</option>
+                            <option value="2000000">£2,000,000+</option>
+                            <option value="5000000">£5,000,000+</option>
+                            <option value="10000000">£10,000,000+</option>
                         </select>
                     </div>
                 </div>
@@ -259,12 +311,20 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                             name="propertyMinBedrooms"
                             value={filters.propertyMinBedrooms}
                             onChange={onFilterChange}
-                            className="text-sm border-gray-300 rounded-lg bg-transparent"
+                            className="text-sm border-gray-300 rounded-lg bg-transparent w-24"
                         >
                             <option value="">Min Beds</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
+                            <option value="1">1+</option>
+                            <option value="2">2+</option>
+                            <option value="3">3+</option>
+                            <option value="4">4+</option>
+                            <option value="4">4+</option>
+                            <option value="5">5+</option>
+                            <option value="6">6+</option>
+                            <option value="7">7+</option>
+                            <option value="8">8+</option>
+                            <option value="9">9+</option>
+                            <option value="10">10+</option>
                         </select>
                     </div>
                     <div className="text-gray-400 text-sm">to</div>
@@ -273,12 +333,20 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                             name="propertyMinBathrooms"
                             value={filters.propertyMinBathrooms}
                             onChange={onFilterChange}
-                            className="text-sm border-gray-300 rounded-lg bg-transparent"
+                            className="text-sm border-gray-300 rounded-lg bg-transparent w-24"
                         >
                             <option value="">Min Baths</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
+                            <option value="1">1+</option>
+                            <option value="2">2+</option>
+                            <option value="3">3+</option>
+                            <option value="4">4+</option>
+                            <option value="4">4+</option>
+                            <option value="5">5+</option>
+                            <option value="6">6+</option>
+                            <option value="7">7+</option>
+                            <option value="8">8+</option>
+                            <option value="9">9+</option>
+                            <option value="10">10+</option>
                         </select>
                     </div>
                 </div>

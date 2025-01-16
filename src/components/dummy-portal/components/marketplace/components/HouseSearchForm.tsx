@@ -10,6 +10,7 @@ type SearchLocation = {
     longitude: number;
     metric: "miles" | "km";
     distance: number | "Within Country" | "All Locations";
+    country_from_search: string;
 };
 
 type Filters = {
@@ -53,6 +54,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyKeywords: ["pool", "parking", "retirement-home"],
             propertyPrice: 500000, 
             propertyLocation: { latitude: 50.79899, longitude: -1.09125 },
+            propertyCountry: "United Kingdom",
             propertySize: "3000 sqft", 
             propertyBedrooms: 4, 
             propertyBathrooms: 3, 
@@ -80,6 +82,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyPrice: 150000, 
             propertyKeywords: ["pool"],
             propertyLocation: { latitude: 51.123, longitude: -0.014 },
+            propertyCountry: "United Kingdom",
             propertySize: "1200 sqft", 
             propertyBedrooms: 2, 
             propertyBathrooms: 1, 
@@ -107,6 +110,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyPrice: 300000, 
             propertyKeywords: ["retirement-home"],
             propertyLocation: { latitude: 51.122, longitude: -0.013 },
+            propertyCountry: "United Kingdom",
             propertySize: "900 sqft", 
             propertyBedrooms: 1, 
             propertyBathrooms: 1, 
@@ -133,6 +137,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyPrice: 250000, 
             propertyKeywords: ["buying-schemes"],
             propertyLocation: { latitude: 51.127, longitude: -0.012 },
+            propertyCountry: "United Kingdom",
             propertySize: "2000 sqft", 
             propertyPostcode: "RH19 2ND",
             propertyBedrooms: 3, 
@@ -160,6 +165,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyPrice: 1000000, 
             propertyKeywords: ["action-property"],
             propertyLocation: { latitude: 50.79899, longitude: -1.09125 },
+            propertyCountry: "United Kingdom",
             propertySize: "5000 sqft", 
             propertyBedrooms: 6, 
             propertyPostcode: "P05 4HD",
@@ -170,6 +176,34 @@ const HouseDisplay = ({ darkMode }) => {
             propertyRental: false, 
             propertyImage: "https://via.placeholder.com/300x200?text=Luxury+Estate", 
             propertyFeatured: false 
+        },
+        {
+            id: 6,
+            propertyAddress: "Empire State Building",
+            propertySettlement: "Skyscraper",
+            propertyDescription: "Iconic Landmark in New York City",
+            propertyAdded: "07/05/2024",
+            propertyAddedBy: "Jackson-Stops",
+            propertyAgent: {
+                agentName: "Jackson-Stops",
+                agentIcon: "",
+                agentNumber: "07469751962",
+                agentEmail: "jrv123756@gmail.com",
+            },
+            propertyPrice: 1000000000, // Adjusted for a landmark value
+            propertyKeywords: ["iconic", "landmark", "skyscraper", "new-york"],
+            propertyLocation: { latitude: 40.748817, longitude: -73.985428 },
+            propertyCountry: "United States",
+            propertySize: "2,768,591 sqft", // Actual Empire State Building area
+            propertyBedrooms: 0, // Non-residential
+            propertyPostcode: "10118",
+            propertyBathrooms: 0, // Non-residential
+            propertyTokenPrice: 100000, // Hypothetical token pricing
+            propertyTokensLeft: 10000, // Hypothetical token count
+            propertyType: "Commercial",
+            propertyRental: false,
+            propertyImage: "https://via.placeholder.com/300x200?text=Empire+State+Building",
+            propertyFeatured: true // Marked as featured due to its prominence
         },
     ];
     
@@ -359,7 +393,7 @@ const HouseDisplay = ({ darkMode }) => {
         const calculatedDistance = haversineDistance(lat1, lon1, lat2, lon2, unit);
         return calculatedDistance <= distance;
     }
-
+    
     const applyFilters = (currentFilters = filters) => {
         setFilteredHouses(
             houses.filter((house) => {
@@ -428,9 +462,7 @@ const HouseDisplay = ({ darkMode }) => {
                             // Display all properties
                             return true;
                         } else if (currentFilters.searchLocation.distance === "Within Country") {
-                            // Logic for "Within Country" (currently same as displaying all for now)
-                            // Future implementation could include country-level filtering
-                            return true;
+                            return currentFilters.searchLocation.country_from_search === house.propertyCountry;
                         } else if (typeof currentFilters.searchLocation.distance === "number") {
                             // Use the selected distance in miles or km
                             return arePointsWithinDistance(
@@ -454,7 +486,6 @@ const HouseDisplay = ({ darkMode }) => {
                 
                 console.log("Search Location:", currentFilters.searchLocation);
                 console.log("House Location:", house.propertyLocation);
-                console.log("Within Distance:", withinDistance);
                 
                 return (
                     meetsMinPrice &&
