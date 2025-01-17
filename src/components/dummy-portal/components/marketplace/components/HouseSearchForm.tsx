@@ -45,7 +45,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyAddress: "West Hill, East Grinstead", 
             propertySettlement: "Detatched",
             propertyDescription: "Experience the pinnacle of city living in this sleek, 2-bedroom, 2-bathroom luxury apartment in the heart of downtown. Boasting floor-to-ceiling windows with panoramic skyline views, a state-of-the-art kitchen with quartz countertops, and access to exclusive amenities including a rooftop pool, fitness center, and concierge services.",
-            propertyAdded: "07/05/2024",
+            propertyAdded: "2025-01-17T14:30:00.000Z",
             propertyAddedBy: "Jackson-Stops",
             propertyAgent: {
                 agentName: "Jackson-Stops",
@@ -73,7 +73,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyAddress: "Vowels Lane, East Grinstead, West Sussex, RH19", 
             propertySettlement: "Detatched",
             propertyDescription: "Escape to tranquility with this enchanting 4-bedroom, 3-bathroom country home situated on 10 sprawling acres. Featuring a cozy stone fireplace, hardwood floors throughout, and a wraparound porch with breathtaking views of rolling hills",
-            propertyAdded: "07/05/2024",
+            propertyAdded: "2025-01-16T15:30:00.000Z",
             propertyAddedBy: "Jackson-Stops",
             propertyAgent: {
                 agentName: "Jackson-Stops",
@@ -101,7 +101,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyAddress: "Legsheath Lane, Forest Row, RH19", 
             propertySettlement: "Detatched",
             propertyDescription: "Wake up to the sound of waves in this delightful 2-bedroom, 1-bathroom beachfront bungalow. With its bright and airy design, this home features a fully equipped kitchen, a sun-soaked living room, and a private deck overlooking the ocean.",
-            propertyAdded: "07/05/2024",
+            propertyAdded: "2025-01-16T15:30:00.000Z",
             propertyAddedBy: "Jackson-Stops",
             propertyAgent: {
                 agentName: "Jackson-Stops",
@@ -129,6 +129,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyAddress: "Country House", 
             propertySettlement: "Terrace",
             propertyDescription: "Discover the perfect blend of style and convenience in this 3-bedroom, 2.5-bathroom modern townhouse.",
+            propertyAdded: "2025-01-16T15:30:00.000Z",
             propertyAddedBy: "Jackson-Stops",
             propertyAgent: {
                 agentName: "Jackson-Stops",
@@ -156,7 +157,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyAddress: "Dormans Park", 
             propertySettlement: "Flat",
             propertyDescription: "Discover the perfect blend of style and convenience in this 3-bedroom, 2.5-bathroom modern townhouse.",
-            propertyAdded: "07/05/2024",
+            propertyAdded: "2025-01-16T15:30:00.000Z",
             propertyAddedBy: "Jackson-Stops",
             propertyAgent: {
                 agentName: "Jackson-Stops",
@@ -184,7 +185,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyAddress: "Empire State Building",
             propertySettlement: "Skyscraper",
             propertyDescription: "Iconic Landmark in New York City",
-            propertyAdded: "07/05/2024",
+            propertyAdded: "2025-01-16T15:30:00.000Z",
             propertyAddedBy: "Jackson-Stops",
             propertyAgent: {
                 agentName: "Jackson-Stops",
@@ -438,10 +439,6 @@ const HouseDisplay = ({ darkMode }) => {
                       (currentFilters.propertyRental.toLowerCase() === "buy" && !house.propertyRental)
                     : true;
     
-                const meetsPropertyAdded = currentFilters.propertyAdded
-                    ? new Date(house.propertyAdded || "") >= new Date(currentFilters.propertyAdded)
-                    : true;
-    
                 
                 const meetsType = Array.isArray(currentFilters.propertySettlement) && currentFilters.propertySettlement.length > 0
                     ? currentFilters.propertySettlement
@@ -495,10 +492,52 @@ const HouseDisplay = ({ darkMode }) => {
                         }
                     })()
                     : true; // If any location is invalid, show all properties
+
+
+                const meetsPropertyAdded = (() => {
+                    if (!currentFilters.propertyAdded) return true; // No filter applied
+
+                    const propertyAddedDate = new Date(house.propertyAdded);
+                    
+                    console.log("Parsed Date:", propertyAddedDate);
+                    if (isNaN(propertyAddedDate.getTime())) {
+                        console.error("Invalid propertyAdded date:", house.propertyAdded);
+                        return false;
+                    }
+                    const now = new Date();
+
+                    if (isNaN(propertyAddedDate.getTime())) {
+                        console.error("Invalid date format:", house.propertyAdded);
+                        return false; // Skip invalid dates
+                    }
                 
-                console.log("Search Location:", currentFilters.searchLocation);
-                console.log("House Location:", house.propertyLocation);
+                    // Check "last 24 hours"
+                    if (currentFilters.propertyAdded === "last24hours") {
+                        const oneDayAgo = new Date(now);
+                        oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+                        return propertyAddedDate >= oneDayAgo;
+                    }
                 
+                    // Check "last 7 days"
+                    if (currentFilters.propertyAdded === "last7days") {
+                        const sevenDaysAgo = new Date(now);
+                        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+                        return propertyAddedDate >= sevenDaysAgo;
+                    }
+                
+                    // Check "last month"
+                    if (currentFilters.propertyAdded === "lastmonth") {
+                        const oneMonthAgo = new Date(now);
+                        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+                        return propertyAddedDate >= oneMonthAgo;
+                    }
+                
+                    return true; // Default to showing all
+                })();
+                
+                console.log(currentFilters.propertyAdded);
+                console.log(house.propertyAdded);
+
                 return (
                     meetsMinPrice &&
                     meetsMaxPrice &&
@@ -513,7 +552,8 @@ const HouseDisplay = ({ darkMode }) => {
                     meetsPropertyAdded &&
                     meetsKeywords &&
                     avoidsDontShowKeywords && 
-                    withinDistance
+                    withinDistance && 
+                    meetsPropertyAdded
                 );
             })
         );

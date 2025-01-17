@@ -191,9 +191,10 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
             { value: "rent", label: "Rent" },
         ],
         timeAdded: [
-            { value: "", label: "All Houses" },
-            { value: "last-24-hours", label: "Last 24 Hours" },
-            { value: "last-7-days", label: "Last 7 Days" },
+            { value: "", label: "House Added" },
+            { value: "last24hours", label: "Last 24 Hours" },
+            { value: "last7days", label: "Last 7 Days" },
+            { value: "lastmonth", label: "Last Month"}
         ],
     };
 
@@ -255,7 +256,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                             onChange={selectFilterChange}
                         />
                         <Dropdown
-                            name="timeAdded"
+                            name="propertyAdded"
                             value={filters.propertyAdded}
                             options={dropdownOptions.timeAdded}
                             onChange={selectFilterChange}
