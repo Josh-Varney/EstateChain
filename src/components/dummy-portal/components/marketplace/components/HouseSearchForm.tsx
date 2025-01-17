@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import HouseList from "./HouseList";
 import FilterBar from "./FilterBar";
 import AlertSaveSearchBar from "./AltertSaveSearchBar";
@@ -245,9 +245,9 @@ const HouseDisplay = ({ darkMode }) => {
         applyFilters(filters);
     }, [filters]);
 
-    // useEffect(() => {
-    //     applySorting();
-    // }, [sortBy, filteredHouses]);
+    useEffect(() => {
+        applySorting(); // Sort the houses
+    }, [sortBy]); // Only run when `sortBy` changes
 
     // Debug if necessary 
     const handleFilterChange: OnKeyWordChange = (e, optionalParam ) => {
@@ -617,7 +617,6 @@ const HouseDisplay = ({ darkMode }) => {
                 break;
         }
 
-        console.log(sortBy);
         setFilteredHouses(sortedHouses);
     };
     
