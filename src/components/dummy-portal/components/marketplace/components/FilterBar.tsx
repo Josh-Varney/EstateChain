@@ -12,6 +12,8 @@ type Filters = {
     propertyMinBathrooms: string;
     propertyMaxBathrooms: string;
     propertyMinTokensLeft: string;
+    propertyMaxTokensLeft: string;
+    propertyMinTokenPrice: string;
     propertyMaxTokenPrice: string;
     propertyKeywords: string[]; 
     dontShowKeywords: string[]; 
@@ -216,6 +218,29 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
         }
     };
 
+    const priceFilterRef = useRef(null);
+    const bedroomFilterRef = useRef(null);
+
+    const isElementHidden = (ref) => {
+        if (!ref.current) return false;
+        const { width, height } = ref.current.getBoundingClientRect();
+        return width === 0 || height === 0;
+    };
+
+    useEffect(() => {
+        const handleVisibilityCheck = () => {
+            console.log('Price Filter Hidden:', isElementHidden(priceFilterRef));
+            console.log('Bedroom Filter Hidden:', isElementHidden(bedroomFilterRef));
+        };
+    
+        handleVisibilityCheck();
+    
+        window.addEventListener('resize', handleVisibilityCheck);
+        return () => {
+            window.removeEventListener('resize', handleVisibilityCheck);
+        };
+    }, []);
+
     return (
         <div className="relative">
             <div className="flex flex-wrap items-center gap-3 p-0 bg-gradient-to-b from-gray-800 to-gray-900">
@@ -253,8 +278,55 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                     </div>
                 </div>
 
+                
+
+                {/* Bedroom Filter */}
+                <div className="hidden lg:flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600" ref={bedroomFilterRef}>
+                    <div className="">
+                        <select
+                            name="propertyMinTokenPrice"
+                            value={filters.propertyMinTokenPrice}
+                            onChange={onFilterChange}
+                            className="text-sm border-gray-300 rounded-lg bg-transparent w-32"
+                        >
+                            <option value="">Min Token Price</option>
+                            <option value="10">10+</option>
+                            <option value="20">20+</option>
+                            <option value="30">30+</option>
+                            <option value="40">40+</option>
+                            <option value="50">50+</option>
+                            <option value="60">60+</option>
+                            <option value="70">70+</option>
+                            <option value="80">80+</option>
+                            <option value="90">90+</option>
+                            <option value="100">100+</option>
+                        </select>
+                    </div>
+                    <div className="text-gray-400 text-sm">to</div>
+                    <div className="">
+                        <select
+                            name="propertyMaxTokenPrice"
+                            value={filters.propertyMaxTokenPrice}
+                            onChange={onFilterChange}
+                            className="text-sm border-gray-300 rounded-lg bg-transparent w-32"
+                        >
+                            <option value="">Max Token Price</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                            <option value="60">60</option>
+                            <option value="70">70</option>
+                            <option value="80">80</option>
+                            <option value="90">90</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+
                 {/* Price Filter */}
-                <div className="hidden md:flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600">
+                <div className="hidden md:flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600" ref={priceFilterRef}>
                     <div>
                         <select
                             name="propertyMinPrice"
@@ -306,53 +378,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                     </div>
                 </div>
 
-                {/* Bedroom Filter */}
-                <div className="hidden lg:flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600">
-                    <div className="">
-                        <select
-                            name="propertyMinBedrooms"
-                            value={filters.propertyMinBedrooms}
-                            onChange={onFilterChange}
-                            className="text-sm border-gray-300 rounded-lg bg-transparent w-24"
-                        >
-                            <option value="">Min Beds</option>
-                            <option value="1">1+</option>
-                            <option value="2">2+</option>
-                            <option value="3">3+</option>
-                            <option value="4">4+</option>
-                            <option value="4">4+</option>
-                            <option value="5">5+</option>
-                            <option value="6">6+</option>
-                            <option value="7">7+</option>
-                            <option value="8">8+</option>
-                            <option value="9">9+</option>
-                            <option value="10">10+</option>
-                        </select>
-                    </div>
-                    <div className="text-gray-400 text-sm">to</div>
-                    <div className="">
-                        <select
-                            name="propertyMaxBedrooms"
-                            value={filters.propertyMaxBedrooms}
-                            onChange={onFilterChange}
-                            className="text-sm border-gray-300 rounded-lg bg-transparent w-24"
-                        >
-                            <option value="">Max Beds</option>
-                            <option value="1">1+</option>
-                            <option value="2">2+</option>
-                            <option value="3">3+</option>
-                            <option value="4">4+</option>
-                            <option value="4">4+</option>
-                            <option value="5">5+</option>
-                            <option value="6">6+</option>
-                            <option value="7">7+</option>
-                            <option value="8">8+</option>
-                            <option value="9">9+</option>
-                            <option value="10">10+</option>
-                        </select>
-                    </div>
-                </div>
-
                 {/* Filter Button */}
                 <div
                     onClick={toggleFilterDropdown}
@@ -378,6 +403,8 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                         setSelectedItems={setSelectedItems}
                         handleMustHave={handleMustHaveToggle}
                         handleDontHave={handleDontShowToggle}
+                        isPriceFilterHidden={isElementHidden(priceFilterRef)} // Pass price filter visibility
+                        isBedroomFilterHidden={isElementHidden(bedroomFilterRef)} // Pass bedroom filter visibility
                     />
                 </div>
             )}

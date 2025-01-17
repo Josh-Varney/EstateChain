@@ -4,11 +4,10 @@ import Overlay from "./HouseMapOverlay";
 
 interface ResultsBarProps {
     count: number;
-    sortBy: string;
     onSortChange?: (value: string) => void;
 }
 
-const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange, sortBy }) => {
+const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange }) => {
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
     const openOverlay = () => setIsOverlayOpen(true);
@@ -39,7 +38,6 @@ const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange, sortBy }) 
                             id="sortOptions"
                             className="text-sm bg-transparent text-white"
                             onChange={(e) => onSortChange?.(e.target.value)}
-                            value={sortBy}
                         >
                             <option value="tokenPriceAsc">Token Price (Low to High)</option>
                             <option value="tokenPriceDesc">Token Price (High to Low)</option>

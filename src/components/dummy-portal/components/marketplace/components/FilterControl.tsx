@@ -12,6 +12,8 @@ interface Filters {
     propertyMaxBathrooms: string;
     propertyMinTokensLeft: string;
     propertyMaxTokenPrice: string;
+    propertyMaxTokensLeft: string;
+    propertyMinTokenPrice: string;
     propertyKeywords: string[]; 
     dontShowKeywords: string[]; 
     propertyType: string;
@@ -27,9 +29,11 @@ interface FilterControlsProps {
     setSelectedItems: (items: string[]) => void; // Added this prop
     handleMustHave: (item: string) => void;
     handleDontHave: (item: string) => void;
+    isPriceFilterHidden: boolean;
+    isBedroomFilterHidden: boolean;
 }
 
-const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange, selectFilterChange }) => {
+const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange, selectFilterChange, isPriceFilterHidden, isBedroomFilterHidden }) => {
     // const DEBUG = true;
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const [mustHaveItems, setMustHaveItems] = useState<string[]>([]);
@@ -44,26 +48,6 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
         { id: "land", label: "Land", icon: <FaTree size={30} /> },
         { id: "park-home", label: "Park Home", icon: <FaHome size={30} /> },
     ];
-
-    useEffect(() => {
-        const savedFilters = localStorage.getItem("selectedFilters");
-        if (savedFilters) setSelectedItems(JSON.parse(savedFilters));
-    
-        const savedMustHaves = localStorage.getItem("selectedMustHaves");
-        if (savedMustHaves) setMustHaveItems(JSON.parse(savedMustHaves));
-    
-        const savedDontShow = localStorage.getItem("selectedDontShow");
-        if (savedDontShow) setDontShowItems(JSON.parse(savedDontShow));
-    
-        // if (DEBUG) {
-        //     console.group("Initial State");
-        //     console.log("Selected Property Types:", savedFilters ? JSON.parse(savedFilters) : []);
-        //     console.log("Must Have Items:", savedMustHaves ? JSON.parse(savedMustHaves) : []);
-        //     console.log("Don't Show Items:", savedDontShow ? JSON.parse(savedDontShow) : []);
-        //     console.groupEnd();
-        // }
-    }, []);
-
 
     const toggleSelection = (
         id: string,
@@ -138,21 +122,15 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
         name: string;
         value: string;
         options: { value: string; label: string }[];
-        placeholder?: string;
         onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-    }> = ({ name, value, options, placeholder, onChange }) => (
+    }> = React.memo(({ name, value, options, onChange }) => (
         <div className="relative w-full">
             <select
                 name={name}
                 value={value}
+                onChange={onChange} // Ensure this is passed correctly
                 className="w-full text-sm border border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                onChange={onChange} 
             >
-                {placeholder && (
-                    <option value="" disabled>
-                        {placeholder}
-                    </option>
-                )}
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>
                         {option.label}
@@ -160,43 +138,131 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                 ))}
             </select>
         </div>
-    );
+    ));
 
+    
     const dropdownOptions = {
         min_bedrooms: [
-            { value: "",  label: "Min Beds" },
+            { value: "", label: "Min Beds" },
+            { value: "1", label: "1+" },
+            { value: "2", label: "2+" },
+            { value: "3", label: "3+" }
+        ],
+        max_bedrooms: [
+            { value: "", label: "Max Beds" },
+            { value: "1", label: "1" },
+            { value: "2", label: "2" },
+            { value: "3", label: "3" }
+        ],
+        min_bathrooms: [
+            { value: "", label: "Min Baths" },
+            { value: "1", label: "1+" },
+            { value: "2", label: "2+" }
+        ],
+        max_bathrooms: [
+            { value: "", label: "Max Baths" },
+            { value: "1", label: "1" },
+            { value: "2", label: "2" }
+        ],
+        rental: [
+            { value: "", label: "Rental Type" },
+            { value: "buy", label: "Buy" },
+            { value: "rent", label: "Rent" }
+        ],
+        min_token_price: [
+            { value: "", label: "Min Token Price" },
             { value: "1", label: "1+" },
             { value: "2", label: "2+" },
             { value: "3", label: "3+" },
+            { value: "4", label: "4+" },
+            { value: "5", label: "5+" },
+            { value: "6", label: "6+" },
+            { value: "7", label: "7+" },
+            { value: "8", label: "8+" },
+            { value: "9", label: "9+" },
+            { value: "10", label: "10+" }
         ],
-        max_bedrooms: [
-            { value: "",  label: "Max Beds" },
+        max_token_price: [
+            { value: "", label: "Max Token Price" },
             { value: "1", label: "1" },
             { value: "2", label: "2" },
             { value: "3", label: "3" },
+            { value: "4", label: "4" },
+            { value: "5", label: "5" },
+            { value: "6", label: "6" },
+            { value: "7", label: "7" },
+            { value: "8", label: "8" },
+            { value: "9", label: "9" },
+            { value: "10", label: "10" }
         ],
-        min_bathrooms: [
-            { value: "",  label: "Min Baths" },
-            { value: "1", label: "1+" },
-            { value: "2", label: "2+" },
+        min_house_price: [
+            { value: "", label: "Min Price" },
+            { value: "100000", label: "£100,000+" },
+            { value: "200000", label: "£200,000+" },
+            { value: "300000", label: "£300,000+" },
+            { value: "400000", label: "£400,000+" },
+            { value: "500000", label: "£500,000+" },
+            { value: "600000", label: "£600,000+" },
+            { value: "700000", label: "£700,000+" },
+            { value: "800000", label: "£800,000+" },
+            { value: "900000", label: "£900,000+" },
+            { value: "1000000", label: "£1,000,000+" },
+            { value: "1500000", label: "£1,500,000+" },
+            { value: "2000000", label: "£2,000,000+" },
+            { value: "5000000", label: "£5,000,000+" },
+            { value: "10000000", label: "£10,000,000+" }
         ],
-        max_bathrooms: [
-            { value: "",  label: "Max Baths" },
-            { value: "1", label: "1" },
-            { value: "2", label: "2" },
-        ],
-        rental: [
-            { value: "",  label: "Rental Type" },
-            { value: "buy", label: "Buy" },
-            { value: "rent", label: "Rent" },
+        max_house_price: [
+            { value: "", label: "Max Price" },
+            { value: "100000", label: "£100,000+" },
+            { value: "200000", label: "£200,000+" },
+            { value: "300000", label: "£300,000+" },
+            { value: "400000", label: "£400,000+" },
+            { value: "500000", label: "£500,000+" },
+            { value: "600000", label: "£600,000+" },
+            { value: "700000", label: "£700,000+" },
+            { value: "800000", label: "£800,000+" },
+            { value: "900000", label: "£900,000+" },
+            { value: "1000000", label: "£1,000,000+" },
+            { value: "1500000", label: "£1,500,000+" },
+            { value: "2000000", label: "£2,000,000+" },
+            { value: "5000000", label: "£5,000,000+" },
+            { value: "10000000", label: "£10,000,000+" }
         ],
         timeAdded: [
             { value: "", label: "House Added" },
             { value: "last24hours", label: "Last 24 Hours" },
             { value: "last7days", label: "Last 7 Days" },
-            { value: "lastmonth", label: "Last Month"}
+            { value: "lastmonth", label: "Last Month" }
         ],
+        min_tokens_left: [
+            { value: "", label: "Min Tokens Left" },
+            { value: "1", label: "1+" },
+            { value: "2", label: "2+" },
+            { value: "3", label: "3+" },
+            { value: "4", label: "4+" },
+            { value: "5", label: "5+" },
+            { value: "6", label: "6+" },
+            { value: "7", label: "7+" },
+            { value: "8", label: "8+" },
+            { value: "9", label: "9+" },
+            { value: "10", label: "10+" }
+        ],
+        max_tokens_left: [
+            { value: "", label: "Max Tokens Left" },
+            { value: "1", label: "1" },
+            { value: "2", label: "2" },
+            { value: "3", label: "3" },
+            { value: "4", label: "4" },
+            { value: "5", label: "5" },
+            { value: "6", label: "6" },
+            { value: "7", label: "7" },
+            { value: "8", label: "8" },
+            { value: "9", label: "9" },
+            { value: "10", label: "10" }
+        ]
     };
+
 
     const dontShowOptions = ["New Home", "Retirement Home", "Buying Schemes", "High Contributions"];
 
@@ -223,45 +289,82 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
             {/* Filters Section */}
             <div className="w-full max-w-5xl space-y-6">
             <div
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6 w-full max-w-5xl"
-                    >
-                        <Dropdown
-                            name="propertyMinBedrooms"
-                            value={filters.propertyMinBedrooms}
-                            options={dropdownOptions.min_bedrooms}
-                            onChange={selectFilterChange}
-                        />
-                        <Dropdown
-                            name="propertyMaxBedrooms"
-                            value={filters.propertyMaxBedrooms}
-                            options={dropdownOptions.max_bedrooms}
-                            onChange={selectFilterChange}
-                        />
-                        <Dropdown
-                            name="propertyMinBathrooms"
-                            value={filters.propertyMinBathrooms}
-                            options={dropdownOptions.min_bathrooms}
-                            onChange={selectFilterChange}
-                        />
-                        <Dropdown
-                            name="propertyMaxBathrooms"
-                            value={filters.propertyMaxBathrooms}
-                            options={dropdownOptions.max_bathrooms}
-                            onChange={selectFilterChange}
-                        />
-                        <Dropdown
-                            name="propertyRental"
-                            value={filters.propertyRental}
-                            options={dropdownOptions.rental}
-                            onChange={selectFilterChange}
-                        />
-                        <Dropdown
-                            name="propertyAdded"
-                            value={filters.propertyAdded}
-                            options={dropdownOptions.timeAdded}
-                            onChange={selectFilterChange}
-                        />
-                    </div>
+                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6 w-full max-w-5xl"
+                >
+                    <Dropdown 
+                        name="propertyMinTokenPrice"
+                        value={filters.propertyMinTokenPrice}
+                        options={dropdownOptions.min_token_price}
+                        onChange={selectFilterChange}
+                    />
+                    <Dropdown
+                        name="propertyMaxTokenPrice"
+                        value={filters.propertyMaxTokenPrice}
+                        options={dropdownOptions.max_token_price}
+                        onChange={selectFilterChange}
+                    />
+                    <Dropdown
+                        name="propertyMinPrice"
+                        value={filters.propertyMinPrice}
+                        options={dropdownOptions.min_house_price}
+                        onChange={selectFilterChange}
+                    />
+                    <Dropdown
+                        name="propertyMaxPrice"
+                        value={filters.propertyMaxPrice} // Corrected: Was mapped to propertyMaxBedrooms
+                        options={dropdownOptions.max_house_price}
+                        onChange={selectFilterChange}
+                    />
+                    <Dropdown
+                        name="propertyMinTokensLeft"
+                        value={filters.propertyMinTokensLeft}
+                        options={dropdownOptions.min_tokens_left}
+                        onChange={selectFilterChange}
+                    />
+                    <Dropdown
+                        name="propertyMaxTokensLeft"
+                        value={filters.propertyMaxTokensLeft}
+                        options={dropdownOptions.max_tokens_left}
+                        onChange={selectFilterChange}
+                    />
+                    <Dropdown
+                        name="propertyMinBedrooms"
+                        value={filters.propertyMinBedrooms}
+                        options={dropdownOptions.min_bedrooms}
+                        onChange={selectFilterChange}
+                    />
+                    <Dropdown
+                        name="propertyMaxBedrooms"
+                        value={filters.propertyMaxBedrooms}
+                        options={dropdownOptions.max_bedrooms}
+                        onChange={selectFilterChange}
+                    />
+                    <Dropdown
+                        name="propertyMinBathrooms"
+                        value={filters.propertyMinBathrooms}
+                        options={dropdownOptions.min_bathrooms}
+                        onChange={selectFilterChange}
+                    />
+                    <Dropdown
+                        name="propertyMaxBathrooms"
+                        value={filters.propertyMaxBathrooms}
+                        options={dropdownOptions.max_bathrooms}
+                        onChange={selectFilterChange}
+                    />
+                    <Dropdown
+                        name="propertyRental"
+                        value={filters.propertyRental}
+                        options={dropdownOptions.rental}
+                        onChange={selectFilterChange}
+                    />
+                    <Dropdown
+                        name="propertyAdded"
+                        value={filters.propertyAdded}
+                        options={dropdownOptions.timeAdded}
+                        onChange={selectFilterChange}
+                    />
+                </div>
+
 
 
                 {/* Must Haves */}

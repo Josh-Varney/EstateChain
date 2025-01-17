@@ -25,6 +25,8 @@ type Filters = {
     propertyMinBathrooms: string;
     propertyMaxBathrooms: string;
     propertyMinTokensLeft: string;
+    propertyMaxTokensLeft: string;
+    propertyMinTokenPrice: string;
     propertyMaxTokenPrice: string;
     propertyAdded: string;
     propertyType: string;
@@ -117,7 +119,7 @@ const HouseDisplay = ({ darkMode }) => {
             propertyBedrooms: 1, 
             propertyBathrooms: 1, 
             propertyTokenPrice: 30, 
-            propertyTokensLeft: 150, 
+            propertyTokensLeft: 9, 
             propertyPostcode: "RH19 3RR",
             propertyType: "Apartment", 
             propertyRental: false, 
@@ -222,6 +224,8 @@ const HouseDisplay = ({ darkMode }) => {
         propertyMinBathrooms: "",
         propertyMaxBathrooms: "",
         propertyMinTokensLeft: "",
+        propertyMaxTokensLeft: "",
+        propertyMinTokenPrice: "",
         propertyMaxTokenPrice: "",
         propertyType: "",
         propertyRental: "",
@@ -231,25 +235,19 @@ const HouseDisplay = ({ darkMode }) => {
     });
 
     const [filteredHouses, setFilteredHouses] = useState(houses);
-    const [sortBy, setSortBy] = useState<string>("tokenPriceAsc");
+    const [sortBy, setSortBy] = useState<string>("");
 
     const handleSortChange = (value: string) => {
         setSortBy(value);
     };
 
     useEffect(() => {
-        window.localStorage.getItem("selectedFilters")
-        window.localStorage.getItem("selectedMustHaves")
-        window.localStorage.getItem("selectedDontShow")
-    })
-
-    useEffect(() => {
         applyFilters(filters);
     }, [filters]);
 
-    useEffect(() => {
-        applySorting();
-    }, [sortBy, filteredHouses]);
+    // useEffect(() => {
+    //     applySorting();
+    // }, [sortBy, filteredHouses]);
 
     // Debug if necessary 
     const handleFilterChange: OnKeyWordChange = (e, optionalParam ) => {
@@ -435,12 +433,20 @@ const HouseDisplay = ({ darkMode }) => {
                     ? house.propertyBathrooms <= parseInt(currentFilters.propertyMaxBathrooms, 10)
                     : true;
     
-                const meetsTokensLeft = currentFilters.propertyMinTokensLeft
-                    ? house.propertyTokensLeft >= parseInt(currentFilters.propertyMinTokensLeft, 10)
+                const meetsMinTokenPrice = currentFilters.propertyMinTokenPrice
+                    ? house.propertyTokenPrice >= parseInt(currentFilters.propertyMinTokenPrice, 10)
                     : true;
     
-                const meetsTokenPrice = currentFilters.propertyMaxTokenPrice
+                const meetsMaxTokenPrice = currentFilters.propertyMaxTokenPrice
                     ? house.propertyTokenPrice <= parseInt(currentFilters.propertyMaxTokenPrice, 10)
+                    : true;
+
+                const meetsMinTokensLeft = currentFilters.propertyMinTokensLeft
+                    ? house.propertyTokensLeft >= parseInt(currentFilters.propertyMaxTokensLeft, 10)
+                    : true;
+    
+                const meetsMaxTokensLeft = currentFilters.propertyMaxTokensLeft
+                    ? house.propertyTokensLeft <= parseInt(currentFilters.propertyMaxTokensLeft, 10)
                     : true;
     
                 const meetsRental = currentFilters.propertyRental
@@ -554,11 +560,13 @@ const HouseDisplay = ({ darkMode }) => {
                     meetsMaxBedrooms &&
                     meetsMinBathrooms &&
                     meetsMaxBathrooms &&
-                    meetsTokensLeft &&
-                    meetsTokenPrice &&
+                    meetsMinTokenPrice &&
+                    meetsMaxTokenPrice &&
                     meetsType &&
                     meetsRental &&
                     meetsPropertyAdded &&
+                    meetsMinTokensLeft &&
+                    meetsMaxTokensLeft &&
                     meetsKeywords &&
                     avoidsDontShowKeywords && 
                     withinDistance && 
@@ -608,6 +616,8 @@ const HouseDisplay = ({ darkMode }) => {
             default:
                 break;
         }
+
+        console.log(sortBy);
         setFilteredHouses(sortedHouses);
     };
     
@@ -634,7 +644,7 @@ const HouseDisplay = ({ darkMode }) => {
                 <AlertSaveSearchBar />
                 <hr className="border-gray-600 w-[98%] mx-auto my-1" />
                 {/* Results bar */}
-                <ResultsBar count={filteredHouses.length} onSortChange={handleSortChange} sortBy={sortBy}/>
+                <ResultsBar count={filteredHouses.length} onSortChange={handleSortChange} />
             </div>
 
             <div className="pb-16">
