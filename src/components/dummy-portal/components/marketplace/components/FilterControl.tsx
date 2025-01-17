@@ -30,10 +30,10 @@ interface FilterControlsProps {
     handleMustHave: (item: string) => void;
     handleDontHave: (item: string) => void;
     isPriceFilterHidden: boolean;
-    isBedroomFilterHidden: boolean;
+    isTokenPriceFilterHidden: boolean;
 }
 
-const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange, selectFilterChange, isPriceFilterHidden, isBedroomFilterHidden }) => {
+const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange, selectFilterChange, isPriceFilterHidden, isTokenPriceFilterHidden }) => {
     // const DEBUG = true;
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const [mustHaveItems, setMustHaveItems] = useState<string[]>([]);
@@ -291,30 +291,38 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
             <div
                     className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6 w-full max-w-5xl"
                 >
-                    <Dropdown 
-                        name="propertyMinTokenPrice"
-                        value={filters.propertyMinTokenPrice}
-                        options={dropdownOptions.min_token_price}
-                        onChange={selectFilterChange}
-                    />
-                    <Dropdown
-                        name="propertyMaxTokenPrice"
-                        value={filters.propertyMaxTokenPrice}
-                        options={dropdownOptions.max_token_price}
-                        onChange={selectFilterChange}
-                    />
-                    <Dropdown
-                        name="propertyMinPrice"
-                        value={filters.propertyMinPrice}
-                        options={dropdownOptions.min_house_price}
-                        onChange={selectFilterChange}
-                    />
-                    <Dropdown
-                        name="propertyMaxPrice"
-                        value={filters.propertyMaxPrice} // Corrected: Was mapped to propertyMaxBedrooms
-                        options={dropdownOptions.max_house_price}
-                        onChange={selectFilterChange}
-                    />
+                    {isTokenPriceFilterHidden &&
+                        <>
+                            <Dropdown 
+                                name="propertyMinTokenPrice"
+                                value={filters.propertyMinTokenPrice}
+                                options={dropdownOptions.min_token_price}
+                                onChange={selectFilterChange}
+                            />
+                            <Dropdown
+                                name="propertyMaxTokenPrice"
+                                value={filters.propertyMaxTokenPrice}
+                                options={dropdownOptions.max_token_price}
+                                onChange={selectFilterChange}
+                            />
+                        </>
+                    }
+                    {isPriceFilterHidden && 
+                        <>
+                            <Dropdown
+                                name="propertyMinPrice"
+                                value={filters.propertyMinPrice}
+                                options={dropdownOptions.min_house_price}
+                                onChange={selectFilterChange}
+                            />
+                            <Dropdown
+                                name="propertyMaxPrice"
+                                value={filters.propertyMaxPrice} // Corrected: Was mapped to propertyMaxBedrooms
+                                options={dropdownOptions.max_house_price}
+                                onChange={selectFilterChange}
+                            />
+                        </>
+                    }
                     <Dropdown
                         name="propertyMinTokensLeft"
                         value={filters.propertyMinTokensLeft}

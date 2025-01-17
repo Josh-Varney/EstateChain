@@ -219,7 +219,9 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
     };
 
     const priceFilterRef = useRef(null);
-    const bedroomFilterRef = useRef(null);
+    const tokenPriceRef = useRef(null);
+    const [isPriceFilterHidden, setIsPriceFilterHidden] = useState(false);
+    const [isTokenPriceHidden, setIsTokenPriceHidden] = useState(false);
 
     const isElementHidden = (ref) => {
         if (!ref.current) return false;
@@ -228,16 +230,20 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
     };
 
     useEffect(() => {
-        const handleVisibilityCheck = () => {
-            console.log('Price Filter Hidden:', isElementHidden(priceFilterRef));
-            console.log('Bedroom Filter Hidden:', isElementHidden(bedroomFilterRef));
+        const checkVisibility = () => {
+            setIsPriceFilterHidden(isElementHidden(priceFilterRef));
+            setIsTokenPriceHidden(isElementHidden(tokenPriceRef));
         };
-    
-        handleVisibilityCheck();
-    
-        window.addEventListener('resize', handleVisibilityCheck);
+
+        // Initial check
+        checkVisibility();
+
+        // Add resize listener
+        window.addEventListener("resize", checkVisibility);
+
+        // Clean up event listener on unmount
         return () => {
-            window.removeEventListener('resize', handleVisibilityCheck);
+            window.removeEventListener("resize", checkVisibility);
         };
     }, []);
 
@@ -281,7 +287,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                 
 
                 {/* Bedroom Filter */}
-                <div className="hidden lg:flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600" ref={bedroomFilterRef}>
+                <div className="hidden lg:flex flex-row space-x-2 items-center px-4 py-2 border-r border-gray-600" ref={tokenPriceRef}>
                     <div className="">
                         <select
                             name="propertyMinTokenPrice"
@@ -404,7 +410,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                         handleMustHave={handleMustHaveToggle}
                         handleDontHave={handleDontShowToggle}
                         isPriceFilterHidden={isElementHidden(priceFilterRef)} // Pass price filter visibility
-                        isBedroomFilterHidden={isElementHidden(bedroomFilterRef)} // Pass bedroom filter visibility
+                        isTokenPriceFilterHidden={isElementHidden(tokenPriceRef)} // Pass bedroom filter visibility
                     />
                 </div>
             )}
