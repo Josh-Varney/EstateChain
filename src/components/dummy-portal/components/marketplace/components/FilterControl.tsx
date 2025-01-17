@@ -7,7 +7,9 @@ interface Filters {
     propertyLocation: string;
     propertyAdded: string;
     propertyMinBedrooms: string;
+    propertyMaxBedrooms: string;
     propertyMinBathrooms: string;
+    propertyMaxBathrooms: string;
     propertyMinTokensLeft: string;
     propertyMaxTokenPrice: string;
     propertyKeywords: string[]; 
@@ -161,23 +163,37 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
     );
 
     const dropdownOptions = {
-        timeAdded: [
-            { value: "anytime", label: "Anytime" },
-            { value: "last-24-hours", label: "Last 24 Hours" },
-            { value: "last-7-days", label: "Last 7 Days" },
-        ],
-        bedrooms: [
+        min_bedrooms: [
+            { value: "",  label: "Min Beds" },
             { value: "1", label: "1+" },
             { value: "2", label: "2+" },
             { value: "3", label: "3+" },
         ],
-        bathrooms: [
+        max_bedrooms: [
+            { value: "",  label: "Max Beds" },
+            { value: "1", label: "1" },
+            { value: "2", label: "2" },
+            { value: "3", label: "3" },
+        ],
+        min_bathrooms: [
+            { value: "",  label: "Min Baths" },
             { value: "1", label: "1+" },
             { value: "2", label: "2+" },
         ],
+        max_bathrooms: [
+            { value: "",  label: "Max Baths" },
+            { value: "1", label: "1" },
+            { value: "2", label: "2" },
+        ],
         rental: [
+            { value: "",  label: "Rental Type" },
             { value: "buy", label: "Buy" },
             { value: "rent", label: "Rent" },
+        ],
+        timeAdded: [
+            { value: "", label: "All Houses" },
+            { value: "last-24-hours", label: "Last 24 Hours" },
+            { value: "last-7-days", label: "Last 7 Days" },
         ],
     };
 
@@ -209,31 +225,39 @@ const FilterControls: React.FC<FilterControlsProps> = ({ filters, onFilterChange
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6 w-full max-w-5xl"
                     >
                         <Dropdown
-                            name="timeAdded"
-                            value={filters.propertyAdded}
-                            options={dropdownOptions.timeAdded}
-                            placeholder="Time Added"
+                            name="propertyMinBedrooms"
+                            value={filters.propertyMinBedrooms}
+                            options={dropdownOptions.min_bedrooms}
                             onChange={selectFilterChange}
                         />
                         <Dropdown
-                            name="propertyMinBedrooms"
-                            value={filters.propertyMinBedrooms}
-                            options={dropdownOptions.bedrooms}
-                            placeholder="Min Bedrooms"
+                            name="propertyMaxBedrooms"
+                            value={filters.propertyMaxBedrooms}
+                            options={dropdownOptions.max_bedrooms}
                             onChange={selectFilterChange}
                         />
                         <Dropdown
                             name="propertyMinBathrooms"
                             value={filters.propertyMinBathrooms}
-                            options={dropdownOptions.bathrooms}
-                            placeholder="Min Bathrooms"
+                            options={dropdownOptions.min_bathrooms}
+                            onChange={selectFilterChange}
+                        />
+                        <Dropdown
+                            name="propertyMaxBathrooms"
+                            value={filters.propertyMaxBathrooms}
+                            options={dropdownOptions.max_bathrooms}
                             onChange={selectFilterChange}
                         />
                         <Dropdown
                             name="propertyRental"
                             value={filters.propertyRental}
                             options={dropdownOptions.rental}
-                            placeholder="Rental Type"
+                            onChange={selectFilterChange}
+                        />
+                        <Dropdown
+                            name="timeAdded"
+                            value={filters.propertyAdded}
+                            options={dropdownOptions.timeAdded}
                             onChange={selectFilterChange}
                         />
                     </div>

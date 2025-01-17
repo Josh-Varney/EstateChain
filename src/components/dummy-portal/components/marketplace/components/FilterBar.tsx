@@ -8,7 +8,9 @@ type Filters = {
     propertyLocation: string;
     propertySettlement: string;
     propertyMinBedrooms: string;
+    propertyMaxBedrooms: string;
     propertyMinBathrooms: string;
+    propertyMaxBathrooms: string;
     propertyMinTokensLeft: string;
     propertyMaxTokenPrice: string;
     propertyKeywords: string[]; 
@@ -330,12 +332,12 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                     <div className="text-gray-400 text-sm">to</div>
                     <div className="">
                         <select
-                            name="propertyMinBathrooms"
-                            value={filters.propertyMinBathrooms}
+                            name="propertyMaxBedrooms"
+                            value={filters.propertyMaxBedrooms}
                             onChange={onFilterChange}
                             className="text-sm border-gray-300 rounded-lg bg-transparent w-24"
                         >
-                            <option value="">Min Baths</option>
+                            <option value="">Max Beds</option>
                             <option value="1">1+</option>
                             <option value="2">2+</option>
                             <option value="3">3+</option>

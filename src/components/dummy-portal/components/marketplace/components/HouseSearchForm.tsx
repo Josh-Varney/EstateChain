@@ -21,7 +21,9 @@ type Filters = {
     propertyKeywords: string[]; // Must Haves
     dontShowKeywords: string[]; // Don't Show
     propertyMinBedrooms: string;
+    propertyMaxBedrooms: string;
     propertyMinBathrooms: string;
+    propertyMaxBathrooms: string;
     propertyMinTokensLeft: string;
     propertyMaxTokenPrice: string;
     propertyAdded: string;
@@ -163,7 +165,7 @@ const HouseDisplay = ({ darkMode }) => {
                 agentEmail: "jrv123756@gmail.com",
             },
             propertyPrice: 1000000, 
-            propertyKeywords: ["action-property"],
+            propertyKeywords: ["action-property", "garden"],
             propertyLocation: { latitude: 50.79899, longitude: -1.09125 },
             propertyCountry: "United Kingdom",
             propertySize: "5000 sqft", 
@@ -215,7 +217,9 @@ const HouseDisplay = ({ darkMode }) => {
         propertySettlement: "",
         propertyAdded: "",
         propertyMinBedrooms: "",
+        propertyMaxBedrooms: "",
         propertyMinBathrooms: "",
+        propertyMaxBathrooms: "",
         propertyMinTokensLeft: "",
         propertyMaxTokenPrice: "",
         propertyType: "",
@@ -405,12 +409,20 @@ const HouseDisplay = ({ darkMode }) => {
                     ? house.propertyPrice <= parseInt(currentFilters.propertyMaxPrice, 10)
                     : true;
 
-                const meetsBedrooms = currentFilters.propertyMinBedrooms
+                const meetsMinBedrooms = currentFilters.propertyMinBedrooms
                     ? house.propertyBedrooms >= parseInt(currentFilters.propertyMinBedrooms, 10)
                     : true;
     
-                const meetsBathrooms = currentFilters.propertyMinBathrooms
+                const meetsMaxBedrooms = currentFilters.propertyMaxBedrooms
+                    ? house.propertyBedrooms <= parseInt(currentFilters.propertyMaxBedrooms, 10)
+                    : true;
+    
+                const meetsMinBathrooms = currentFilters.propertyMinBathrooms
                     ? house.propertyBathrooms >= parseInt(currentFilters.propertyMinBathrooms, 10)
+                    : true;
+
+                const meetsMaxBathrooms = currentFilters.propertyMaxBathrooms
+                    ? house.propertyBathrooms <= parseInt(currentFilters.propertyMaxBathrooms, 10)
                     : true;
     
                 const meetsTokensLeft = currentFilters.propertyMinTokensLeft
@@ -490,8 +502,10 @@ const HouseDisplay = ({ darkMode }) => {
                 return (
                     meetsMinPrice &&
                     meetsMaxPrice &&
-                    meetsBedrooms &&
-                    meetsBathrooms &&
+                    meetsMinBedrooms &&
+                    meetsMaxBedrooms &&
+                    meetsMinBathrooms &&
+                    meetsMaxBathrooms &&
                     meetsTokensLeft &&
                     meetsTokenPrice &&
                     meetsType &&
