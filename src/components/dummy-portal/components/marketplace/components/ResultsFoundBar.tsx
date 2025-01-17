@@ -4,10 +4,11 @@ import Overlay from "./HouseMapOverlay";
 
 interface ResultsBarProps {
     count: number;
+    sortBy: string;
     onSortChange?: (value: string) => void;
 }
 
-const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange }) => {
+const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange, sortBy }) => {
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
     const openOverlay = () => setIsOverlayOpen(true);
@@ -38,11 +39,18 @@ const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange }) => {
                             id="sortOptions"
                             className="text-sm bg-transparent text-white"
                             onChange={(e) => onSortChange?.(e.target.value)}
+                            value={sortBy}
                         >
-                            <option value="">Max Price</option>
-                            <option value="100">$100</option>
-                            <option value="500">$500</option>
-                            <option value="1000">$1000</option>
+                            <option value="tokenPriceAsc">Token Price (Low to High)</option>
+                            <option value="tokenPriceDesc">Token Price (High to Low)</option>
+                            <option value="priceAsc">House Price (Low to High)</option>
+                            <option value="priceDesc">House Price (High to Low)</option>
+                            <option value="tokensLeftAsc">Tokens Left (Fewest First)</option>
+                            <option value="tokensLeftDesc">Tokens Left (Most First)</option>
+                            <option value="bedroomsAsc">Bedrooms (Low to High)</option>
+                            <option value="bedroomsDesc">Bedrooms (High to Low)</option>
+                            <option value="dateAddedAsc">Date Added (Oldest First)</option>
+                            <option value="dateAddedDesc">Date Added (Newest First)</option>
                         </select>
                     </div>
 

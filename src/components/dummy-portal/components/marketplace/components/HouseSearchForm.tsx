@@ -231,6 +231,11 @@ const HouseDisplay = ({ darkMode }) => {
     });
 
     const [filteredHouses, setFilteredHouses] = useState(houses);
+    const [sortBy, setSortBy] = useState<string>("tokenPriceAsc");
+
+    const handleSortChange = (value: string) => {
+        setSortBy(value);
+    };
 
     useEffect(() => {
         window.localStorage.getItem("selectedFilters")
@@ -241,6 +246,10 @@ const HouseDisplay = ({ darkMode }) => {
     useEffect(() => {
         applyFilters(filters);
     }, [filters]);
+
+    useEffect(() => {
+        applySorting();
+    }, [sortBy, filteredHouses]);
 
     // Debug if necessary 
     const handleFilterChange: OnKeyWordChange = (e, optionalParam ) => {
@@ -558,6 +567,49 @@ const HouseDisplay = ({ darkMode }) => {
             })
         );
     };
+
+    const applySorting = () => {
+        const sortedHouses = [...filteredHouses];
+        switch (sortBy) {
+            case "priceAsc":
+                sortedHouses.sort((a, b) => a.propertyPrice - b.propertyPrice);
+                break;
+            case "priceDesc":
+                sortedHouses.sort((a, b) => b.propertyPrice - a.propertyPrice);
+                break;
+            case "bedroomsAsc":
+                sortedHouses.sort((a, b) => a.propertyBedrooms - b.propertyBedrooms);
+                break;
+            case "bedroomsDesc":
+                sortedHouses.sort((a, b) => b.propertyBedrooms - a.propertyBedrooms);
+                break;
+            case "tokenPriceAsc":
+                sortedHouses.sort((a, b) => a.propertyTokenPrice - b.propertyTokenPrice);
+                break;
+            case "tokenPriceDesc":
+                sortedHouses.sort((a, b) => b.propertyTokenPrice - a.propertyTokenPrice);
+                break;
+            case "tokensLeftAsc":
+                sortedHouses.sort((a, b) => a.propertyTokensLeft - b.propertyTokensLeft);
+                break;
+            case "tokensLeftDesc":
+                sortedHouses.sort((a, b) => b.propertyTokensLeft - a.propertyTokensLeft);
+                break;
+            case "dateAddedAsc":
+                sortedHouses.sort(
+                    (a, b) => new Date(a.propertyAdded).getTime() - new Date(b.propertyAdded).getTime()
+                );
+                break;
+            case "dateAddedDesc":
+                sortedHouses.sort(
+                    (a, b) => new Date(b.propertyAdded).getTime() - new Date(a.propertyAdded).getTime()
+                );
+                break;
+            default:
+                break;
+        }
+        setFilteredHouses(sortedHouses);
+    };
     
     return (
         <div
@@ -582,7 +634,7 @@ const HouseDisplay = ({ darkMode }) => {
                 <AlertSaveSearchBar />
                 <hr className="border-gray-600 w-[98%] mx-auto my-1" />
                 {/* Results bar */}
-                <ResultsBar count={filteredHouses.length} />
+                <ResultsBar count={filteredHouses.length} onSortChange={handleSortChange} sortBy={sortBy}/>
             </div>
 
             <div className="pb-16">
