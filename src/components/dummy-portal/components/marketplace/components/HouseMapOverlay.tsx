@@ -2,12 +2,45 @@ import React, { useEffect, useRef } from "react";
 import FilterBar from "./FilterBar";
 import { FaCrosshairs } from "react-icons/fa";
 
+interface FilterType {
+  propertyMinPrice: string;
+  propertyMaxPrice: string;
+  propertyLocation: string;
+  propertySettlement: string;
+  propertyKeywords: string[];
+  dontShowKeywords: string[];
+  propertyMinBedrooms: string;
+  propertyMaxBedrooms: string;
+  propertyMinBathrooms: string;
+  propertyMaxBathrooms: string;
+  propertyMinTokensLeft: string;
+  propertyMaxTokensLeft: string;
+  propertyMinTokenPrice: string;
+  propertyMaxTokenPrice: string;
+  propertyAdded: string;
+  propertyType: string;
+  propertyRental: string;
+  searchLocation: {
+      latitude: number;
+      longitude: number;
+      metric: "miles" | "km";
+      distance: number | "Within Country" | "All Locations";
+      country_from_search: string;
+  } | null;
+}
+
 interface OverlayProps {
   isOpen: boolean;
   closeOverlay: () => void;
+  darkMode: boolean; // Optional prop
+  filters: FilterType;
+  onFilterChange: (
+      e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+      optionalParam?: string
+  ) => void;
 }
 
-const Overlay: React.FC<OverlayProps> = ({ isOpen, closeOverlay }) => {
+const Overlay: React.FC<OverlayProps> = ({ isOpen, closeOverlay, darkMode, filters, onFilterChange }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -87,35 +120,13 @@ const Overlay: React.FC<OverlayProps> = ({ isOpen, closeOverlay }) => {
         {/* FilterBar */}
         <div className="flex-grow">
           <FilterBar
-            darkMode={""}
-            filters={{
-              propertyMinPrice: "",
-              propertyMaxPrice: "",
-              propertyLocation: "",
-              propertySettlement: "",
-              propertyMinBedrooms: "",
-              propertyMinBathrooms: "",
-              propertyMinTokensLeft: "",
-              propertyMaxTokenPrice: "",
-              propertyKeywords: [],
-              dontShowKeywords: [],
-              propertyAdded: "",
-              propertyType: "",
-              propertyRental: "",
-            }}
-            onFilterChange={(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-              console.log("Filter change detected:", event.target.value);
-            } }    />
+            darkMode={darkMode}
+            filters={filters}
+            onFilterChange={onFilterChange}    
+            isOverlay={true}
+            closeOverlay={closeOverlay}
+            />
         </div>
-
-        {/* Close Button */}
-        <button
-          className="text-gray-600 hover:text-red-500 focus:outline-none shrink-0 px-6"
-          onClick={closeOverlay}
-          aria-label="Close Overlay"
-        >
-          <FaCrosshairs />
-        </button>
       </div>
 
       {/* Google Maps Section */}

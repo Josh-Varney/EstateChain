@@ -24,7 +24,7 @@ interface FilterControlsProps {
     filters: Filters;
     onFilterChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     selectFilterChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-    darkMode: string;
+    darkMode: boolean;
     selectedItems: string[]; // Added this prop
     setSelectedItems: (items: string[]) => void; // Added this prop
     handleMustHave: (item: string) => void;

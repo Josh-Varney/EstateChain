@@ -23,12 +23,14 @@ type Filters = {
 };
 
 type FilterBarProps = {
-    darkMode: string;
+    darkMode: boolean;
     filters: Filters;
     onFilterChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>, optionalParam?: string) => void;
+    isOverlay?: boolean;
+    closeOverlay?
 };
 
-const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange }) => {
+const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange, isOverlay, closeOverlay }) => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [distanceFilter, setDistanceFilter] = useState<string>('10'); // Default to 10 miles
     const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
@@ -392,6 +394,18 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                     <h1 className="text-sm">Filters</h1>
                     <FaSortDown />
                 </div>
+                
+                {isOverlay && 
+                    <>
+                        <div
+                            onClick={closeOverlay}
+                            className="px-4 py-2 flex flex-row space-x-1 cursor-pointer"
+                        >
+                            <h1 className="text-sm">Filters</h1>
+                            <FaSortDown />
+                        </div>
+                    </>
+                }
             </div>
 
             {/* Dropdown Filter Panel */}

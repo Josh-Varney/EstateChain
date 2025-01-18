@@ -643,7 +643,7 @@ const HouseDisplay = ({ darkMode }) => {
                 <AlertSaveSearchBar />
                 <hr className="border-gray-600 w-[98%] mx-auto my-1" />
                 {/* Results bar */}
-                <ResultsBar count={filteredHouses.length} onSortChange={handleSortChange} />
+                <ResultsBar count={filteredHouses.length} onSortChange={handleSortChange} darkMode={darkMode} filters={filters} onFilterChange={handleFilterChange}  />
             </div>
 
             <div className="pb-16">

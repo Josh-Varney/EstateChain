@@ -2,12 +2,45 @@ import React, { useState } from "react";
 import { FaMap, FaRegAddressCard } from "react-icons/fa";
 import Overlay from "./HouseMapOverlay";
 
+interface FilterType {
+    propertyMinPrice: string;
+    propertyMaxPrice: string;
+    propertyLocation: string;
+    propertySettlement: string;
+    propertyKeywords: string[];
+    dontShowKeywords: string[];
+    propertyMinBedrooms: string;
+    propertyMaxBedrooms: string;
+    propertyMinBathrooms: string;
+    propertyMaxBathrooms: string;
+    propertyMinTokensLeft: string;
+    propertyMaxTokensLeft: string;
+    propertyMinTokenPrice: string;
+    propertyMaxTokenPrice: string;
+    propertyAdded: string;
+    propertyType: string;
+    propertyRental: string;
+    searchLocation: {
+        latitude: number;
+        longitude: number;
+        metric: "miles" | "km";
+        distance: number | "Within Country" | "All Locations";
+        country_from_search: string;
+    } | null;
+}
+
 interface ResultsBarProps {
     count: number;
     onSortChange?: (value: string) => void;
+    darkMode: boolean; // Optional prop
+    filters: FilterType;
+    onFilterChange: (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+        optionalParam?: string
+    ) => void;
 }
 
-const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange }) => {
+const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange, darkMode, filters, onFilterChange }) => {
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
     const openOverlay = () => setIsOverlayOpen(true);
@@ -75,7 +108,7 @@ const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange }) => {
             </div>
 
             {/* Overlay */}
-            <Overlay isOpen={isOverlayOpen} closeOverlay={closeOverlay} />
+            <Overlay isOpen={isOverlayOpen} closeOverlay={closeOverlay} darkMode={darkMode} filters={filters} onFilterChange={onFilterChange} />
         </div>
     );
 };
