@@ -397,13 +397,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
                 
                 {isOverlay && 
                     <>
-                        <div
+                       <div
                             onClick={closeOverlay}
-                            className="px-4 py-2 flex flex-row space-x-1 cursor-pointer"
+                            className="px-4 py-2 flex text-xs items-center justify-center space-x-2 cursor-pointer border-l border-gray-600 hover:text-red-500"
+                            aria-label="Close"
+                            title="Close"
                         >
-                            <h1 className="text-sm">Filters</h1>
-                            <FaSortDown />
+                            <h1 className="text-base font-medium">Close</h1>
+                            <span className="text-lg font-bold">×</span>
                         </div>
+                                            
                     </>
                 }
             </div>

@@ -29,6 +29,46 @@ interface FilterType {
     } | null;
 }
 
+type House = {
+    id: number;
+    propertyAddress: string;
+    propertySettlement: string;
+    propertyDescription: string;
+    propertyAdded: string; // ISO string format
+    propertyAddedBy: string;
+    propertyAgent: {
+        agentName: string;
+        agentIcon: string;
+        agentNumber: string;
+        agentEmail: string;
+    };
+    propertyKeywords: string[];
+    propertyPrice: number;
+    propertyLocation: {
+        latitude: number;
+        longitude: number;
+    };
+    propertyCountry: string;
+    propertySize: string;
+    propertyBedrooms: number;
+    propertyBathrooms: number;
+    propertyTokenPrice: number;
+    propertyTokensLeft: number;
+    propertyType: string;
+    propertyPostcode: string;
+    propertyRental: boolean;
+    propertyImage: string;
+    propertyFeatured: boolean;
+};
+
+type SearchLocation = {
+    latitude: number;
+    longitude: number;
+    metric: "miles" | "km";
+    distance: number | "Within Country" | "All Locations";
+    country_from_search: string;
+};
+
 interface ResultsBarProps {
     count: number;
     onSortChange?: (value: string) => void;
@@ -38,9 +78,11 @@ interface ResultsBarProps {
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
         optionalParam?: string
     ) => void;
+    filteredHouses: House[];
+    searchLocation: SearchLocation | null;
 }
 
-const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange, darkMode, filters, onFilterChange }) => {
+const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange, darkMode, filters, onFilterChange, filteredHouses, searchLocation }) => {
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
     const openOverlay = () => setIsOverlayOpen(true);
@@ -108,7 +150,7 @@ const ResultsBar: React.FC<ResultsBarProps> = ({ count, onSortChange, darkMode, 
             </div>
 
             {/* Overlay */}
-            <Overlay isOpen={isOverlayOpen} closeOverlay={closeOverlay} darkMode={darkMode} filters={filters} onFilterChange={onFilterChange} />
+            <Overlay isOpen={isOverlayOpen} closeOverlay={closeOverlay} darkMode={darkMode} filters={filters} onFilterChange={onFilterChange} filteredHouses={filteredHouses} searchLocation={searchLocation}/>
         </div>
     );
 };

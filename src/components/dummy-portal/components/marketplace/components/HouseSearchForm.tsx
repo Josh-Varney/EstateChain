@@ -34,6 +34,38 @@ type Filters = {
     searchLocation: SearchLocation | null;
 };
 
+type House = {
+    id: number;
+    propertyAddress: string;
+    propertySettlement: string;
+    propertyDescription: string;
+    propertyAdded: string; // ISO string format
+    propertyAddedBy: string;
+    propertyAgent: {
+        agentName: string;
+        agentIcon: string;
+        agentNumber: string;
+        agentEmail: string;
+    };
+    propertyKeywords: string[];
+    propertyPrice: number;
+    propertyLocation: {
+        latitude: number;
+        longitude: number;
+    };
+    propertyCountry: string;
+    propertySize: string;
+    propertyBedrooms: number;
+    propertyBathrooms: number;
+    propertyTokenPrice: number;
+    propertyTokensLeft: number;
+    propertyType: string;
+    propertyPostcode: string;
+    propertyRental: boolean;
+    propertyImage: string;
+    propertyFeatured: boolean;
+};
+
 type OnKeyWordChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     optionalParam?: string
@@ -229,12 +261,12 @@ const HouseDisplay = ({ darkMode }) => {
         propertyMaxTokenPrice: "",
         propertyType: "",
         propertyRental: "",
-        searchLocation: null,
+        searchLocation: null, // Ensure explicitly set to null
         propertyKeywords: [], // Must Haves
         dontShowKeywords: [], // Don't Show
     });
 
-    const [filteredHouses, setFilteredHouses] = useState(houses);
+    const [filteredHouses, setFilteredHouses] = useState<House[]>(houses);
     const [sortBy, setSortBy] = useState<string>("");
 
     const handleSortChange = (value: string) => {
@@ -643,7 +675,7 @@ const HouseDisplay = ({ darkMode }) => {
                 <AlertSaveSearchBar />
                 <hr className="border-gray-600 w-[98%] mx-auto my-1" />
                 {/* Results bar */}
-                <ResultsBar count={filteredHouses.length} onSortChange={handleSortChange} darkMode={darkMode} filters={filters} onFilterChange={handleFilterChange}  />
+                <ResultsBar count={filteredHouses.length} onSortChange={handleSortChange} darkMode={darkMode} filters={filters} onFilterChange={handleFilterChange} filteredHouses={filteredHouses} searchLocation={filters.searchLocation}/>
             </div>
 
             <div className="pb-16">
