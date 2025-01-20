@@ -77,7 +77,7 @@ const HouseDisplay = ({ darkMode }) => {
         { 
             id: 1, 
             propertyAddress: "West Hill, East Grinstead", 
-            propertySettlement: "Detatched",
+            propertySettlement: "Detached",
             propertyDescription: "Experience the pinnacle of city living in this sleek, 2-bedroom, 2-bathroom luxury apartment in the heart of downtown. Boasting floor-to-ceiling windows with panoramic skyline views, a state-of-the-art kitchen with quartz countertops, and access to exclusive amenities including a rooftop pool, fitness center, and concierge services.",
             propertyAdded: "2025-01-17T14:30:00.000Z",
             propertyAddedBy: "Jackson-Stops",
@@ -105,7 +105,7 @@ const HouseDisplay = ({ darkMode }) => {
         { 
             id: 2, 
             propertyAddress: "Vowels Lane, East Grinstead, West Sussex, RH19", 
-            propertySettlement: "Detatched",
+            propertySettlement: "Detached",
             propertyDescription: "Escape to tranquility with this enchanting 4-bedroom, 3-bathroom country home situated on 10 sprawling acres. Featuring a cozy stone fireplace, hardwood floors throughout, and a wraparound porch with breathtaking views of rolling hills",
             propertyAdded: "2025-01-16T15:30:00.000Z",
             propertyAddedBy: "Jackson-Stops",
@@ -133,7 +133,7 @@ const HouseDisplay = ({ darkMode }) => {
         { 
             id: 3, 
             propertyAddress: "Legsheath Lane, Forest Row, RH19", 
-            propertySettlement: "Detatched",
+            propertySettlement: "Detached",
             propertyDescription: "Wake up to the sound of waves in this delightful 2-bedroom, 1-bathroom beachfront bungalow. With its bright and airy design, this home features a fully equipped kitchen, a sun-soaked living room, and a private deck overlooking the ocean.",
             propertyAdded: "2025-01-16T15:30:00.000Z",
             propertyAddedBy: "Jackson-Stops",
@@ -242,7 +242,38 @@ const HouseDisplay = ({ darkMode }) => {
             propertyImage: "https://via.placeholder.com/300x200?text=Empire+State+Building",
             propertyFeatured: true // Marked as featured due to its prominence
         },
-    ];
+        { 
+            id: 7, 
+            propertyAddress: "Cedar Drive, Leatherhead", 
+            propertySettlement: "Detached", 
+            propertyDescription: "Set in a quiet, family-friendly neighborhood, this elegant 5-bedroom, 4-bathroom detached house offers both luxury and comfort. Featuring a spacious open-plan living area, a modern kitchen with high-end appliances, a private garden, and a double garage. The master suite includes a walk-in closet and en-suite bathroom. Conveniently located with easy access to Leatherhead train station, local schools, and shops.", 
+            propertyAdded: "2025-01-19T09:45:00.000Z", 
+            propertyAddedBy: "Greenwood Estates", 
+            propertyAgent: {
+                agentName: "Greenwood Estates", 
+                agentIcon: "", 
+                agentNumber: "07865412378", 
+                agentEmail: "info@greenwoodestates.com"
+            },
+            propertyKeywords: ["garden", "garage", "family-home", "modern", "quiet-neighborhood"], 
+            propertyPrice: 850000, 
+            propertyLocation: { 
+                latitude: 51.2970, 
+                longitude: -0.3310 
+            }, 
+            propertyCountry: "United Kingdom", 
+            propertySize: "3500 sqft", 
+            propertyBedrooms: 5, 
+            propertyBathrooms: 4, 
+            propertyTokenPrice: 75, 
+            propertyTokensLeft: 150, 
+            propertyType: "House", 
+            propertyPostcode: "KT22 7AF", 
+            propertyRental: false, 
+            propertyImage: "https://via.placeholder.com/300x200?text=Elegant+Detached+House", 
+            propertyFeatured: true 
+        }
+    ];    
     
 
     const [filters, setFilters] = useState<Filters>({
