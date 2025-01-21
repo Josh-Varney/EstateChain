@@ -82,7 +82,9 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "jest",
-        "server": "ts-node server/server.ts",
+        "server": "concurrently \"npm run goserver\" \"npm run tsserver\"",
+        "goserver": "go run server/main.go",
+        "tsserver": "ts-node server/server.ts",
         "eject": "react-scripts eject",
         "dev": "concurrently \"npm run server\" \"npm run start\""
     },
