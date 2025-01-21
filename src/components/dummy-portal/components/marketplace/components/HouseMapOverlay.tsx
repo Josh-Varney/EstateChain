@@ -153,27 +153,34 @@ const Overlay: React.FC<OverlayProps> = ({
 
   const initializeMap = () => {
     if (mapRef.current) {
+      // Default to 0, 0 if no search location or invalid lat/lng
       const defaultCenter = { lat: 0, lng: 0 };
       const radius = searchLocation?.distance && typeof searchLocation?.distance === "number" 
         ? searchLocation.distance 
         : 0;
   
-      const mapCenter = searchLocation?.latitude && searchLocation?.longitude 
+      const mapCenter = (searchLocation?.latitude && searchLocation?.longitude && !isNaN(searchLocation.latitude) && !isNaN(searchLocation.longitude)) 
         ? { 
             lat: searchLocation.latitude, 
             lng: searchLocation.longitude 
           } 
-        : defaultCenter;
+        : defaultCenter;  // Fallback to default center if lat or lng is invalid or missing
   
-      if (!mapInstance.current || !searchLocation) {
+      if (!mapInstance.current) {
         mapInstance.current = new google.maps.Map(mapRef.current, {
-          center: defaultCenter,
+          center: defaultCenter,  // Default to {0, 0}
           zoom: radius > 0 ? 10 : 3,
           mapId: "87d7c47084b9320e",
         });
       } else {
-        mapInstance.current.setCenter(mapCenter);
-        adjustZoomBasedOnSearchLocation(radius);
+        if (mapCenter && typeof mapCenter.lat === 'number' && typeof mapCenter.lng === 'number') {
+          console.log(mapCenter);
+          // Set the center of the map to the valid coordinates
+          mapInstance.current.setCenter(mapCenter);
+          adjustZoomBasedOnSearchLocation(radius);
+        } else {
+          console.log('Invalid mapCenter:', mapCenter);
+        }
       }
   
       markersRef.current.forEach((marker) => {
@@ -204,31 +211,31 @@ const Overlay: React.FC<OverlayProps> = ({
   
         if (!circleRef.current) {
           circleRef.current = new google.maps.Circle({
-            center: { lat: searchLocation.latitude, lng: searchLocation.longitude },
-            radius: metersRadius,
-            map: mapInstance.current,
-            fillOpacity: 0.1,
-            fillColor: "#FF0000",
-            strokeColor: "#8B0000",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
+              center: { lat: searchLocation.latitude, lng: searchLocation.longitude },
+              radius: metersRadius,
+              map: mapInstance.current,
+              fillOpacity: 0.1,
+              fillColor: "#FF0000",  // Color of the filled area
+              strokeColor: "#FF0000", // Border color
+              strokeOpacity: 0.2, // Border opacity
+              strokeWeight: 1, // Border thickness (in pixels)
           });
-        } else {
+      } else {
           circleRef.current.setCenter({ lat: searchLocation.latitude, lng: searchLocation.longitude });
           circleRef.current.setRadius(metersRadius);
-        }
+      }
   
         const insideHouses = filteredHouses.filter((house) => {
           const houseLatLng = new google.maps.LatLng(
-            house.propertyLocation.latitude,
-            house.propertyLocation.longitude
+              house.propertyLocation.latitude,
+              house.propertyLocation.longitude
           );
-  
-          return google.maps.geometry.spherical.computeDistanceBetween(
+
+        return google.maps.geometry.spherical.computeDistanceBetween(
             houseLatLng,
             circleRef.current!.getCenter()!
-          ) <= metersRadius;
-        });
+        ) <= metersRadius;
+    });
   
         setHouseDetails(insideHouses.length > 0 ? insideHouses : null);
       } else {
@@ -240,12 +247,23 @@ const Overlay: React.FC<OverlayProps> = ({
       }
     }
   };
-
-  const adjustZoomBasedOnSearchLocation = (radius: number) => {
-    if (mapInstance.current && searchLocation) {
-      if (searchLocation?.distance === "Within Country") {
-        const { latitude, longitude } = searchLocation;
   
+  const adjustZoomBasedOnSearchLocation = (radius: number) => {
+    console.log(radius);
+    console.log(mapInstance)
+    console.log(searchLocation)
+    if (mapInstance.current && searchLocation) {
+      // Validate if latitude and longitude are numbers before using them
+      const latitude = (typeof searchLocation?.latitude === "number" && !isNaN(searchLocation?.latitude)) 
+        ? searchLocation.latitude 
+        : 0;  // Default to 0 if invalid
+  
+      const longitude = (typeof searchLocation?.longitude === "number" && !isNaN(searchLocation?.longitude)) 
+        ? searchLocation.longitude 
+        : 0;  // Default to 0 if invalid
+
+  
+      if (searchLocation?.distance === "Within Country") {
         getCountryZoomLevel(latitude, longitude)
           .then((zoomLevel) => {
             mapInstance.current?.setCenter({ lat: latitude, lng: longitude });
@@ -256,7 +274,11 @@ const Overlay: React.FC<OverlayProps> = ({
           });
       } else if (searchLocation?.distance === "All Locations") {
         mapInstance.current.setZoom(radius > 0 ? 12 : 3);
-      } else {
+      } else if (longitude == 0 && latitude == 0){  // The search Reset Error here
+        // This may lead to bugs in the future
+        mapInstance.current.setZoom(radius > 0 ? 12 : 3);
+      }
+      else {
         mapInstance.current.setZoom(calculateZoomLevel(radius, searchLocation?.metric || "miles"));
       }
     }
