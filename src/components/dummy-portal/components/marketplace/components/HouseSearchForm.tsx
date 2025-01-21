@@ -299,10 +299,18 @@ const HouseDisplay = ({ darkMode }) => {
 
     const [filteredHouses, setFilteredHouses] = useState<House[]>(houses);
     const [sortBy, setSortBy] = useState<string>("");
+    const [searchQuery, setSearchQuery] = useState<string>("");
 
     const handleSortChange = (value: string) => {
         setSortBy(value);
     };
+
+    // useEffect(() => {
+    //     const savedLocation = localStorage.getItem('searchLocation');
+    //     if (savedLocation) {
+    //       setLoca(JSON.parse(savedLocation));
+    //     }
+    //   }, []);
 
     useEffect(() => {
         applyFilters(filters);
@@ -700,6 +708,7 @@ const HouseDisplay = ({ darkMode }) => {
                 darkMode={darkMode}
                 filters={filters}
                 onFilterChange={handleFilterChange} 
+                // setSearchQuery={setSearchQuery}
             />
             
             <div className="bg-gray-800 shadow-lg">

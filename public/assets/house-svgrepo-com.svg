@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 442" width="100" height="100">
+  <!-- Upper part of the Ethereum logo (top triangle) -->
+  <polygon points="128,40 15,159 128,159" fill="#3C3C3D" />
+  
+  <!-- Bottom part of the Ethereum logo (bottom triangle) -->
+  <polygon points="128,159 240,159 128,442" fill="#8C8C8C" />
+  
+  <!-- Line in the middle -->
+  <polygon points="128,159 128,296 240,159" fill="#393939" />
+</svg>

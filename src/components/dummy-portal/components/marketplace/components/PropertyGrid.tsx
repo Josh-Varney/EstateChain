@@ -18,6 +18,44 @@ import PropertyStampDutyCalculator from "./PropertyStampDutyCalculator";
 import PropertyInvestPopup from "./PropertyInvestPopUp";
 import CryptoTaxCalculator from "./PropertyCryptoTaxCalculator";
 
+type House = {
+  id: number;
+  propertyAddress: string;
+  propertySettlement: string;
+  propertyDescription: string;
+  propertyAdded: string;
+  propertyAddedBy: string;
+  propertyAgent: {
+    agentName: string;
+    agentIcon: string;
+    agentNumber: string;
+    agentEmail: string;
+  };
+  propertyKeywords: string[];
+  propertyPrice: number;
+  propertyLocation: {
+    latitude: number;
+    longitude: number;
+  };
+  propertyCountry: string;
+  propertySize: string;
+  propertyBedrooms: number;
+  propertyBathrooms: number;
+  propertyTokenPrice: number;
+  propertyTokensLeft: number;
+  propertyType: string;
+  propertyPostcode: string;
+  propertyRental: boolean;
+  propertyImage: string;
+  propertyFeatured: boolean;
+};
+
+type PropertyDetailsProps = {
+  darkMode: boolean;
+  houseDisplayed?: House;
+};
+
+
 // PropertyDetails Component
 const PropertyDetails = ({ title, value }) => (
   <div className="space-y-1 whitespace-nowrap">
@@ -26,7 +64,7 @@ const PropertyDetails = ({ title, value }) => (
   </div>
 );
 
-const PropertyGrid = ({ darkMode }) => {
+const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed }) => {
   const navigate = useNavigate();
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -52,7 +90,7 @@ const PropertyGrid = ({ darkMode }) => {
       }`}
       style={{ overflow: "hidden" }} // Explicitly hiding overflow to ensure no outer scrollbars
     >
-      <div className="relative h-full w-full overflow-y-auto">
+      <div className="relative h-full w-full overflow-y-auto">çc
         {/* Navigation Section */}
         <header
           className="flex items-center space-x-3 py-4 px-4 md:px-6 cursor-pointer"
@@ -81,7 +119,7 @@ const PropertyGrid = ({ darkMode }) => {
                 New Home
               </h1>
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
-                <h2 className="text-lg font-semibold">Whittaker House</h2>
+                <h2 className="text-lg font-semibold">{houseDisplayed?.propertyAddress}</h2>
                 <div className="flex space-x-4 text-lg">
                   <FaHeart className="cursor-pointer hover:text-red-700" />
                   <FaShare className="cursor-pointer hover:text-green-600" />

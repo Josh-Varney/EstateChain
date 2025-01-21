@@ -31,9 +31,9 @@ type FilterBarProps = {
 };
 
 const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange, isOverlay, closeOverlay }) => {
-    const [searchQuery, setSearchQuery] = useState<string>("");
     const [distanceFilter, setDistanceFilter] = useState<string>('10'); // Default to 10 miles
     const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedItems, setSelectedItems] = useState<string[]>(() => {
         const saved = localStorage.getItem("selectedItems");
         return saved ? JSON.parse(saved) : [];

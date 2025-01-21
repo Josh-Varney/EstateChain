@@ -7,9 +7,41 @@ import PropertyGrid from "./PropertyGrid";
 
 interface DisplayPropertyProps {}
 
-const DisplayProperty: React.FC<DisplayPropertyProps> = () => {
-  const { propertyID } = useParams<{ propertyID: string }>();
+type House = {
+  id: number;
+  propertyAddress: string;
+  propertySettlement: string;
+  propertyDescription: string;
+  propertyAdded: string;
+  propertyAddedBy: string;
+  propertyAgent: {
+    agentName: string;
+    agentIcon: string;
+    agentNumber: string;
+    agentEmail: string;
+  };
+  propertyKeywords: string[];
+  propertyPrice: number;
+  propertyLocation: {
+    latitude: number;
+    longitude: number;
+  };
+  propertyCountry: string;
+  propertySize: string;
+  propertyBedrooms: number;
+  propertyBathrooms: number;
+  propertyTokenPrice: number;
+  propertyTokensLeft: number;
+  propertyType: string;
+  propertyPostcode: string;
+  propertyRental: boolean;
+  propertyImage: string;
+  propertyFeatured: boolean;
+};
 
+const DisplayProperty: React.FC<DisplayPropertyProps> = () => {
+
+  const [house, setHouse] = useState<House>();
   const [darkMode, setDarkMode] = useState(false);
   const [isBuyer, setIsBuyer] = useState(true);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false);
@@ -53,6 +85,27 @@ const DisplayProperty: React.FC<DisplayPropertyProps> = () => {
     if (savedTheme === "dark") {
       setDarkMode(true);
     }
+    // Get the query string from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const houseString = urlParams.get('propertyID');
+
+    if (houseString) {
+      try {
+        // Decode and parse the house object from the URL
+        // Ensure that the houseString is a valid JSON string
+        const decodedHouseString = decodeURIComponent(houseString);
+  
+        // Check if the string starts with a "{" (likely to be an object) before trying to parse
+        if (decodedHouseString && decodedHouseString.startsWith("{")) {
+          const parsedHouse = JSON.parse(decodedHouseString);
+          setHouse(parsedHouse); // Set the house object in the state
+        } else {
+          console.error("The propertyID is not a valid JSON object:", decodedHouseString);
+        }
+      } catch (error) {
+        console.error("Failed to parse house data from URL", error);
+      }
+    }
   }, []);
 
   return (
@@ -77,7 +130,7 @@ const DisplayProperty: React.FC<DisplayPropertyProps> = () => {
 
         {/* Scrollable Content */}
         <div className="flex-grow h-full overflow-y-auto">
-          <PropertyGrid darkMode={darkMode} />
+          <PropertyGrid darkMode={darkMode} houseDisplayed={house} />
         </div>
       </div>
 

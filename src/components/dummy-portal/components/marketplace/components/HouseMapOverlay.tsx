@@ -99,6 +99,7 @@ const Overlay: React.FC<OverlayProps> = ({
   const [houseDetails, setHouseDetails] = React.useState<House[] | null>(null);
   const [isMessageVisible, setIsMessageVisible] = React.useState(true);
 
+  
   const calculateZoomLevel = (radius: number, metric: "miles" | "km"): number => {
     if (metric === "miles") {
       if (radius <= 10) return 12;
@@ -151,7 +152,7 @@ const Overlay: React.FC<OverlayProps> = ({
     });
   };
 
-  const initializeMap = () => {
+  const initializeMap = async () => {
     if (mapRef.current) {
       // Default to 0, 0 if no search location or invalid lat/lng
       const defaultCenter = { lat: 0, lng: 0 };
@@ -187,12 +188,58 @@ const Overlay: React.FC<OverlayProps> = ({
         marker.map = null; // Remove old markers
       });
       markersRef.current = [];
+
+      const houseIcon = {
+        url: "/public/house-svgrepo-com.svg",
+        size: new google.maps.Size(50, 50),
+        anchor: new google.maps.Point(25, 50),
+      };
+    
+      const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+
+      const parser = new DOMParser();
+
+      // Function to fetch and parse the SVG file
+      async function loadSVGFile(url) {
+        const response = await fetch(url);
+        const svgText = await response.text();
+        const parser = new DOMParser();
+        const pinSvg = parser.parseFromString(svgText, 'image/svg+xml').documentElement;
+        return pinSvg;
+      }
+
+      function buildContent(house: House) {
+        const content = document.createElement("div");
+        content.classList.add("property");
+      
+        // SVG pin shape and content structure using Tailwind CSS
+        content.innerHTML = `
+          <div class="relative w-12 h-12 rounded-full bg-white-500 text-white flex flex-col justify-center items-center overflow-hidden">
+            <!-- Pin Icon (SVG) -->
+            <svg class="h-10 w-10 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <!-- Pin Tail -->
+            <div class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-6 border-r-6 border-t-10 border-transparent border-t-red-500"></div>
+            
+            <!-- White Box (hidden initially) -->
+            <div class="absolute bottom-14 left-1/2 transform -translate-x-1/2 w-32 p-2 bg-white border border-gray-300 shadow-lg rounded-lg opacity-0 transition-opacity duration-300 pointer-events-none">
+              <div class="text-center text-sm font-bold text-gray-800">${house.propertyPrice}</div>
+              <div class="text-center text-xs text-gray-600">${house.propertyAddress}</div>
+            </div>
+          </div>
+        `;
+        
+        return content;
+      }
+      
   
       filteredHouses.forEach((house) => {
         const marker = new google.maps.marker.AdvancedMarkerElement({
           position: { lat: house.propertyLocation.latitude, lng: house.propertyLocation.longitude },
           map: mapInstance.current, // Attach directly to the map
-          title: house.propertyAddress,
+          content: buildContent(house)
         });
   
         marker.addListener("click", () => {
@@ -286,6 +333,7 @@ const Overlay: React.FC<OverlayProps> = ({
 
   useEffect(() => {
     if (searchLocation) {
+      localStorage.setItem('searchLocation', JSON.stringify(searchLocation));
       initializeMap();
     }
   }, [searchLocation]);
@@ -324,19 +372,19 @@ const Overlay: React.FC<OverlayProps> = ({
 
   return (
     <div
-      className={`fixed top-0 right-0 h-screen w-screen bg-white text-gray-700 z-50 transform ${
+      className={`fixed top-0 right-0 h-screen w-screen z-50 transform ${
         isOpen ? "translate-x-0" : "translate-x-full"
       } transition-transform duration-300 ease-in-out`}
     >
-      <div className="flex flex-row w-full justify-between items-center bg-red-400">
+      <div className="flex flex-row w-full justify-between items-center">
         <div className="flex-grow">
           <FilterBar
             darkMode={darkMode}
             filters={filters}
             onFilterChange={onFilterChange}
             isOverlay={true}
-            closeOverlay={closeOverlay}
-          />
+            closeOverlay={closeOverlay} 
+           />
         </div>
       </div>
 
@@ -350,7 +398,7 @@ const Overlay: React.FC<OverlayProps> = ({
           <SearchLocationMessage onClose={() => setIsMessageVisible(false)} />
         )}
         <div
-          ref={mapRef}
+          ref={mapRef} 
           className="w-full h-full"
           style={{ minHeight: "300px" }}
         />
