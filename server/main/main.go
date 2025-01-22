@@ -2,13 +2,13 @@ package main
 
 import (
 	"database/sql"
+	"estatechain/server/agent"
+	"estatechain/server/house"
 	"fmt"
 	"log"
 	"os"
-	"estatechain/server/house"
-	"estatechain/server/agent" 
 
-
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	_ "github.com/microsoft/go-mssqldb"
@@ -58,6 +58,8 @@ func main() {
 	// Create Gin router
 	router := gin.Default()
 
+	router.Use(cors.Default())
+
 	// Define route and pass the db instance to the handler
 	router.POST("/add-agent", func(c *gin.Context) {
 		agent.AddAgent(db, c) // Pass the db instance to the handler
@@ -78,6 +80,9 @@ func main() {
         house.AddProperty(db, c)
     })
 
+	router.GET("/get-properties", func(c *gin.Context) {
+		house.GetAllProperties(db, c)
+	})
 
 	// Start server
 	router.Run(":8080")

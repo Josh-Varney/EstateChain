@@ -160,6 +160,30 @@ app.get("/geoencode/search", async (req: Request, res: Response) => {
   }
 });
 
+// This endpoint fetches properties from the Go server without any filtering
+app.get("/api/getProperties", async (req, res) => {
+  try {
+      // Make a request to your Go server to fetch all properties (adjust the URL as needed)
+      const response = await axios.get('http://localhost:8080/get-properties');
+
+      // Assuming the response from the Go API is in the format:
+      // { properties: [...] }
+      const properties = response.data.properties;
+
+      // If there are no properties returned from the Go server
+      if (!properties || properties.length === 0) {
+          return res.status(404).json({ message: "No properties found" });
+      }
+
+      // Send the properties data back to the client
+      res.json(properties);
+
+  } catch (error) {
+      console.log("Error fetching properties:", error);
+      res.status(500).json({ error: "Failed to fetch properties" });
+  }
+});
+
 
 
 // Start the server

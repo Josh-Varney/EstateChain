@@ -72,209 +72,13 @@ type OnKeyWordChange = (
 ) => void;
 
 const HouseDisplay = ({ darkMode }) => {
-
-    const houses = [
-        { 
-            id: 1, 
-            propertyAddress: "West Hill, East Grinstead", 
-            propertySettlement: "Detached",
-            propertyDescription: "Experience the pinnacle of city living in this sleek, 2-bedroom, 2-bathroom luxury apartment in the heart of downtown. Boasting floor-to-ceiling windows with panoramic skyline views, a state-of-the-art kitchen with quartz countertops, and access to exclusive amenities including a rooftop pool, fitness center, and concierge services.",
-            propertyAdded: "2025-01-17T14:30:00.000Z",
-            propertyAddedBy: "Jackson-Stops",
-            propertyAgent: {
-                agentName: "Jackson-Stops",
-                agentIcon: "",
-                agentNumber: "07469751962",
-                agentEmail: "jrv123756@gmail.com",
-            },
-            propertyKeywords: ["pool", "parking", "retirement-home"],
-            propertyPrice: 500000, 
-            propertyLocation: { latitude: 50.79899, longitude: -1.09125 },
-            propertyCountry: "United Kingdom",
-            propertySize: "3000 sqft", 
-            propertyBedrooms: 4, 
-            propertyBathrooms: 3, 
-            propertyTokenPrice: 50, 
-            propertyTokensLeft: 100, 
-            propertyType: "Villa", 
-            propertyPostcode: "P05 1HD",
-            propertyRental: true, 
-            propertyImage: "https://via.placeholder.com/300x200?text=Modern+Villa", 
-            propertyFeatured: true 
-        },
-        { 
-            id: 2, 
-            propertyAddress: "Vowels Lane, East Grinstead, West Sussex, RH19", 
-            propertySettlement: "Detached",
-            propertyDescription: "Escape to tranquility with this enchanting 4-bedroom, 3-bathroom country home situated on 10 sprawling acres. Featuring a cozy stone fireplace, hardwood floors throughout, and a wraparound porch with breathtaking views of rolling hills",
-            propertyAdded: "2025-01-16T15:30:00.000Z",
-            propertyAddedBy: "Jackson-Stops",
-            propertyAgent: {
-                agentName: "Jackson-Stops",
-                agentIcon: "",
-                agentNumber: "07469751962",
-                agentEmail: "jrv123756@gmail.com",
-            },
-            propertyPrice: 150000, 
-            propertyKeywords: ["pool"],
-            propertyLocation: { latitude: 51.123, longitude: -0.014 },
-            propertyCountry: "United Kingdom",
-            propertySize: "1200 sqft", 
-            propertyBedrooms: 2, 
-            propertyBathrooms: 1, 
-            propertyTokenPrice: 15, 
-            propertyTokensLeft: 200, 
-            propertyType: "Cottage", 
-            propertyPostcode: "RH19 1HD",
-            propertyRental: false, 
-            propertyImage: "https://via.placeholder.com/300x200?text=Cozy+Cottage", 
-            propertyFeatured: true 
-        },
-        { 
-            id: 3, 
-            propertyAddress: "Legsheath Lane, Forest Row, RH19", 
-            propertySettlement: "Detached",
-            propertyDescription: "Wake up to the sound of waves in this delightful 2-bedroom, 1-bathroom beachfront bungalow. With its bright and airy design, this home features a fully equipped kitchen, a sun-soaked living room, and a private deck overlooking the ocean.",
-            propertyAdded: "2025-01-16T15:30:00.000Z",
-            propertyAddedBy: "Jackson-Stops",
-            propertyAgent: {
-                agentName: "Jackson-Stops",
-                agentIcon: "",
-                agentNumber: "07469751962",
-                agentEmail: "jrv123756@gmail.com",
-            },
-            propertyPrice: 300000, 
-            propertyKeywords: ["retirement-home"],
-            propertyLocation: { latitude: 51.122, longitude: -0.013 },
-            propertyCountry: "United Kingdom",
-            propertySize: "900 sqft", 
-            propertyBedrooms: 1, 
-            propertyBathrooms: 1, 
-            propertyTokenPrice: 30, 
-            propertyTokensLeft: 9, 
-            propertyPostcode: "RH19 3RR",
-            propertyType: "Apartment", 
-            propertyRental: false, 
-            propertyImage: "https://via.placeholder.com/300x200?text=Urban+Apartment", 
-            propertyFeatured: false 
-        },
-        { 
-            id: 4, 
-            propertyAddress: "Country House", 
-            propertySettlement: "Terrace",
-            propertyDescription: "Discover the perfect blend of style and convenience in this 3-bedroom, 2.5-bathroom modern townhouse.",
-            propertyAdded: "2025-01-16T15:30:00.000Z",
-            propertyAddedBy: "Jackson-Stops",
-            propertyAgent: {
-                agentName: "Jackson-Stops",
-                agentIcon: "",
-                agentNumber: "07469751962",
-                agentEmail: "jrv123756@gmail.com",
-            },
-            propertyPrice: 250000, 
-            propertyKeywords: ["buying-schemes"],
-            propertyLocation: { latitude: 51.127, longitude: -0.012 },
-            propertyCountry: "United Kingdom",
-            propertySize: "2000 sqft", 
-            propertyPostcode: "RH19 2ND",
-            propertyBedrooms: 3, 
-            propertyBathrooms: 2, 
-            propertyTokenPrice: 25, 
-            propertyTokensLeft: 180, 
-            propertyType: "House", 
-            propertyRental: false, 
-            propertyImage: "https://via.placeholder.com/300x200?text=Country+House", 
-            propertyFeatured: false 
-        },
-        { 
-            id: 5, 
-            propertyAddress: "Dormans Park", 
-            propertySettlement: "Flat",
-            propertyDescription: "Discover the perfect blend of style and convenience in this 3-bedroom, 2.5-bathroom modern townhouse.",
-            propertyAdded: "2025-01-16T15:30:00.000Z",
-            propertyAddedBy: "Jackson-Stops",
-            propertyAgent: {
-                agentName: "Jackson-Stops",
-                agentIcon: "",
-                agentNumber: "07469751962",
-                agentEmail: "jrv123756@gmail.com",
-            },
-            propertyPrice: 1000000, 
-            propertyKeywords: ["action-property", "garden"],
-            propertyLocation: { latitude: 50.79899, longitude: -1.09125 },
-            propertyCountry: "United Kingdom",
-            propertySize: "5000 sqft", 
-            propertyBedrooms: 6, 
-            propertyPostcode: "P05 4HD",
-            propertyBathrooms: 5, 
-            propertyTokenPrice: 100, 
-            propertyTokensLeft: 50, 
-            propertyType: "Estate", 
-            propertyRental: false, 
-            propertyImage: "https://via.placeholder.com/300x200?text=Luxury+Estate", 
-            propertyFeatured: false 
-        },
-        {
-            id: 6,
-            propertyAddress: "Empire State Building",
-            propertySettlement: "Skyscraper",
-            propertyDescription: "Iconic Landmark in New York City",
-            propertyAdded: "2025-01-16T15:30:00.000Z",
-            propertyAddedBy: "Jackson-Stops",
-            propertyAgent: {
-                agentName: "Jackson-Stops",
-                agentIcon: "",
-                agentNumber: "07469751962",
-                agentEmail: "jrv123756@gmail.com",
-            },
-            propertyPrice: 1000000000, // Adjusted for a landmark value
-            propertyKeywords: ["iconic", "landmark", "skyscraper", "new-york"],
-            propertyLocation: { latitude: 40.748817, longitude: -73.985428 },
-            propertyCountry: "United States",
-            propertySize: "2,768,591 sqft", // Actual Empire State Building area
-            propertyBedrooms: 0, // Non-residential
-            propertyPostcode: "10118",
-            propertyBathrooms: 0, // Non-residential
-            propertyTokenPrice: 100000, // Hypothetical token pricing
-            propertyTokensLeft: 10000, // Hypothetical token count
-            propertyType: "Commercial",
-            propertyRental: false,
-            propertyImage: "https://via.placeholder.com/300x200?text=Empire+State+Building",
-            propertyFeatured: true // Marked as featured due to its prominence
-        },
-        { 
-            id: 7, 
-            propertyAddress: "Cedar Drive, Leatherhead", 
-            propertySettlement: "Detached", 
-            propertyDescription: "Set in a quiet, family-friendly neighborhood, this elegant 5-bedroom, 4-bathroom detached house offers both luxury and comfort. Featuring a spacious open-plan living area, a modern kitchen with high-end appliances, a private garden, and a double garage. The master suite includes a walk-in closet and en-suite bathroom. Conveniently located with easy access to Leatherhead train station, local schools, and shops.", 
-            propertyAdded: "2025-01-19T09:45:00.000Z", 
-            propertyAddedBy: "Greenwood Estates", 
-            propertyAgent: {
-                agentName: "Greenwood Estates", 
-                agentIcon: "", 
-                agentNumber: "07865412378", 
-                agentEmail: "info@greenwoodestates.com"
-            },
-            propertyKeywords: ["garden", "garage", "family-home", "modern", "quiet-neighborhood"], 
-            propertyPrice: 850000, 
-            propertyLocation: { 
-                latitude: 51.2970, 
-                longitude: -0.3310 
-            }, 
-            propertyCountry: "United Kingdom", 
-            propertySize: "3500 sqft", 
-            propertyBedrooms: 5, 
-            propertyBathrooms: 4, 
-            propertyTokenPrice: 75, 
-            propertyTokensLeft: 150, 
-            propertyType: "House", 
-            propertyPostcode: "KT22 7AF", 
-            propertyRental: false, 
-            propertyImage: "https://via.placeholder.com/300x200?text=Elegant+Detached+House", 
-            propertyFeatured: true 
-        }
-    ];    
     
+    const [houses, setHouses] = useState<House[]>([]); 
+    const [filteredHouses, setFilteredHouses] = useState<House[]>(houses);
+    const [sortBy, setSortBy] = useState<string>("");
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [loading, setLoading] = useState(true); // Track loading state
+    const [error, setError] = useState<string | null>(null); // Error state for fetching issues
 
     const [filters, setFilters] = useState<Filters>({
         propertyMinPrice: "",
@@ -296,21 +100,83 @@ const HouseDisplay = ({ darkMode }) => {
         propertyKeywords: [], // Must Haves
         dontShowKeywords: [], // Don't Show
     });
-
-    const [filteredHouses, setFilteredHouses] = useState<House[]>(houses);
-    const [sortBy, setSortBy] = useState<string>("");
-    const [searchQuery, setSearchQuery] = useState<string>("");
-
+    
     const handleSortChange = (value: string) => {
         setSortBy(value);
     };
 
-    // useEffect(() => {
-    //     const savedLocation = localStorage.getItem('searchLocation');
-    //     if (savedLocation) {
-    //       setLoca(JSON.parse(savedLocation));
-    //     }
-    //   }, []);
+    // Fetch houses only once when the component mounts
+    useEffect(() => {
+
+            // Function to convert the data
+        const convertToHouseList = (data: any[]): House[] => {
+            return data.map(property => ({
+                id: property.propertyID,
+                propertyAddress: property.propertyAddress,
+                propertySettlement: property.propertySettlement,
+                propertyDescription: property.propertyDescription,
+                propertyAdded: new Date().toISOString(), // Current date as the "added" date
+                propertyAddedBy: property.propertyAddedBy,
+                propertyAgent: {
+                    agentName: "Agent Name", // Placeholder
+                    agentIcon: "default-icon-url", // Placeholder
+                    agentNumber: "123-456-7890", // Placeholder
+                    agentEmail: "agent@example.com" // Placeholder
+                },
+                propertyKeywords: property.propertyKeywords.split(", "), // Assuming keywords are comma-separated
+                propertyPrice: property.propertyPrice,
+                propertyLocation: {
+                    latitude: parseFloat(property.propertyGeoLat),
+                    longitude: parseFloat(property.propertyGeoLong)
+                },
+                propertyCountry: property.propertyCountry,
+                propertySize: property.propertySize,
+                propertyBedrooms: property.propertyBedrooms,
+                propertyBathrooms: property.propertyBathrooms,
+                propertyTokenPrice: property.propertyTokenPrice,
+                propertyTokensLeft: property.propertyTokensLeft,
+                propertyType: property.propertyType,
+                propertyPostcode: property.propertyPostcode,
+                propertyRental: property.propertyRental,
+                propertyImage: property.propertyImage,
+                propertyFeatured: property.propertyFeatured
+            }));
+        };
+
+        const fetchHouses = async () => {
+            try {
+                const response = await fetch("http://localhost:3001/api/getProperties");
+                // console.log("Response Status:", response.status); // Log status code
+                const responseBody = await response.text(); // Get the raw response body
+                // console.log("Raw Response Body:", responseBody); // Log the raw response
+        
+                if (response.ok) {
+                    const data = JSON.parse(responseBody); // Parse the response body
+                    // console.log("Parsed Data:", data); // Check the structure of the parsed data
+                    
+                    // Ensure the data has the 'properties' field and it's an array
+                    if (data) {
+                        const houses = convertToHouseList(data);
+                        setHouses(houses); // Update state with the properties
+                        setFilteredHouses(houses);
+                        // console.log("houses:", houses);
+                    } else {
+                        setError("No properties found in response.");
+                        console.error("Properties key not found or is empty.");
+                    }
+                } else {
+                    setError(`Failed to fetch houses: ${response.status} - ${responseBody}`);
+                }
+            } catch (error) {
+                setError(`Error fetching houses: ${error.message}`);
+                console.error("Error fetching houses:", error);
+            } finally {
+                setLoading(false);
+            }
+        };        
+
+        fetchHouses();
+    }, []); 
 
     useEffect(() => {
         applyFilters(filters);

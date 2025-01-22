@@ -126,3 +126,69 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"properties": properties})
 }
 
+// Function to get properties by agent ID
+func GetPropertiesByAgent(db *sql.DB, c *gin.Context) {
+    agentID := c.Param("id")
+
+    query := `
+        SELECT propertyID, propertyName, propertyAddress, propertyPrice, propertyLocationLatitude, 
+               propertyLocationLongitude, propertySize, propertyBedrooms, propertyBathrooms, 
+               propertyType, propertyPostcode, propertyImage, propertyFeatured
+        FROM Property
+        WHERE propertyAgentID = @AgentID
+    `
+    rows, err := db.Query(query, sql.Named("AgentID", agentID))
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error fetching properties: %s", err.Error())})
+        return
+    }
+    defer rows.Close()
+
+    var properties []map[string]interface{}
+
+    for rows.Next() {
+        var property struct {
+            PropertyID            int     `json:"propertyID"`
+            PropertyName          string  `json:"propertyName"`
+            PropertyAddress       string  `json:"propertyAddress"`
+            PropertyPrice         float64 `json:"propertyPrice"`
+            PropertyLocationLatitude  float64 `json:"propertyLocationLatitude"`
+            PropertyLocationLongitude float64 `json:"propertyLocationLongitude"`
+            PropertySize          string  `json:"propertySize"`
+            PropertyBedrooms      int     `json:"propertyBedrooms"`
+            PropertyBathrooms     int     `json:"propertyBathrooms"`
+            PropertyType          string  `json:"propertyType"`
+            PropertyPostcode      string  `json:"propertyPostcode"`
+            PropertyImage         string  `json:"propertyImage"`
+            PropertyFeatured      bool    `json:"propertyFeatured"`
+        }
+
+        err := rows.Scan(&property.PropertyID, &property.PropertyName, &property.PropertyAddress, &property.PropertyPrice,
+                         &property.PropertyLocationLatitude, &property.PropertyLocationLongitude, &property.PropertySize,
+                         &property.PropertyBedrooms, &property.PropertyBathrooms, &property.PropertyType,
+                         &property.PropertyPostcode, &property.PropertyImage, &property.PropertyFeatured)
+        if err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error reading property: %s", err.Error())})
+            return
+        }
+
+        properties = append(properties, map[string]interface{}{
+            "propertyID":            property.PropertyID,
+            "propertyName":          property.PropertyName,
+            "propertyAddress":       property.PropertyAddress,
+            "propertyPrice":         property.PropertyPrice,
+            "propertyLocationLatitude":  property.PropertyLocationLatitude,
+            "propertyLocationLongitude": property.PropertyLocationLongitude,
+            "propertySize":          property.PropertySize,
+            "propertyBedrooms":      property.PropertyBedrooms,
+            "propertyBathrooms":     property.PropertyBathrooms,
+            "propertyType":          property.PropertyType,
+            "propertyPostcode":      property.PropertyPostcode,
+            "propertyImage":         property.PropertyImage,
+            "propertyFeatured":      property.PropertyFeatured,
+        })
+    }
+
+    c.JSON(http.StatusOK, gin.H{"properties": properties})
+}
+
