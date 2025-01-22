@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"estatechain/server/agent" // Import your agent package
+	"estatechain/server/house"
+	"estatechain/server/agent" 
+
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -44,6 +46,8 @@ func main() {
 	}
 	defer db.Close()
 
+	fmt.Println("DB object before Exec:", db)
+
 	// Check DB connection
 	err = db.Ping()
 	if err != nil {
@@ -54,10 +58,26 @@ func main() {
 	// Create Gin router
 	router := gin.Default()
 
-	// Define routes for agent functions
-	router.POST("/addAgent", agent.AddAgent)
-	router.GET("/getAgent/:agentID", agent.GetAgent)
-	router.DELETE("/removeAgent/:agentID", agent.RemoveAgent)
+	// Define route and pass the db instance to the handler
+	router.POST("/add-agent", func(c *gin.Context) {
+		agent.AddAgent(db, c) // Pass the db instance to the handler
+	})
+
+	// Define route to get agent by ID
+	router.GET("/get-agent/:agentID", func(c *gin.Context) {
+		agent.GetAgent(db, c) // Pass the db instance to the handler
+	})
+	
+	// DELETE route for removing an agent by ID
+	router.DELETE("/remove-agent/:agentID", func(c *gin.Context) {
+		agent.RemoveAgent(db, c) // Pass the db instance to the handler
+	})
+
+	// Define route and pass db instance 
+    router.POST("/add-property", func(c *gin.Context) {
+        house.AddProperty(db, c)
+    })
+
 
 	// Start server
 	router.Run(":8080")

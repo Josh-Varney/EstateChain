@@ -1,0 +1,221 @@
+package house
+
+import (
+	"database/sql"
+	"fmt"
+	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+)
+
+// Function to handle the POST request to add a property
+func AddProperty(db *sql.DB, c *gin.Context) {
+    var request struct {
+        PropertyName          string  `json:"propertyName"`
+        PropertyAddress       string  `json:"propertyAddress"`
+        PropertyGeoLat        string  `json:"propertyGeoLat"`
+        PropertyGeoLong       string  `json:"propertyGeoLong"`
+        PropertyDescription   string  `json:"propertyDescription"`
+        PropertyAddedBy       string  `json:"propertyAddedBy"` // Wallet Address
+        PropertyKeywords      string  `json:"propertyKeywords"` // JSON or CSV
+        PropertyPrice         float64 `json:"propertyPrice"`
+        PropertyLocationLatitude  float64 `json:"propertyLocationLatitude"`
+        PropertyLocationLongitude float64 `json:"propertyLocationLongitude"`
+        PropertySize          string  `json:"propertySize"`
+        PropertyBedrooms      int     `json:"propertyBedrooms"`
+        PropertyBathrooms     int     `json:"propertyBathrooms"`
+        PropertyTokenPrice    float64 `json:"propertyTokenPrice"`
+        PropertyTokensLeft    int     `json:"propertyTokensLeft"`
+        PropertyType          string  `json:"propertyType"`
+        PropertyPostcode      string  `json:"propertyPostcode"`
+        PropertyImage         string  `json:"propertyImage"`
+        PropertyFeatured      bool    `json:"propertyFeatured"` // True/False
+        PropertyRental        bool    `json:"propertyRental"` // True/False
+        PropertySettlement    string  `json:"propertySettlement"`
+        PropertyCountry       string  `json:"propertyCountry"`
+        PropertyCity          string  `json:"propertyCity"`
+        PropertyPostalCode    string  `json:"propertyPostalCode"`
+        PropertyStreet        string  `json:"propertyStreet"`
+        PropertyStreetNum     string  `json:"propertyStreetNum"`
+        PropertyAgentID       int     `json:"propertyAgentID"`
+    }
+
+    // Bind JSON body to the request struct
+    if err := c.BindJSON(&request); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+        return
+    }
+
+    // Prepare the SQL query to insert a property
+    query := `
+        INSERT INTO Property (
+            propertyName, propertyAddress, propertyGeoLat, propertyGeoLong, propertyDescription, 
+            propertyAddedBy, propertyKeywords, propertyPrice, propertyLocationLatitude, 
+            propertyLocationLongitude, propertySize, propertyBedrooms, propertyBathrooms, 
+            propertyTokenPrice, propertyTokensLeft, propertyType, propertyPostcode, propertyImage, 
+            propertyFeatured, propertyRental, propertySettlement, propertyCountry, propertyCity, 
+            propertyPostalCode, propertyStreet, propertyStreetNum, propertyAgentID
+        ) VALUES (
+            @PropertyName, @PropertyAddress, @PropertyGeoLat, @PropertyGeoLong, @PropertyDescription, 
+            @PropertyAddedBy, @PropertyKeywords, @PropertyPrice, @PropertyLocationLatitude, 
+            @PropertyLocationLongitude, @PropertySize, @PropertyBedrooms, @PropertyBathrooms, 
+            @PropertyTokenPrice, @PropertyTokensLeft, @PropertyType, @PropertyPostcode, @PropertyImage, 
+            @PropertyFeatured, @PropertyRental, @PropertySettlement, @PropertyCountry, @PropertyCity, 
+            @PropertyPostalCode, @PropertyStreet, @PropertyStreetNum, @PropertyAgentID
+        )
+    `
+
+    // Execute the query with the request parameters
+    _, err := db.Exec(query,
+        sql.Named("PropertyName", request.PropertyName),
+        sql.Named("PropertyAddress", request.PropertyAddress),
+        sql.Named("PropertyGeoLat", request.PropertyGeoLat),
+        sql.Named("PropertyGeoLong", request.PropertyGeoLong),
+        sql.Named("PropertyDescription", request.PropertyDescription),
+        sql.Named("PropertyAddedBy", request.PropertyAddedBy),
+        sql.Named("PropertyKeywords", request.PropertyKeywords),
+        sql.Named("PropertyPrice", request.PropertyPrice),
+        sql.Named("PropertyLocationLatitude", request.PropertyLocationLatitude),
+        sql.Named("PropertyLocationLongitude", request.PropertyLocationLongitude),
+        sql.Named("PropertySize", request.PropertySize),
+        sql.Named("PropertyBedrooms", request.PropertyBedrooms),
+        sql.Named("PropertyBathrooms", request.PropertyBathrooms),
+        sql.Named("PropertyTokenPrice", request.PropertyTokenPrice),
+        sql.Named("PropertyTokensLeft", request.PropertyTokensLeft),
+        sql.Named("PropertyType", request.PropertyType),
+        sql.Named("PropertyPostcode", request.PropertyPostcode),
+        sql.Named("PropertyImage", request.PropertyImage),
+        sql.Named("PropertyFeatured", request.PropertyFeatured),
+        sql.Named("PropertyRental", request.PropertyRental),
+        sql.Named("PropertySettlement", request.PropertySettlement),
+        sql.Named("PropertyCountry", request.PropertyCountry),
+        sql.Named("PropertyCity", request.PropertyCity),
+        sql.Named("PropertyPostalCode", request.PropertyPostalCode),
+        sql.Named("PropertyStreet", request.PropertyStreet),
+        sql.Named("PropertyStreetNum", request.PropertyStreetNum),
+        sql.Named("PropertyAgentID", request.PropertyAgentID),
+    )
+
+    // Handle error during query execution
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error inserting property: %s", err.Error())})
+        return
+    }
+
+    // If successful, return a success message
+    c.JSON(http.StatusOK, gin.H{"message": "Property added successfully"})
+}
+
+// Function to get a property by ID
+func GetProperty(db *sql.DB, c *gin.Context) {
+    // Get the propertyID from URL parameter
+    propertyID := c.Param("propertyID")
+
+    if propertyID == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Property ID is required"})
+        return
+    }
+
+    // Convert propertyID from string to integer
+    id, err := strconv.Atoi(propertyID)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Property ID. It must be a number"})
+        return
+    }
+
+    // Define the struct for the property response
+    var property struct {
+        PropertyID              int     `json:"propertyID"`
+        PropertyName            string  `json:"propertyName"`
+        PropertyAddress         string  `json:"propertyAddress"`
+        PropertyGeoLat          string  `json:"propertyGeoLat"`
+        PropertyGeoLong         string  `json:"propertyGeoLong"`
+        PropertyDescription     string  `json:"propertyDescription"`
+        PropertyAddedBy         string  `json:"propertyAddedBy"`
+        PropertyKeywords        string  `json:"propertyKeywords"`
+        PropertyPrice           float64 `json:"propertyPrice"`
+        PropertyLocationLatitude float64 `json:"propertyLocationLatitude"`
+        PropertyLocationLongitude float64 `json:"propertyLocationLongitude"`
+        PropertySize            string  `json:"propertySize"`
+        PropertyBedrooms        int     `json:"propertyBedrooms"`
+        PropertyBathrooms       int     `json:"propertyBathrooms"`
+        PropertyTokenPrice      float64 `json:"propertyTokenPrice"`
+        PropertyTokensLeft      int     `json:"propertyTokensLeft"`
+        PropertyType            string  `json:"propertyType"`
+        PropertyPostcode        string  `json:"propertyPostcode"`
+        PropertyImage           string  `json:"propertyImage"`
+        PropertyFeatured        bool    `json:"propertyFeatured"`
+        PropertyRental          bool    `json:"propertyRental"`
+        PropertySettlement      string  `json:"propertySettlement"`
+        PropertyCountry         string  `json:"propertyCountry"`
+        PropertyCity            string  `json:"propertyCity"`
+        PropertyPostalCode      string  `json:"propertyPostalCode"`
+        PropertyStreet          string  `json:"propertyStreet"`
+        PropertyStreetNum       string  `json:"propertyStreetNum"`
+        PropertyAgentID         int     `json:"propertyAgentID"`
+    }
+
+    // SQL query to fetch the property by ID
+    query := `
+        SELECT propertyID, propertyName, propertyAddress, propertyGeoLat, propertyGeoLong,
+               propertyDescription, propertyAddedBy, propertyKeywords, propertyPrice,
+               propertyLocationLatitude, propertyLocationLongitude, propertySize,
+               propertyBedrooms, propertyBathrooms, propertyTokenPrice, propertyTokensLeft,
+               propertyType, propertyPostcode, propertyImage, propertyFeatured,
+               propertyRental, propertySettlement, propertyCountry, propertyCity,
+               propertyPostalCode, propertyStreet, propertyStreetNum, propertyAgentID
+        FROM Property
+        WHERE propertyID = ?
+    `
+
+    // Execute the query and scan the result into the 'property' struct
+    row := db.QueryRow(query, id)
+    err = row.Scan(
+        &property.PropertyID, &property.PropertyName, &property.PropertyAddress,
+        &property.PropertyGeoLat, &property.PropertyGeoLong, &property.PropertyDescription,
+        &property.PropertyAddedBy, &property.PropertyKeywords, &property.PropertyPrice,
+        &property.PropertyLocationLatitude, &property.PropertyLocationLongitude,
+        &property.PropertySize, &property.PropertyBedrooms, &property.PropertyBathrooms,
+        &property.PropertyTokenPrice, &property.PropertyTokensLeft, &property.PropertyType,
+        &property.PropertyPostcode, &property.PropertyImage, &property.PropertyFeatured,
+        &property.PropertyRental, &property.PropertySettlement, &property.PropertyCountry,
+        &property.PropertyCity, &property.PropertyPostalCode, &property.PropertyStreet,
+        &property.PropertyStreetNum, &property.PropertyAgentID,
+    )
+
+    // Check if an error occurred
+    if err != nil {
+        if err == sql.ErrNoRows {
+            // Property not found
+            c.JSON(http.StatusNotFound, gin.H{"error": "Property not found"})
+        } else {
+            // Other error
+            c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error fetching property: %s", err.Error())})
+        }
+        return
+    }
+
+    // Return the property as JSON
+    c.JSON(http.StatusOK, gin.H{"property": property})
+}
+
+// Function to handle the DELETE request to remove a property by ID
+func RemoveProperty(db *sql.DB, c *gin.Context) {
+    // Get the propertyID from the URL parameter
+    propertyID := c.Param("id")
+
+    // Prepare the SQL query to delete the property by its ID
+    query := `DELETE FROM Property WHERE propertyID = @PropertyID`
+
+    // Execute the query
+    _, err := db.Exec(query, sql.Named("PropertyID", propertyID))
+    if err != nil {
+        // If an error occurs, return a 500 internal server error
+        c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error deleting property: %s", err.Error())})
+        return
+    }
+
+    // If successful, return a success message
+    c.JSON(http.StatusOK, gin.H{"message": "Property removed successfully"})
+}
