@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -63,33 +62,8 @@ func main() {
 	router := gin.Default()
 
 	// Define the POST route for adding a property
-	router.POST("/addProperty", addPropertyHandler)
+	router.POST("/addProperty", addAgent)
 
 	// Start the server
 	router.Run(":8080")
-}
-
-// Function to handle the POST request to add a property
-func addPropertyHandler(c *gin.Context) {
-	var request struct {
-		Name  string `json:"name"`
-		Value string `json:"value"`
-	}
-
-	// Bind the request JSON to the struct
-	if err := c.BindJSON(&request); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return
-	}
-
-	// Prepare the SQL query to insert the property into the database
-	query := "INSERT INTO properties (name, value) VALUES (@p1, @p2)"
-	_, err := db.Exec(query, request.Name, request.Value)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error inserting data: %s", err.Error())})
-		return
-	}
-
-	// Respond with success
-	c.JSON(http.StatusOK, gin.H{"message": "Property added successfully"})
 }
