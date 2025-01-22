@@ -1,11 +1,11 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"log"
 	"os"
+	"estatechain/server/agent" // Import your agent package
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -20,12 +20,6 @@ var password string
 var database string
 
 func main() {
-	// Release Mode for Engine
-	gin.SetMode(gin.ReleaseMode)
-
-	// Trusted Proxies
-	r := gin.Default()
-	r.SetTrustedProxies([]string{"127.0.0.1", "192.168.1.2", "10.0.0.0/8"})
 	// Load environment variables from .env file
 	err := godotenv.Load()
 	if err != nil {
@@ -39,9 +33,9 @@ func main() {
 	password = os.Getenv("DB_PASSWORD_AZURE")
 	database = os.Getenv("DB_DATABASE")
 
-	// Build connection string
-	connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%s;database=%s;",
-		server, user, password, port, database)
+	// Build connection string for Azure SQL Database
+	connString := fmt.Sprintf("sqlserver://%s:%s@%s:%s?database=%s",
+		user, password, server, port, database)
 
 	// Create connection pool
 	db, err = sql.Open("sqlserver", connString)
@@ -50,20 +44,21 @@ func main() {
 	}
 	defer db.Close()
 
-	// Check the DB connection
-	ctx := context.Background()
-	err = db.PingContext(ctx)
+	// Check DB connection
+	err = db.Ping()
 	if err != nil {
 		log.Fatal("Error pinging database: ", err.Error())
 	}
 	fmt.Println("Connected to the database successfully!")
 
-	// Create a Gin router
+	// Create Gin router
 	router := gin.Default()
 
-	// Define the POST route for adding a property
-	router.POST("/addProperty", addAgent)
+	// Define routes for agent functions
+	router.POST("/addAgent", agent.AddAgent)
+	router.GET("/getAgent/:agentID", agent.GetAgent)
+	router.DELETE("/removeAgent/:agentID", agent.RemoveAgent)
 
-	// Start the server
+	// Start server
 	router.Run(":8080")
 }
