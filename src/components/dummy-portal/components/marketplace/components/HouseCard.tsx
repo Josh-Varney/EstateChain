@@ -2,24 +2,24 @@ import React from "react";
 import { FaBath, FaBed, FaCamera, FaHeart, FaMailBulk, FaPhoneAlt } from "react-icons/fa";
 import HouseCarousel from "./HouseCarousel";
 
-const HouseCard = ({ house }: { house: any }) => {
+const HouseCard = ({ house }: { house: House }) => {
     const placeholderImages = [
         "https://via.placeholder.com/500x300?text=House+Image+1",
         "https://via.placeholder.com/500x300?text=House+Image+2",
         "https://via.placeholder.com/500x300?text=House+Image+3",
     ];
 
-    const images = house.image ? [house.image] : placeholderImages;
+    // const images = house.image ? [house.image] : placeholderImages;
+    const images = placeholderImages;
 
     return (
         <div className="w-full flex flex-col border border-gray-300 rounded-lg shadow-md overflow-hidden transform transition duration-200 hover:scale-95 hover:shadow-2xl cursor-pointer"
             onClick={() => {
-                const houseID = house.id
-                window.location.href = `/simulation/mockmarketplace/display-property?propertyID=${encodeURIComponent(house)}`
+                window.location.href = `/simulation/mockmarketplace/display-property?propertyID=${encodeURIComponent(JSON.stringify(house))}`
             }}
         >
             {/* Featured Badge */}
-            {house.featured && (
+            {house.propertyFeatured && (
                 <div className="flex items-center bg-yellow-500 text-white px-3 py-1 text-xs font-bold uppercase">
                     <FaCamera className="mr-2" />
                     <span>Featured</span>
@@ -38,7 +38,7 @@ const HouseCard = ({ house }: { house: any }) => {
                     {/* Pricing */}
                     <div className="p-2 bg-gray-100 text-center">
                         <p className="text-lg font-semibold text-green-600">
-                            {house.price ? `£${house.price.toLocaleString()}` : "Price not available"}
+                            {house.propertyTokenPrice ? `£${house.propertyTokenPrice}` : "Price not available"}
                         </p>
                     </div>
                 </div>
@@ -58,11 +58,11 @@ const HouseCard = ({ house }: { house: any }) => {
                             <div className="flex space-x-4 text-gray-700 mt-2 md:mt-0">
                                 <div className="flex items-center space-x-1">
                                     <FaBed className="text-sm" />
-                                    <span className="text-sm">{house.bedrooms || "N/A"}</span>
+                                    <span className="text-sm">{house.propertyBedrooms || "N/A"}</span>
                                 </div>
                                 <div className="flex items-center space-x-1">
                                     <FaBath className="text-sm" />
-                                    <span className="text-sm">{house.bathrooms || "N/A"}</span>
+                                    <span className="text-sm">{house.propertyBathrooms || "N/A"}</span>
                                 </div>
                             </div>
                         </div>

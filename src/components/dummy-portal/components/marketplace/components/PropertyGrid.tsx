@@ -18,38 +18,6 @@ import PropertyStampDutyCalculator from "./PropertyStampDutyCalculator";
 import PropertyInvestPopup from "./PropertyInvestPopUp";
 import CryptoTaxCalculator from "./PropertyCryptoTaxCalculator";
 
-type House = {
-  id: number;
-  propertyAddress: string;
-  propertySettlement: string;
-  propertyDescription: string;
-  propertyAdded: string;
-  propertyAddedBy: string;
-  propertyAgent: {
-    agentName: string;
-    agentIcon: string;
-    agentNumber: string;
-    agentEmail: string;
-  };
-  propertyKeywords: string[];
-  propertyPrice: number;
-  propertyLocation: {
-    latitude: number;
-    longitude: number;
-  };
-  propertyCountry: string;
-  propertySize: string;
-  propertyBedrooms: number;
-  propertyBathrooms: number;
-  propertyTokenPrice: number;
-  propertyTokensLeft: number;
-  propertyType: string;
-  propertyPostcode: string;
-  propertyRental: boolean;
-  propertyImage: string;
-  propertyFeatured: boolean;
-};
-
 type PropertyDetailsProps = {
   darkMode: boolean;
   houseDisplayed?: House;
@@ -73,12 +41,7 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
   const closePopup = () => setIsPopupOpen(false);
 
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
-  const description = `
-    Discover Whittaker House, a visionary new development that sets the standard
-    for modern living. Ideally situated in a prime location, this exquisite 
-    collection of residences seamlessly blends cutting-edge contemporary design 
-    with timeless elegance.
-  `;
+
   const charLimit = 100; // Set the character limit for truncation
 
   return (
@@ -90,7 +53,7 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
       }`}
       style={{ overflow: "hidden" }} // Explicitly hiding overflow to ensure no outer scrollbars
     >
-      <div className="relative h-full w-full overflow-y-auto">çc
+      <div className="relative h-full w-full overflow-y-auto">
         {/* Navigation Section */}
         <header
           className="flex items-center space-x-3 py-4 px-4 md:px-6 cursor-pointer"
@@ -119,7 +82,7 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
                 New Home
               </h1>
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
-                <h2 className="text-lg font-semibold">{houseDisplayed?.propertyAddress}</h2>
+                <h2 className="text-lg font-semibold">{houseDisplayed ? houseDisplayed?.propertyAddress : "N/A"}</h2>
                 <div className="flex space-x-4 text-lg">
                   <FaHeart className="cursor-pointer hover:text-red-700" />
                   <FaShare className="cursor-pointer hover:text-green-600" />
@@ -128,7 +91,7 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
               {/* Price and Info */}
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
                 <div className="flex items-center space-x-2 text-lg">
-                  <span className="font-medium">$10,000</span>
+                  <span className="font-medium">${houseDisplayed ? houseDisplayed?.propertyTokenPrice : "N/A"}</span>
                   <FaInfoCircle />
                 </div>
                 <button
@@ -159,17 +122,17 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
                   <h1 className="text-sm">Monthly Mortgage Payments</h1>
                 </div>
                 <span className="text-sm text-gray-500">
-                  Added on 26/12/2024
+                  {houseDisplayed?.propertyAdded ? houseDisplayed.propertyAdded : "N/A"}
                 </span>
               </div>
               <hr className="border-t border-gray-500" />
 
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6">
-                <PropertyDetails title="Property Type" value="Apartment" />
-                <PropertyDetails title="Bedrooms" value="1" />
-                <PropertyDetails title="Bathrooms" value="1" />
-                <PropertyDetails title="Size" value="Ask Agent" />
-                <PropertyDetails title="Tenure" value="Lease Hold" />
+                <PropertyDetails title="Property Type" value={houseDisplayed?.propertyType ? houseDisplayed.propertyType : "N/A"} />
+                <PropertyDetails title="Bedrooms" value={houseDisplayed?.propertyBedrooms ? houseDisplayed.propertyBedrooms : "N/A"} />
+                <PropertyDetails title="Bathrooms" value={houseDisplayed?.propertyBathrooms ? houseDisplayed.propertyBathrooms : "N/A"} />
+                <PropertyDetails title="Size" value={houseDisplayed?.propertySize ? houseDisplayed?.propertySize : "N/A"} />
+                <PropertyDetails title="Tenure" value="Lease Hold" /> 
               </div>
               <hr className="border-t border-gray-500" />
             </section>
@@ -206,11 +169,13 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
             <section className="space-y-4">
               <h1 className="text-lg font-semibold">Description</h1>
               <p>
-                {descriptionExpanded || description.length <= charLimit
-                  ? description
-                  : description.slice(0, charLimit) + '...'}
+                {houseDisplayed?.propertyDescription
+                  ? houseDisplayed.propertyDescription.length <= charLimit
+                    ? houseDisplayed.propertyDescription
+                    : houseDisplayed.propertyDescription.slice(0, charLimit) + '...'
+                  : 'N/A'}
               </p>
-              {description.length > charLimit && (
+              {houseDisplayed?.propertyDescription && houseDisplayed.propertyDescription.length > 400 && (
                 <button
                   onClick={() => setDescriptionExpanded(!descriptionExpanded)}
                   className="text-blue-500 hover:underline"
@@ -219,6 +184,7 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
                 </button>
               )}
             </section>
+
 
             {/* Additional Details */}
             <section className="space-y-6">
@@ -240,15 +206,16 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
             </section>
 
             <section>
+              {/* San Francisco, California, USA. This is Default */}
               <PropertyMapDisplayContainer
-                title={"Whittaker House"}
-                latitude={40.748817}
-                longitude={-73.985428}
+                title={houseDisplayed?.propertyAddress ? houseDisplayed.propertyAddress : "N/A"}
+                latitude={houseDisplayed?.propertyLocation.latitude ? houseDisplayed.propertyLocation.latitude : 37.7749}
+                longitude={houseDisplayed?.propertyLocation.longitude ? houseDisplayed.propertyLocation.longitude : -122.4194}
               />
             </section>
 
             <section>
-              <PropertyAgentDisplayCard title={"Agent Card"} />
+              <PropertyAgentDisplayCard title={houseDisplayed?.propertyAgent.agentName ? houseDisplayed.propertyAgent.agentName : "N/A Agent Card"} agent={houseDisplayed?.propertyAgent} />
             </section>
 
             <section>
@@ -268,9 +235,9 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
                 : "bg-white text-gray-900"
             } hidden lg:block`}
           >
-            <h3 className="text-lg font-semibold mb-4">Marketed By</h3>
+            <h3 className="text-lg font-semibold mb-4">Marketed By {houseDisplayed?.propertyAgent.agentName}</h3>
             <address className="text-sm">
-              90 London Road, East Grinstead, Sussex, RH19 2ND
+              {houseDisplayed?.propertyAgent.agentEmail}
             </address>
             <a
               href="#"

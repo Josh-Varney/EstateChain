@@ -1,7 +1,30 @@
 import React from "react";
 import { FaLuggageCart } from "react-icons/fa";
 
-const PropertyAgentDisplayCard = ({ title }) => {
+type AgentDetails = {
+  agentName: string;
+  agentIcon: string;
+  agentNumber: string; 
+  agentEmail: string;
+  agentAddress: string;
+  agentWhyDescription: string;
+  agentSoldRecentlyDescription: string;
+}
+
+type PropertyAgentDisplayCardProps = {
+  title: string;
+  agent?: AgentDetails; // Made agent optional
+}
+
+const PropertyAgentDisplayCard = ({ title, agent }: PropertyAgentDisplayCardProps) => {
+  // Set default values in case agent is undefined
+  const agentInfo = agent || {
+    agentName: "Unknown Agent",
+    agentIcon: "",
+    agentNumber: "Not Available",
+    agentEmail: "Not Available"
+  };
+
   return (
     <div className="mb-6 border border-gray-700 rounded-lg shadow-md overflow-hidden bg-gray-800">
       {/* Card Header */}
@@ -16,9 +39,11 @@ const PropertyAgentDisplayCard = ({ title }) => {
       <div className="px-5 py-4 bg-gray-800 text-gray-200">
         {/* About Section */}
         <div className="mb-5">
-          <h2 className="text-xl font-bold text-white">About Savills, Haywards Heath</h2>
+          <h2 className="text-xl font-bold text-white">About {agentInfo.agentName}</h2>
           <p className="mt-1 text-sm text-gray-300">
-            4 Chelsea Arcade, The Broadway, Haywards Heath, RH16 3AP
+            <strong>Name:</strong> {agentInfo.agentName} <br />
+            <strong>Phone:</strong> {agentInfo.agentNumber} <br />
+            <strong>Email:</strong> {agentInfo.agentEmail}
           </p>
         </div>
 
@@ -26,7 +51,7 @@ const PropertyAgentDisplayCard = ({ title }) => {
         <div className="mb-5">
           <h2 className="text-xl font-bold text-white">Why Savills</h2>
           <p className="mt-1 text-sm text-gray-300">
-            Founded in the UK in 1855, Savills is one of the world's leading property agents. Our experience and dedication make us a trusted partner.
+            {agent?.agentWhyDescription ? agent.agentWhyDescription : "Check out their website!"}
           </p>
         </div>
 
@@ -34,7 +59,7 @@ const PropertyAgentDisplayCard = ({ title }) => {
         <div className="mb-5">
           <h2 className="text-xl font-bold text-white">Properties We Sold Recently</h2>
           <p className="mt-1 text-sm text-gray-300">
-            Discover the diverse range of properties we have successfully sold, showcasing our expertise in the market.
+            {agent?.agentSoldRecentlyDescription ? agent.agentSoldRecentlyDescription : "We have sold the following properties"}
           </p>
         </div>
 

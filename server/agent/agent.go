@@ -83,7 +83,7 @@ func GetAgent(db *sql.DB, c *gin.Context) {
 
     // Use a parameterized query to prevent SQL injection
     query := `
-        SELECT agentID, agentName, agentIcon, agentContactNumber, agentEmail
+        SELECT agentID, agentName, agentIcon, agentContactNumber, agentEmail,
         FROM PropertyAgent
         WHERE agentID = @AgentID
     `

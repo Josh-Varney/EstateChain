@@ -25,6 +25,11 @@ app.use(express.json());
 // Serve static files (optional for deployment)
 app.use(express.static(path.join(process.cwd(), 'build')));
 
+
+app.get("/api/getHello", async (req: Request, res: Response) => { // Ask for something, Someone has promised 
+  res.json("Hello");
+})
+
 app.get("/api/getBalancesTestNet", async (req: Request, res: Response) => {
   const infuraApiKey = process.env.INFURA_DEV_API;
 
@@ -175,6 +180,7 @@ app.get("/api/getProperties", async (req, res) => {
           return res.status(404).json({ message: "No properties found" });
       }
 
+      console.log(properties);
       // Send the properties data back to the client
       res.json(properties);
 

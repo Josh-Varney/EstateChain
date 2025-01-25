@@ -34,38 +34,6 @@ type Filters = {
     searchLocation: SearchLocation | null;
 };
 
-type House = {
-    id: number;
-    propertyAddress: string;
-    propertySettlement: string;
-    propertyDescription: string;
-    propertyAdded: string; // ISO string format
-    propertyAddedBy: string;
-    propertyAgent: {
-        agentName: string;
-        agentIcon: string;
-        agentNumber: string;
-        agentEmail: string;
-    };
-    propertyKeywords: string[];
-    propertyPrice: number;
-    propertyLocation: {
-        latitude: number;
-        longitude: number;
-    };
-    propertyCountry: string;
-    propertySize: string;
-    propertyBedrooms: number;
-    propertyBathrooms: number;
-    propertyTokenPrice: number;
-    propertyTokensLeft: number;
-    propertyType: string;
-    propertyPostcode: string;
-    propertyRental: boolean;
-    propertyImage: string;
-    propertyFeatured: boolean;
-};
-
 type OnKeyWordChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     optionalParam?: string
@@ -107,41 +75,48 @@ const HouseDisplay = ({ darkMode }) => {
 
     // Fetch houses only once when the component mounts
     useEffect(() => {
-
             // Function to convert the data
-        const convertToHouseList = (data: any[]): House[] => {
-            return data.map(property => ({
-                id: property.propertyID,
-                propertyAddress: property.propertyAddress,
-                propertySettlement: property.propertySettlement,
-                propertyDescription: property.propertyDescription,
-                propertyAdded: new Date().toISOString(), // Current date as the "added" date
-                propertyAddedBy: property.propertyAddedBy,
-                propertyAgent: {
-                    agentName: "Agent Name", // Placeholder
-                    agentIcon: "default-icon-url", // Placeholder
-                    agentNumber: "123-456-7890", // Placeholder
-                    agentEmail: "agent@example.com" // Placeholder
-                },
-                propertyKeywords: property.propertyKeywords.split(", "), // Assuming keywords are comma-separated
-                propertyPrice: property.propertyPrice,
-                propertyLocation: {
+            const convertToHouseList = (data: any[]): House[] => {
+                return data.map(property => ({
+                  id: property.propertyID,
+                  propertyAddress: property.propertyAddress,
+                  propertySettlement: property.propertySettlement,
+                  propertyDescription: property.propertyDescription,
+                  propertyAdded: new Date().toISOString(), // Current date as the "added" date
+                  propertyAddedBy: property.propertyAddedBy,
+                  propertyAgent: {
+                    agentName: property.agentName || "Unknown Agent",
+                    agentIcon: property.agentIcon || "default-icon-url",
+                    agentNumber: property.agentContactNumber || "Not Provided",
+                    agentEmail: property.agentEmail || "Not Provided",
+                    agentAddress: property.agentAddress || "Not Provided",
+                    agentSoldRecentlyDescription: property.agentSoldRecentlyDescription || "Not Provided",
+                    agentWhyDescription: property.agentWhyDescription || "Not Provided",
+                  },
+                  propertyKeywords: property.propertyKeywords.split(","), // Assuming keywords are comma-separated
+                  propertyPrice: property.propertyPrice,
+                  propertyLocation: {
                     latitude: parseFloat(property.propertyGeoLat),
                     longitude: parseFloat(property.propertyGeoLong)
-                },
-                propertyCountry: property.propertyCountry,
-                propertySize: property.propertySize,
-                propertyBedrooms: property.propertyBedrooms,
-                propertyBathrooms: property.propertyBathrooms,
-                propertyTokenPrice: property.propertyTokenPrice,
-                propertyTokensLeft: property.propertyTokensLeft,
-                propertyType: property.propertyType,
-                propertyPostcode: property.propertyPostcode,
-                propertyRental: property.propertyRental,
-                propertyImage: property.propertyImage,
-                propertyFeatured: property.propertyFeatured
-            }));
+                  },
+                  propertyCountry: property.propertyCountry,
+                  propertySize: property.propertySize,
+                  propertyBedrooms: property.propertyBedrooms,
+                  propertyBathrooms: property.propertyBathrooms,
+                  propertyTokenPrice: property.propertyTokenPrice,
+                  propertyTokensLeft: property.propertyTokensLeft,
+                  propertyType: property.propertyType,
+                  propertyPostcode: property.propertyPostcode,
+                  propertyRental: property.propertyRental,
+                  propertyImage: property.propertyImage,
+                  propertyFeatured: property.propertyFeatured,
+                  propertyGarden: property.propertyGarden || false, // Ensure a default value
+                  propertyAcessibility: property.propertyAcessibility || false, // Ensure a default value
+                  propertyKeyFeatures: property.propertyKeyFeatures ? property.propertyKeyFeatures.split(",") : [], // Ensure a default empty array if undefined
+                  propertyTenure: property.propertyTenure || "Unknown" // Default to "Unknown" if missing
+                }));
         };
+        
 
         const fetchHouses = async () => {
             try {
@@ -153,12 +128,13 @@ const HouseDisplay = ({ darkMode }) => {
                 if (response.ok) {
                     const data = JSON.parse(responseBody); // Parse the response body
                     // console.log("Parsed Data:", data); // Check the structure of the parsed data
-                    
                     // Ensure the data has the 'properties' field and it's an array
                     if (data) {
                         const houses = convertToHouseList(data);
                         setHouses(houses); // Update state with the properties
                         setFilteredHouses(houses);
+
+                        console.log(houses);
                         // console.log("houses:", houses);
                     } else {
                         setError("No properties found in response.");

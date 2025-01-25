@@ -7,38 +7,6 @@ import PropertyGrid from "./PropertyGrid";
 
 interface DisplayPropertyProps {}
 
-type House = {
-  id: number;
-  propertyAddress: string;
-  propertySettlement: string;
-  propertyDescription: string;
-  propertyAdded: string;
-  propertyAddedBy: string;
-  propertyAgent: {
-    agentName: string;
-    agentIcon: string;
-    agentNumber: string;
-    agentEmail: string;
-  };
-  propertyKeywords: string[];
-  propertyPrice: number;
-  propertyLocation: {
-    latitude: number;
-    longitude: number;
-  };
-  propertyCountry: string;
-  propertySize: string;
-  propertyBedrooms: number;
-  propertyBathrooms: number;
-  propertyTokenPrice: number;
-  propertyTokensLeft: number;
-  propertyType: string;
-  propertyPostcode: string;
-  propertyRental: boolean;
-  propertyImage: string;
-  propertyFeatured: boolean;
-};
-
 const DisplayProperty: React.FC<DisplayPropertyProps> = () => {
 
   const [house, setHouse] = useState<House>();
@@ -98,6 +66,7 @@ const DisplayProperty: React.FC<DisplayPropertyProps> = () => {
         // Check if the string starts with a "{" (likely to be an object) before trying to parse
         if (decodedHouseString && decodedHouseString.startsWith("{")) {
           const parsedHouse = JSON.parse(decodedHouseString);
+
           setHouse(parsedHouse); // Set the house object in the state
         } else {
           console.error("The propertyID is not a valid JSON object:", decodedHouseString);

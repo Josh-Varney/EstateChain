@@ -5,38 +5,6 @@ interface HouseDetailsProps {
   onClose: () => void;
 }
 
-type House = {
-  id: number;
-  propertyAddress: string;
-  propertySettlement: string;
-  propertyDescription: string;
-  propertyAdded: string;
-  propertyAddedBy: string;
-  propertyAgent: {
-    agentName: string;
-    agentIcon: string;
-    agentNumber: string;
-    agentEmail: string;
-  };
-  propertyKeywords: string[];
-  propertyPrice: number;
-  propertyLocation: {
-    latitude: number;
-    longitude: number;
-  };
-  propertyCountry: string;
-  propertySize: string;
-  propertyBedrooms: number;
-  propertyBathrooms: number;
-  propertyTokenPrice: number;
-  propertyTokensLeft: number;
-  propertyType: string;
-  propertyPostcode: string;
-  propertyRental: boolean;
-  propertyImage: string;
-  propertyFeatured: boolean;
-};
-
 const HouseDetails: React.FC<HouseDetailsProps> = ({ houses, onClose }) => (
   <div className="fixed top-0 right-0 h-screen w-2/12 bg-gray-800 z-50 shadow-lg">
     {/* Header */}

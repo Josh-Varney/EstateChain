@@ -30,38 +30,6 @@ interface FilterType {
   } | null;
 }
 
-type House = {
-  id: number;
-  propertyAddress: string;
-  propertySettlement: string;
-  propertyDescription: string;
-  propertyAdded: string;
-  propertyAddedBy: string;
-  propertyAgent: {
-    agentName: string;
-    agentIcon: string;
-    agentNumber: string;
-    agentEmail: string;
-  };
-  propertyKeywords: string[];
-  propertyPrice: number;
-  propertyLocation: {
-    latitude: number;
-    longitude: number;
-  };
-  propertyCountry: string;
-  propertySize: string;
-  propertyBedrooms: number;
-  propertyBathrooms: number;
-  propertyTokenPrice: number;
-  propertyTokensLeft: number;
-  propertyType: string;
-  propertyPostcode: string;
-  propertyRental: boolean;
-  propertyImage: string;
-  propertyFeatured: boolean;
-};
-
 type SearchLocation = {
   latitude: number;
   longitude: number;
