@@ -25,6 +25,11 @@ export const doCreateUserWithEmailAndPassword = async (email: string, password: 
 export const doSignInWithEmailAndPassword = async (email: string, password: string): Promise<User> => {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+        if (userCredential.user){
+            console.log(userCredential.user);
+        }
+
         return userCredential.user; // Return the signed-in user
     } catch (error) {
         console.error("Error during sign-in:", error);
@@ -38,6 +43,11 @@ export const doSignInWithGoogle = async (): Promise<User> => {
     const provider = new GoogleAuthProvider();
     try {
         const result = await signInWithPopup(auth, provider);
+
+        if (result.user){
+            console.log(result.user);
+        }
+
         return result.user; // Return the signed-in user
     } catch (error) {
         console.error("Error signing in with Google:", error);

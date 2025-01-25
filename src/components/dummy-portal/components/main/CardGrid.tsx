@@ -18,9 +18,11 @@ const accounts = [
 ];
 
 const cryptocurrencies = [
-  { id: "btc", name: "Bitcoin", icon: <FaBitcoin /> },
-  { id: "eth", name: "Ethereum", icon: <FaEthereum /> },
-  { id: "ltc", name: "Litecoin", icon: <FaEthereum /> },
+  { id: "SETH", name: "SepoliaEth", icon: <FaBitcoin /> },
+  { id: "HETH", name: "HoleskyEth", icon: <FaEthereum /> },
+  { id: "POLY", name: "PolygonAmoy", icon: <FaBitcoin /> },
+  { id: "BSCT", name: "bscTestnet", icon: <FaEthereum /> },
+  { id: "FUJI", name: "avalancheFuji" , icon: <FaBitcoin />}
 ];
 
 const revenueSources = [

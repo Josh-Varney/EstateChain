@@ -9,9 +9,11 @@ interface WalletDropdownProps {
 }
 
 const currencies = [
-  { code: 'ETH', label: 'Ethereum' },
-  { code: 'BTC', label: 'Bitcoin' },
-  { code: 'USDT', label: 'Tether' },
+  { code: 'SETH', label: 'SepoliaETH' },
+  { code: 'HETH', label: 'HoleskyETH' },
+  { code: 'AMOY', label: 'PolygonAmoy' },
+  { code: 'BSCT', label: 'bscTestnet'},
+  { code: 'FUJI', label: 'avalancheFuji'},
 ];
 
 const WalletDropdown: React.FC<WalletDropdownProps> = ({ close, address = '0x1234...abcd', balance = '0.00 ETH', isOpen }) => {

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"estatechain/server/agent"
 	"estatechain/server/house"
+	"estatechain/server/user_package"
 	"fmt"
 	"log"
 	"os"
@@ -82,6 +83,14 @@ func main() {
 
 	router.GET("/get-properties", func(c *gin.Context) {
 		house.GetAllProperties(db, c)
+	})
+
+	router.POST("/add-user", func(c *gin.Context){
+		user_package.StoreUser(db, c)
+	})
+
+	router.GET("/get-user/:uuid", func(c *gin.Context){
+		user_package.GetUser(db, c)
 	})
 
 	// Start server

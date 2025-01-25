@@ -25,11 +25,6 @@ app.use(express.json());
 // Serve static files (optional for deployment)
 app.use(express.static(path.join(process.cwd(), 'build')));
 
-
-app.get("/api/getHello", async (req: Request, res: Response) => { // Ask for something, Someone has promised 
-  res.json("Hello");
-})
-
 app.get("/api/getBalancesTestNet", async (req: Request, res: Response) => {
   const infuraApiKey = process.env.INFURA_DEV_API;
 
@@ -190,6 +185,29 @@ app.get("/api/getProperties", async (req, res) => {
   }
 });
 
+// POST User
+app.post("/api/postUser", async (req: Request, res: Response) => {
+  try {
+      const userData = req.body; // The incoming JSON data will be here
+
+      // Make a POST request to the Go server to store the user data
+      const response = await axios.post('http://localhost:8080/store-user', userData, {
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      });
+
+      // Send the response from the Go server back to the client
+      res.json({
+          message: "User data successfully forwarded to Go server",
+          goServerResponse: response.data
+      });
+  } catch (error) {
+      // If there's an error, send it back to the client
+      console.error('Error forwarding user data to Go server:', error);
+      res.status(500).json({ error: 'Failed to forward data to Go server' });
+  }
+});
 
 
 // Start the server
