@@ -78,6 +78,7 @@ const FAQPage: React.FC = () => {
     }
 
     try {
+      console.log("executes with ", newEmail)
       await submitQuestion(newEmail, newQuestion.trim());
       const updatedFAQs = await getApprovedQuestions();
       setFaqData(updatedFAQs);
