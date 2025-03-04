@@ -3,6 +3,7 @@ import Sidebar from "../main/Sidebar";
 import HeaderBar from "../main/HeaderBar";
 import HouseDisplay from "./components/HouseSearchForm";
 import Prompts from "../prompts/Prompts";
+import AddPropertyButton from "./components/addPropertyButton";
 
 const DummyMarket: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -81,6 +82,8 @@ const DummyMarket: React.FC = () => {
           closeProfilePrompt={() => setProfilePrompt(false)}
           closeNotificationPrompt={() => setNotificationPrompt(false)}
         />
+
+        {!isBuyer && <AddPropertyButton />}
       </div>
     </div>
   );

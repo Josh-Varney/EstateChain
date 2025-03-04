@@ -25,7 +25,7 @@ const GoogleProvider: React.FC = () => {
                 navigate("/selector");
             } 
             else {
-                console.log("here we are");
+                navigate("/adm-hub-hidden");
             }
         
         } catch (error) {

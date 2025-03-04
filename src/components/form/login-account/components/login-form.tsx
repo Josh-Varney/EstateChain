@@ -45,7 +45,7 @@ const LoginForm: React.FC = () => {
         }
         else 
         {
-          console.log("Admin");
+          setTimeout(() => navigate("/adm-hub-hidden"), 2000); //
         }
         
       } else {
