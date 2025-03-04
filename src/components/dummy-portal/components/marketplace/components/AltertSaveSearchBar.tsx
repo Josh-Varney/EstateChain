@@ -1,5 +1,5 @@
 import React from "react";
-import { FaBell, FaChevronCircleLeft, FaChevronRight, FaStar } from "react-icons/fa";
+import { FaBell, FaChevronRight, FaStar } from "react-icons/fa";
 
 interface AlertSaveSearchBarProps {
     postcode?: string; 

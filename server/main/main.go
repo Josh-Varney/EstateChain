@@ -93,6 +93,14 @@ func main() {
 		user_package.GetUser(db, c)
 	})
 
+	router.GET("/check-user", func (c *gin.Context) {
+		user_package.CheckUserExists(db, c)
+	})
+
+	router.GET("/check-admin", func(c *gin.Context) {
+		user_package.CheckUserType(db, c)
+	})
+
 	// Start server
 	router.Run(":8080")
 }

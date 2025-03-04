@@ -1,35 +1,38 @@
-import { getTestNetworkBalances } from "../components/dummy-portal/testnet/infura-meta";
+// import { getTestNetworkBalances } from "../components/dummy-portal/testnet/infura-meta";
 
 // MetaMask Connection to Wallet
 const MetaMaskConnect = async (): Promise<void> => {
-   
     if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
         try {
-            // window.ethereum is hooked when metamask installed on Chrome
+            // Request accounts from MetaMask
             const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-            
-            // many accounts may be connected 
-            localStorage.setItem("connectedAccount", accounts as string);
-            console.log("MetaMask Accounts:", localStorage.getItem('connectedAccount'));
-            
-            alert(localStorage.getItem("connectedAccount"));
 
-            getTestNetworkBalances(localStorage.getItem("connectedAccount") as string);
+            // Store all connected accounts into localStorage
+            localStorage.setItem("connectedAccounts", JSON.stringify(accounts));
+            console.log("MetaMask Accounts:", accounts);
+            alert(`Connected Accounts: ${accounts.join(", ")}`);
+
+            // Listen for account changes and update localStorage
+            window.ethereum.on('accountsChanged', (accounts: string[]) => {
+                localStorage.setItem("connectedAccounts", JSON.stringify(accounts));
+                console.log("Updated MetaMask Accounts:", accounts);
+                alert(`Account changed: ${accounts.join(", ")}`);
+            });
 
         } catch (error) {
             console.log("MetaMask Connection Error:", error);
         }
     } else {
-        // Please add context for the user (This is probably an error due to the user having a safari browser)
         console.log("Please install MetaMask.");
     }
 };
 
-const MetaMaskDisconnect = () =>{
-    localStorage.removeItem("connectedAccount");
 
-    alert("Wallet Disconnected");
-}
+// const MetaMaskDisconnect = () =>{
+//     localStorage.removeItem("connectedAccount");
+
+//     alert("Wallet Disconnected");
+// }
 
 
 // Coinbase Wallet Connect
@@ -64,10 +67,40 @@ const MetaMaskDisconnect = () =>{
 // };
 
 // Event Listeners
-window.ethereum?.on('accountsChanged', (accounts: any) => {
-    console.log('MetaMask accounts changed:', accounts);
-    // Optionally update UI here
+window.ethereum.on('accountsChanged', (accounts: string[]) => {
+    console.log('MetaMask accounts changed here:', accounts);
+
+    // Retrieve currently stored accounts from localStorage
+    const storedAccounts = JSON.parse(localStorage.getItem("connectedAccounts") || "[]");
+
+    // Identify added accounts (present in new `accounts` but not in `storedAccounts`)
+    const addedAccounts = accounts.filter((account) => !storedAccounts.includes(account));
+
+    // Identify removed accounts (present in `storedAccounts` but not in new `accounts`)
+    const removedAccounts = storedAccounts.filter((account: string) => !accounts.includes(account));
+
+    // Update localStorage with the new accounts list
+    localStorage.setItem("connectedAccounts", JSON.stringify(accounts));
+
+    // Log the changes
+    if (addedAccounts.length > 0) {
+        console.log("Accounts added:", addedAccounts);
+    }
+
+    if (removedAccounts.length > 0) {
+        console.log("Accounts removed:", removedAccounts);
+    }
+
+    // Optionally, update the UI or state here
+    if (accounts.length === 0) {
+        console.log("Please connect to MetaMask.");
+    } else {
+        console.log("Current connected account(s):", accounts);
+    }
+
+    console.log("localStorage", localStorage.getItem("connectedAccounts"))
 });
+
 
 window.coinbaseWalletProvider?.on('accountsChanged', (accounts: any) => {
     console.log('Coinbase accounts changed:', accounts);

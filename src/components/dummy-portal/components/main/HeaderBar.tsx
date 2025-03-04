@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaWallet, FaBell } from "react-icons/fa";
 import { Avatar, AvatarFallback, AvatarImage } from "../../../../shadcn-components/ui/avatar";
 

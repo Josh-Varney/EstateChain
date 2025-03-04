@@ -10,7 +10,9 @@ import {
     UserCredential,
     User,
 } from "firebase/auth";
-import { auth } from "./firebase"; // Ensure the correct path to your firebase.ts file
+import { auth } from "./firebase"; 
+import axios from "axios";
+
 
 export const doCreateUserWithEmailAndPassword = async (email: string, password: string): Promise<UserCredential> => {
     try {
@@ -27,7 +29,38 @@ export const doSignInWithEmailAndPassword = async (email: string, password: stri
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
         if (userCredential.user){
-            console.log(userCredential.user);
+            
+            const response = await axios.get(`http://localhost:3001/api/checkUserExists`, {
+                params: { uuid: userCredential.user.uid },
+            });
+
+            if (userCredential.user && !response.data.exists){
+
+                const userData: { 
+                    uuid: string;
+                    email: string;
+                    displayName: string;
+                    photoURL: string;
+                    providerID: string;
+                    phone_number: string;
+                } = {
+                    uuid: userCredential.user.uid,
+                    email: userCredential.user.email ? userCredential.user.email : "NotProvidedbyGoogle",
+                    displayName: userCredential.user.displayName ? userCredential.user.displayName : "NotProvidedbyGoogle",
+                    photoURL: userCredential.user.photoURL ? userCredential.user.photoURL : "NotProvidedByGoogle",
+                    providerID: userCredential.user.providerId ? userCredential.user.providerId : "NotProvidedByGoogle",
+                    phone_number: userCredential.user.phoneNumber ? userCredential.user.phoneNumber : "NotProvidedByGoogle"
+                }
+    
+                try {
+                    const response = await axios.post(`http://localhost:3001/api/postUser`, { userData });
+                    console.log('Response from server:', response.data);
+                }
+                catch (error) {
+                    console.error('Error sending user data:', error);
+                }
+            }
+            localStorage.setItem('uuid', userCredential.user.uid);
         }
 
         return userCredential.user; // Return the signed-in user
@@ -45,9 +78,39 @@ export const doSignInWithGoogle = async (): Promise<User> => {
         const result = await signInWithPopup(auth, provider);
 
         if (result.user){
-            console.log(result.user);
+            const response = await axios.get(`http://localhost:3001/api/checkUserExists`, {
+                params: { uuid: result.user.uid },
+            });
+    
+            if (result.user && !response.data.exists){
+    
+                const userData: { 
+                    uuid: string;
+                    email: string;
+                    displayName: string;
+                    photoURL: string;
+                    providerID: string;
+                    phone_number: string;
+                } = {
+                    uuid: result.user.uid,
+                    email: result.user.email ? result.user.email : "NotProvidedbyGoogle",
+                    displayName: result.user.displayName ? result.user.displayName : "NotProvidedbyGoogle",
+                    photoURL: result.user.photoURL ? result.user.photoURL : "NotProvidedByGoogle",
+                    providerID: result.user.providerId ? result.user.providerId : "NotProvidedByGoogle",
+                    phone_number: result.user.phoneNumber ? result.user.phoneNumber : "NotProvidedByGoogle"
+                }
+    
+                try {
+                    const response = await axios.post(`http://localhost:3001/api/postUser`, { userData });
+                    console.log('Response from server:', response.data);
+                }
+                catch (error) {
+                    console.error('Error sending user data:', error);
+            }
+            
         }
-
+        localStorage.setItem("uuid", result.user.uid);
+    }
         return result.user; // Return the signed-in user
     } catch (error) {
         console.error("Error signing in with Google:", error);
@@ -55,6 +118,24 @@ export const doSignInWithGoogle = async (): Promise<User> => {
     }
 };
 
+export const checkUserIsPrivileged = async (): Promise<boolean> => {
+    try {
+        const uuid = localStorage.getItem("uuid");
+        if (!uuid) {
+            console.log("UUID not found in localStorage");
+            return false;
+        }
+
+        const response = await axios.get(`http://localhost:3001/api/checkClient`, {
+            params: { uuid }
+        });
+
+        return response.data.isPrivileged || false; // Ensure it returns a boolean
+    } catch (error) {
+        console.error("Error checking privileges:", error);
+        return false;
+    }
+};
 export const doSignOut = async (): Promise<void> => {
     try {
         await signOut(auth);

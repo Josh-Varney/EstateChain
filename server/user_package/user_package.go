@@ -2,13 +2,15 @@ package user_package
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
+
 	"github.com/gin-gonic/gin"
 )
 
 type User struct {
-    UUID        int    `json:"uuid"`
+    UUID        string    `json:"uuid"`
     Email       string `json:"email"`
     DisplayName string `json:"displayName"`
     PhotoURL    string `json:"photoURL"`
@@ -19,12 +21,21 @@ type User struct {
 
 // Function to handle the DELETE request to remove a property by ID
 func StoreUser(db *sql.DB, c *gin.Context) {
-	var user User
-	// Bind the incoming JSON to the user struct
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+    var requestData struct {
+        UserData User `json:"userData"` // Bind userData field in request to the User struct
+    }
+
+    // Bind the incoming JSON to the requestData struct
+    if err := c.ShouldBindJSON(&requestData); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    // Access the User struct from requestData
+    user := requestData.UserData
+
+    // Print the user struct to verify its content
+    fmt.Printf("Received User: %+v\n", user)
 
 	// Prepare the SQL query to insert user details, including the provided UUID
 	query := `
@@ -53,6 +64,66 @@ func StoreUser(db *sql.DB, c *gin.Context) {
 		"user_email": user.Email,
 	})
 }
+
+func CheckUserExists(db *sql.DB, c *gin.Context) {
+    // Get the UUID from the URL query parameter
+    uuid := c.DefaultQuery("uuid", "")
+    if uuid == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "UUID is required"})
+        return
+    }
+    println("Received UUID:", uuid)  // For debugging
+
+    // Prepare the SQL query to check if the UUID exists in the Users table
+    query := `
+        SELECT COUNT(1)
+        FROM Users
+        WHERE uuid = @uuid` // Using @paramName for MSSQL (you might need to adapt this if you're using another DB)
+
+    // Execute the query
+    var count int
+    err := db.QueryRow(query, sql.Named("uuid", uuid)).Scan(&count)
+
+    if err != nil {
+        // If there is a database error, return an internal server error
+        println("Database error:", err)
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    // Check if UUID exists in the database
+    if count > 0 {
+        c.JSON(http.StatusOK, gin.H{"exists": true})
+    } else {
+        c.JSON(http.StatusOK, gin.H{"exists": false})
+    }
+}
+
+func CheckUserType(db *sql.DB, c *gin.Context){
+    uuid := c.DefaultQuery("uuid", "")
+    if uuid == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "UUID is required"})
+        return
+    }
+    println("Received UUID:", uuid)  // For debugging
+
+    // SQL query to check if the UUID exists in the Admin table
+    query := `SELECT CASE 
+                WHEN EXISTS (SELECT 1 FROM Admin WHERE uuid = @uuid) THEN 1 
+                ELSE 0 
+              END AS ExistsFlag`
+
+    var exists int
+    err := db.QueryRow(query, sql.Named("uuid", uuid)).Scan(&exists)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+        return
+    }
+
+    // Return response based on the result
+    c.JSON(http.StatusOK, gin.H{"exists": exists == 1})
+}
+
 
 // Function to fetch a user by UUID
 func GetUser(db *sql.DB, c *gin.Context) {

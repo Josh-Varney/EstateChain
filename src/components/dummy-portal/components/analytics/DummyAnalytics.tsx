@@ -24,9 +24,9 @@ const DummyAnalytics: React.FC = () => {
     setIsBuyer((prevState) => !prevState);
   };
 
-  const toggleIsBuyer = () => {
-    setIsBuyer((prevIsBuyer) => !prevIsBuyer); // Update the state
-  };
+  // const toggleIsBuyer = () => {
+  //   setIsBuyer((prevIsBuyer) => !prevIsBuyer); // Update the state
+  // };
 
 
   const toggleNotificationPrompt = () => {

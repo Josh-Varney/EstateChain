@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { FaHome, FaBuilding, FaTree, FaWarehouse } from "react-icons/fa";
 
 interface Filters {

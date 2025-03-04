@@ -14,7 +14,7 @@ import FunctionActivatedDropdown from "./ButtonActivatedDropdown";
 import PropertyMapDisplayContainer from "./PropertyMapDisplayContainer";
 import PropertyAgentDisplayCard from "./PropertyAgentDisplayCard";
 import PropertyNotesWritten from "./PropertyNotes";
-import PropertyStampDutyCalculator from "./PropertyStampDutyCalculator";
+// import PropertyStampDutyCalculator from "./PropertyStampDutyCalculator";
 import PropertyInvestPopup from "./PropertyInvestPopUp";
 import CryptoTaxCalculator from "./PropertyCryptoTaxCalculator";
 

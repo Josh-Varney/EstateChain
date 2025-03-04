@@ -10,7 +10,7 @@ const HouseCard = ({ house }: { house: House }) => {
     ];
 
     // const images = house.image ? [house.image] : placeholderImages;
-    const images = placeholderImages;
+    // const images = placeholderImages;
 
     return (
         <div className="w-full flex flex-col border border-gray-300 rounded-lg shadow-md overflow-hidden transform transition duration-200 hover:scale-95 hover:shadow-2xl cursor-pointer"

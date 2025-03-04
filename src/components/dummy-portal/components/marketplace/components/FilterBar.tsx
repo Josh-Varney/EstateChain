@@ -50,7 +50,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ darkMode, filters, onFilterChange
     }, [selectedItems]);
 
     const handleFilterChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = event.target;
+        // const { name, value } = event.target;
 
         onFilterChange(event); // Notify the parent handler
     };

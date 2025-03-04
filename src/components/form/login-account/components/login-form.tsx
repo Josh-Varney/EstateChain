@@ -4,6 +4,7 @@ import { doSendEmailVerification, doSignInWithEmailAndPassword } from "../../../
 import SocialLoginProviders from "./login-form-social-providers";
 import ErrorSuccessMessage from "./login-form-error-message";
 import FormField from "./login-form-field";
+import axios from "axios";
 
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState<string>("");
@@ -34,7 +35,19 @@ const LoginForm: React.FC = () => {
 
       if (userCredentials.emailVerified) {
         setSuccess("Login successful. Redirecting...");
-        setTimeout(() => navigate("/selector"), 2000);
+
+        const response = await axios.get(`http://localhost:3001/api/checkClient`, {
+          params: { uuid: userCredentials.uid }
+        })
+
+        if (response.data.exists == false){
+          setTimeout(() => navigate("/selector"), 2000); //
+        }
+        else 
+        {
+          console.log("Admin");
+        }
+        
       } else {
         setError("Please verify your email.");
         setShowResendLink(true);

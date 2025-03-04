@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { FaBitcoin, FaEthereum, FaWallet } from "react-icons/fa";
+import { FaBitcoin, FaWallet } from "react-icons/fa";
 
 interface WalletGridCardProps {
   darkMode: boolean;

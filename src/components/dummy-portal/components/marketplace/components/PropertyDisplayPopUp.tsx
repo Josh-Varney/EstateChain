@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../../main/Sidebar";
 import HeaderBar from "../../main/HeaderBar";
 import Prompts from "../../prompts/Prompts";
-import { useParams } from "react-router-dom";
 import PropertyGrid from "./PropertyGrid";
 
 interface DisplayPropertyProps {}

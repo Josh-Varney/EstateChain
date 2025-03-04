@@ -157,24 +157,24 @@ const Overlay: React.FC<OverlayProps> = ({
       });
       markersRef.current = [];
 
-      const houseIcon = {
-        url: "/public/house-svgrepo-com.svg",
-        size: new google.maps.Size(50, 50),
-        anchor: new google.maps.Point(25, 50),
-      };
+      // const houseIcon = {
+      //   url: "/public/house-svgrepo-com.svg",
+      //   size: new google.maps.Size(50, 50),
+      //   anchor: new google.maps.Point(25, 50),
+      // };
     
-      const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+      // const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
 
-      const parser = new DOMParser();
+      // const parser = new DOMParser();
 
       // Function to fetch and parse the SVG file
-      async function loadSVGFile(url) {
-        const response = await fetch(url);
-        const svgText = await response.text();
-        const parser = new DOMParser();
-        const pinSvg = parser.parseFromString(svgText, 'image/svg+xml').documentElement;
-        return pinSvg;
-      }
+      // async function loadSVGFile(url) {
+      //   const response = await fetch(url);
+      //   const svgText = await response.text();
+      //   const parser = new DOMParser();
+      //   const pinSvg = parser.parseFromString(svgText, 'image/svg+xml').documentElement;
+      //   return pinSvg;
+      // }
 
       function buildContent(house: House) {
         const content = document.createElement("div");

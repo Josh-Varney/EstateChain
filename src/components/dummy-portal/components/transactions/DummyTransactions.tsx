@@ -6,7 +6,7 @@ import TransactionScreen from "./components/Transactions";
 
 const DummyTransactions: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
-  const [isBuyer, setIsBuyer] = useState(true);
+  const [_, setIsBuyer] = useState(true);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false);
   const [walletConnectedPrompt, setWalletConnectedPrompt] = useState(false);
   const [profilePrompt, setProfilePrompt] = useState(false);

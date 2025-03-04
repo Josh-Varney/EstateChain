@@ -6,6 +6,7 @@ import axios from "axios";
 import { ethers } from 'ethers';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { formatUnits } from 'ethers/lib/utils';
+import { error } from 'console';
 
 dotenv.config();
 
@@ -190,11 +191,16 @@ app.post("/api/postUser", async (req: Request, res: Response) => {
   try {
       const userData = req.body; // The incoming JSON data will be here
 
+      // Validate the user data (basic example)
+      if (!userData) {
+        return res.status(400).json({ error: "Missing required fields: uuid" });
+    }
+
       // Make a POST request to the Go server to store the user data
-      const response = await axios.post('http://localhost:8080/store-user', userData, {
-          headers: {
-              'Content-Type': 'application/json',
-          }
+      const response = await axios.post('http://localhost:8080/add-user', userData, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
 
       // Send the response from the Go server back to the client
@@ -206,6 +212,54 @@ app.post("/api/postUser", async (req: Request, res: Response) => {
       // If there's an error, send it back to the client
       console.error('Error forwarding user data to Go server:', error);
       res.status(500).json({ error: 'Failed to forward data to Go server' });
+  }
+});
+
+// Make the GET request to your Go server endpoint
+app.get("/api/checkUserExists", async (req: Request, res: Response) => {
+  const uuid = req.query.uuid;
+
+  console.log(uuid);
+
+  // Check if UUID is provided
+  if (!uuid) {
+    return res.status(400).json({ error: "UUID is Required" });
+  }
+
+  try {
+    // Make GET request to Go server
+    const response = await axios.get("http://localhost:8080/check-user", {
+      params: {
+        uuid: uuid, // Pass UUID as a query parameter
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // Return the response from the Go server to the client
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error: When checking user exists on Go server", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/api/checkClient", async (req: Request, res: Response) => {
+   try {
+    const uuid = req.query.uuid;
+    if (!uuid){
+      return res.status(400).json({ error: "UUID is required" });
+    }
+    
+    const response = await axios.get("http://localhost:8080/check-admin", {
+      params: { uuid }
+    });
+
+    res.status(200).json(response.data);
+   } catch (error) {
+    console.error("Error calling Go API:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

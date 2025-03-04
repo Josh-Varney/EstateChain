@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doSignInWithGoogle } from '../../firebase/auth';
+import axios from 'axios';
+import { error } from 'console';
 
 const GoogleProvider: React.FC = () => {
     const navigate = useNavigate();
@@ -9,9 +11,23 @@ const GoogleProvider: React.FC = () => {
         e.preventDefault();
         // const auth = getAuth();
         try {
-            await doSignInWithGoogle();
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            navigate("/selector");
+            const user = await doSignInWithGoogle();
+            const response = await axios.get(`http://localhost:3001/api/checkClient`, {
+                params: { uuid: user.uid }
+            })
+
+            if (response.status !== 200){
+                console.log("Admin Check Error", response.data);
+            }
+
+            if (response.data.exists == false){
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                navigate("/selector");
+            } 
+            else {
+                console.log("here we are");
+            }
+        
         } catch (error) {
             console.error("Sign-in error:", error);
         }

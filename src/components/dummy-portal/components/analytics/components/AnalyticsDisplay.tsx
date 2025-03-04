@@ -20,18 +20,18 @@ const transactions = [
 const categories = ["Residential", "Commercial", "Land"];
 
 export default function TokenizedRealEstateDashboard() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, _] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const filteredTransactions = transactions.filter((transaction) => {
-    const matchesCategory =
-      selectedCategory === "all" || transaction.category === selectedCategory;
-    const matchesSearch = transaction.property
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  // const filteredTransactions = transactions.filter((transaction) => {
+  //   const matchesCategory =
+  //     selectedCategory === "all" || transaction.category === selectedCategory;
+  //   const matchesSearch = transaction.property
+  //     .toLowerCase()
+  //     .includes(searchQuery.toLowerCase());
+  //   return matchesCategory && matchesSearch;
+  // });
 
   const portfolioValueData = {
     labels: categories,

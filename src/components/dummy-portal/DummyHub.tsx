@@ -24,9 +24,9 @@ const DummyDashboard: React.FC = () => {
     setIsBuyer((prevState) => !prevState);
   };
 
-  const toggleIsBuyer = () => {
-    setIsBuyer((prevIsBuyer) => !prevIsBuyer);
-  };
+  // const toggleIsBuyer = () => {
+  //   setIsBuyer((prevIsBuyer) => !prevIsBuyer);
+  // };
 
   const toggleProfilePrompt = () => {
     setProfilePrompt((prev) => !prev);
