@@ -7,8 +7,12 @@ const AddPropertyButton: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1); // Track current step
   const [images, setImages] = useState<FileList | null>(null);
 
+  const totalSteps = 6; // Update if you have more steps
+  const progressPercentage = (currentStep / totalSteps) * 100;
+
   const [propertyAgent, setPropertyAgent] = useState({
-    isAgent: '',
+    isAgent: false,
+    agentID: '',
     agentName: '',
     agentContactNumber: '',
     agentEmail: '',
@@ -68,10 +72,18 @@ const AddPropertyButton: React.FC = () => {
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
+    const { name, type, value, checked } = e.target;
     setPropertyData((prevData) => ({
       ...prevData,
-      [name]: checked,
+      [name]: type === "checkbox" ? checked : value, // Handle checkboxes properly
+    }));
+  };
+  
+  const handleCheckboxChangeAgent = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, type, value, checked } = e.target;
+    setPropertyAgent((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value, // Handle checkboxes properly
     }));
   };
 
@@ -81,7 +93,8 @@ const AddPropertyButton: React.FC = () => {
     console.log('Submitted Agent')
     
     setPropertyAgent({
-        isAgent: '',
+        agentID: '',
+        isAgent: false,
         agentName: '',
         agentAddress: '',
         agentContactNumber: '',
@@ -187,7 +200,12 @@ const AddPropertyButton: React.FC = () => {
             {/* Step 1: Basic Information */}
             {currentStep === 1 && (
               <div>
-                <h3 className="text-xl font-semibold mb-2">Step 1: Basic Property Information</h3>
+                <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
+                  <div
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${progressPercentage}%` }}
+                  ></div>
+              </div>
                 <form>
                      {/* Property Name */}
                     <div className="mb-4">
@@ -202,7 +220,7 @@ const AddPropertyButton: React.FC = () => {
                         </label>
 
                         <Tooltip id="propertyNameTooltip" place="right">
-                            Enter the property name if applicable.
+                            Enter the property name, this will be the header of your property listing.
                         </Tooltip>
 
                         <input
@@ -211,7 +229,8 @@ const AddPropertyButton: React.FC = () => {
                             name="propertyName"
                             value={propertyData.propertyName}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 text-blue-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="e.g., Quince House"
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
                         
@@ -219,16 +238,8 @@ const AddPropertyButton: React.FC = () => {
                   <div className="mb-4">
                     <label htmlFor="propertyAddress" className="text-sm font-medium text-gray-700 flex items-center">
                         Property Address:
-                        <Info
-                        size={16}
-                        className="ml-2 text-red-500 cursor-pointer"
-                        data-tooltip-id="propertyAddressTooltip"
-                        />
                     </label>
 
-                    <Tooltip id="propertyAddressTooltip" place="right">
-                        Enter the full address of the property.
-                    </Tooltip>
 
                     <input
                         type="text"
@@ -236,40 +247,42 @@ const AddPropertyButton: React.FC = () => {
                         name="propertyAddress"
                         value={propertyData.propertyAddress}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md text-blue-400 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="e.g., The Grange, Main Road, Meriden, CV7 7LA"
+                        className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                     </div>
 
                      {/* Property Tenure */}
-                     <div className="mb-4">
-                        
-                        <label htmlFor="propertyTenure" className="text-sm font-medium text-gray-700 flex items-center">
-                            Property Tenure:
-                            <Info
-                            size={16}
-                            className="ml-2 text-red-500 cursor-pointer"
-                            data-tooltip-id="propertyTenureTooltip"
-                            />
-                        </label>
-
-                        <Tooltip id="propertyTenureTooltip" place="right">
-                            Enter the property tenure if applicable.
-                        </Tooltip>
-
-                        <input
-                            type="text"
-                            id="propertyTenure"
-                            name="propertyTenure"
-                            value={propertyData.propertyTenure}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 text-blue-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
+                    <div className="mb-4">
+                      <label htmlFor="propertyTenure" className="text-sm font-medium text-gray-700 flex items-center">
+                        Property Tenure:
+                        <Info
+                          size={16}
+                          className="ml-2 text-red-500 cursor-pointer"
+                          data-tooltip-id="propertyTenureTooltip"
+                          />
+                      </label>
+                      <select
+                        id="propertyTenure"
+                        name="propertyTenure"
+                        value={propertyData.propertyTenure}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="">Select Tenure</option>
+                        <option value="leasehold">Lease Hold</option>
+                        <option value="freehold">Free Hold</option>
+                      </select>
                     </div>
+
+                    <Tooltip id="propertyTenureTooltip" place="right">
+                        Enter the full tenure of the property. Legal status of the property.
+                    </Tooltip>
 
                   {/* Property Price */}
                   <div className="mb-4">
                     <label htmlFor="propertyPrice" className="text-sm font-medium text-gray-700 flex items-center">
-                      Property Price:
+                      Property Valuation:
                       <Info
                         size={16}
                         className="ml-2 text-red-500 cursor-pointer"
@@ -282,12 +295,12 @@ const AddPropertyButton: React.FC = () => {
                       name="propertyPrice"
                       value={propertyData.propertyPrice}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-blue-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
                     <Tooltip id="propertyPriceTooltip" place="right">
-                        Enter the valuation of the property.
+                        Enter the valuation of the property for token pricing.
                     </Tooltip>
 
                   {/* Property Tokens */}
@@ -306,7 +319,7 @@ const AddPropertyButton: React.FC = () => {
                       name="propertyTokens"
                       value={propertyData.propertyTokensLeft}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-blue-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
@@ -329,20 +342,27 @@ const AddPropertyButton: React.FC = () => {
                       name="propertyType"
                       value={propertyData.propertyType}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="">Select Type</option>
-                      <option value="House">House</option>
-                      <option value="Apartment">Apartment</option>
-                      <option value="Condo">Condo</option>
-                      <option value="Commercial">Commercial</option>
+                      <option value="Residential">Residential</option>
+                      <option value="Retail">Retail</option>
+                      <option value="Leisure">Leisure</option>
+                      <option value="Land">Land</option>
+                      <option value="Commercial">Commerical</option>
+                      <option value="Bulk Warehouse">Bulk Warehouse</option>
+                      <option value="Industrial">Industrial</option>
+                      <option value="Offices">Offices</option>
+                      <option value="Healthcare">Healthcare</option>
+                      <option value="Multifamily">Multifamily</option>
+                      <option value="Hospitality">Hospitality</option>
+                      <option value="Special Purpose">Special Purpose</option>
                     </select>
                   </div>
 
                     <Tooltip id="propertyTypeTooltip" place="right">
-                        Enter the type of property.
+                        Enter the type of property type that will be listed.
                     </Tooltip>
-
 
                   {/* Next Button */}
                   <button
@@ -359,7 +379,12 @@ const AddPropertyButton: React.FC = () => {
             {/* Step 2: Location Information */}
             {currentStep === 2 && (
             <div>
-                <h3 className="text-xl font-semibold mb-4">Step 2: Location Information</h3>
+                <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
+                  <div
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${progressPercentage}%` }}
+                  ></div>
+              </div>
                 <form>
                     {/* Property Tokenization Type */}
                     <div className="mb-4">
@@ -376,9 +401,8 @@ const AddPropertyButton: React.FC = () => {
                         name="propertyRental"
                         value={propertyData.propertyRental ? "Rental" : "Non-Rental"} // Correcting the value here
                         onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     >
-                        <option value="">Select Type</option>
                         <option value="Rental">Rental</option>
                         <option value="Non-Rental">Non-Rental</option>
                     </select>
@@ -403,29 +427,31 @@ const AddPropertyButton: React.FC = () => {
                       name="propertySettlement"
                       value={propertyData.propertySettlement}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="">Select Type</option>
                       <option value="Detatched">Detatched</option>
                       <option value="Terrace">Terrace</option>
                       <option value="Flat">Flat</option>
                       <option value="Semi-Detatched">Semi-Detatched</option>
+                      <option value="Bungalow">Bungalow</option>
+                      <option value="Cottage">Cottage</option>
+                      <option value="Maisonette">Maisonette</option>
+                      <option value="Mansion">Mansion</option>
+                      <option value="Office">Office</option>
+                      <option value="Industrial">Industrial</option>
+                      <option value="Hotel">Hotel</option>
                     </select>
                   </div>
 
                     <Tooltip id="propertySettlementTooltip" place="right">
-                        Enter the property settlement.
+                        Enter the type of real estate.
                     </Tooltip>
 
                 {/* Postcode */}
                 <div className="mb-4">
                     <label htmlFor="postcode" className="text-sm font-medium text-gray-700 flex items-center">
                     Postcode:
-                    <Info
-                        size={16}
-                        className="ml-2 text-red-500 cursor-pointer"
-                        data-tooltip-id="propertyTypeTooltip"
-                    />
                     </label>
                     <input
                     type="text"
@@ -438,13 +464,14 @@ const AddPropertyButton: React.FC = () => {
                         propertyPostcode: e.target.value,
                         })
                     }
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="e.g., CV7 7LA"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
 
                 {/* Country */}
                 <div className="mb-4">
-                    <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="country" className="block text-sm font-medium text-gray-700 items-center">
                     Country:
                     </label>
                     <input
@@ -452,8 +479,8 @@ const AddPropertyButton: React.FC = () => {
                     id="country"
                     name="country"
                     value={propertyData.propertyCountry}
-                    readOnly
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100"
+                    placeholder="e.g., United Kingdom"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
 
@@ -467,8 +494,8 @@ const AddPropertyButton: React.FC = () => {
                     id="city"
                     name="city"
                     value={propertyData.propertyCity}
-                    readOnly
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100"
+                    placeholder="e.g., London"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
 
@@ -482,8 +509,8 @@ const AddPropertyButton: React.FC = () => {
                     id="street"
                     name="street"
                     value={propertyData.propertyStreet}
-                    readOnly
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100"
+                    placeholder="e.g., First Street"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
 
@@ -497,8 +524,8 @@ const AddPropertyButton: React.FC = () => {
                     id="streetNum"
                     name="streetNum"
                     value={propertyData.propertyStreetNum}
-                    readOnly
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100"
+                    placeholder="e.g., 11"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
 
@@ -527,7 +554,12 @@ const AddPropertyButton: React.FC = () => {
             {/* Step 3: Property Features */}
             {currentStep === 3 && (
             <div>
-                <h3 className="text-xl font-semibold mb-4">Step 3: Property Features</h3>
+                <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
+                  <div
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${progressPercentage}%` }}
+                  ></div>
+              </div>
                 <form>
                 {/* Property Size */}
                 <div className="mb-4">
@@ -554,11 +586,6 @@ const AddPropertyButton: React.FC = () => {
                 <div className="mb-4">
                     <label htmlFor="propertyBedrooms" className="text-sm font-medium text-gray-700 flex items-center">
                       Property Bedrooms:
-                      <Info
-                        size={16}
-                        className="ml-2 text-red-500 cursor-pointer"
-                        data-tooltip-id="propertyBedroomsTooltip"
-                        />
                     </label>
                     <input
                       type="number"
@@ -566,23 +593,14 @@ const AddPropertyButton: React.FC = () => {
                       name="propertyBedrooms"
                       value={propertyData.propertyBedrooms}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-blue-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
-
-                  <Tooltip id="propertyBedroomsTooltip" place="right">
-                    Enter the property bedrooms
-                  </Tooltip>
 
                   {/* Property Bedrooms */}
                 <div className="mb-4">
                     <label htmlFor="propertyBathrooms" className="text-sm font-medium text-gray-700 flex items-center">
                       Property Bathrooms:
-                      <Info
-                        size={16}
-                        className="ml-2 text-red-500 cursor-pointer"
-                        data-tooltip-id="propertyBathroomsTooltip"
-                        />
                     </label>
                     <input
                       type="number"
@@ -590,18 +608,19 @@ const AddPropertyButton: React.FC = () => {
                       name="propertyBathrooms"
                       value={propertyData.propertyBathrooms}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-blue-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
-                  <Tooltip id="propertyBathroomsTooltip" place="right">
-                    Enter the property bathrooms
-                  </Tooltip>
-
                 {/* Property Description */}
                 <div className="mb-4">
-                    <label htmlFor="propertyDescription" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="propertyDescription" className="flex flex-row text-sm font-medium text-gray-700">
                     Property Description:
+                    <Info
+                        size={16}
+                        className="ml-2 text-red-500 cursor-pointer"
+                        data-tooltip-id="propertyDescriptionTooltip"
+                    />
                     </label>
                     <textarea
                     id="propertyDescription"
@@ -615,9 +634,13 @@ const AddPropertyButton: React.FC = () => {
                     }
                     placeholder="Enter details about the property..."
                     rows={4}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     ></textarea>
                 </div>
+
+                <Tooltip id="propertyDescriptionTooltip" place="right">
+                        This will be a prime factor in drawing attraction to the listing.
+                </Tooltip>
                 
                 <div className='pl-12 pr-12 p-2 flex flex-row justify-between'>
                 <div>
@@ -655,8 +678,13 @@ const AddPropertyButton: React.FC = () => {
 
                 {/* Keywords */}
                 <div className="mb-4">
-                    <label htmlFor="propertyKeywords" className="block text-sm font-medium text-gray-700">
-                    Keywords (comma-separated):
+                    <label htmlFor="propertyKeywords" className="flex flex-row text-sm font-medium text-gray-700">
+                    Keywords (comma-separated): 
+                    <Info
+                        size={16}
+                        className="ml-2 text-red-500 cursor-pointer"
+                        data-tooltip-id="propertyKeywordsTooltip"
+                    />
                     </label>
                     <input
                     type="text"
@@ -670,9 +698,13 @@ const AddPropertyButton: React.FC = () => {
                         })
                     }
                     placeholder="e.g., garden, parking, sea view"
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
+
+                <Tooltip id="propertyKeywordsTooltip" place="right">
+                        This will gain engagement through seperated keywords.
+                </Tooltip>
 
                 {/* Previous and Next Buttons */}
                 <div className="flex justify-between">
@@ -698,206 +730,250 @@ const AddPropertyButton: React.FC = () => {
             {/* Step 4: Upload Images */}
             {currentStep === 4 && (
             <div>
-                <h3 className="text-xl font-semibold mb-4">Step 4: Upload Images</h3>
+                <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
+                  <div
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${progressPercentage}%` }}
+                  ></div>
+              </div>
+
                 <form>
                 {/* Property Rental Checkbox */}
                 <div className="mb-4">
-                    <label htmlFor="propertyRental" className="block text-sm font-medium text-gray-700">
-                    Is the Property Rental?
-                    </label>
-                    <input
-                    type="checkbox"
-                    id="propertyRental"
-                    name="propertyRental"
-                    checked={propertyData.propertyRental}
-                    onChange={(e) => handleInputChange(e)}
-                    className="mt-1"
-                    />
-                    {propertyData.propertyRental && (
-                    <div className="mt-2">
-                        <label htmlFor="rentalDistributionExpectancy" className="block text-sm font-medium text-gray-700">
-                        Rental Distribution Expectancy:
-                        </label>
-                        <input
-                        type="text"
-                        id="rentalDistributionExpectancy"
-                        name="rentalDistributionExpectancy"
-                        value={propertyData.rentalDistributionExpectancy || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    )}
-                </div>
+                  <div className="flex flex-row space-x-4 items-center">
+                      <label htmlFor="propertyRental" className="block text-sm font-medium text-gray-700">
+                          Is the Property Rental?
+                      </label>
+                      <input
+                          type="checkbox"
+                          id="propertyRental"
+                          name="propertyRental"
+                          checked={propertyData.propertyRental}
+                          onChange={handleCheckboxChange}
+                          className="mt-1"
+                      />
+                  </div>
+
+                  {propertyData.propertyRental && (
+                      <div className="mt-4">
+                          <div className="flex flex-row">
+                              <label htmlFor="rentalDistributionExpectancy" className="block text-sm font-medium text-gray-700">
+                                  Rental Income Expectancy Per Month:
+                              </label>
+                              <Info
+                                  size={16}
+                                  className="ml-2 text-red-500 cursor-pointer"
+                                  data-tooltip-id="propertyRentalDistributionTooltip"
+                              />
+                          </div>
+                          <input
+                              type="text"
+                              id="rentalDistributionExpectancy"
+                              name="rentalDistributionExpectancy"
+                              value={propertyData.rentalDistributionExpectancy || ""}
+                              onChange={handleInputChange} // Ensure this is always present
+                              placeholder="e.g., £200 a month"
+                              className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          />
+                      </div>
+                  )}
+              </div>
+
+                <Tooltip id="propertyRentalDistributionTooltip" place="right">
+                    This income will be distributed evenly based on ownership.
+                </Tooltip>
+
 
                 {/* Agent Info Selection */}
                 <div className="mb-4">
-                    <label htmlFor="agent" className="block text-sm font-medium text-gray-700">
-                    Is this property managed by an agent?
-                    </label>
-                    <select
-                    id="agent"
-                    name="agent"
-                    value={propertyAgent.isAgent || "apply"}  // Default value is 'apply'
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    >
-                    <option value="apply">Apply to be the agent</option>
-                    <option value="agent">Already an agent</option>
-                    </select>
+                    <div className="flex flex-row space-x-4 items-center">
+                        <label htmlFor="isAgent" className="block text-sm font-medium text-gray-700">
+                            Is this property managed by an agent?
+                        </label>
+                        <input
+                            type="checkbox"
+                            id="isAgent"
+                            name="isAgent"
+                            checked={propertyAgent.isAgent} // Ensure this is a boolean
+                            onChange={handleCheckboxChangeAgent}
+                            className="mt-1"
+                        />
+                    </div>
                 </div>
 
                 {/* Conditional fields for agent details if the agent is already selected */}
-                {propertyAgent.isAgent === "agent" && (
+                {propertyAgent.isAgent && (
                     <div>
-                    <div className="mb-4">
-                        <label htmlFor="agentName" className="block text-sm font-medium text-gray-700">
-                        Agent Name:
-                        </label>
-                        <input
-                        type="text"
-                        id="agentName"
-                        name="agentName"
-                        value={propertyAgent.agentName || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="agentContactNumber" className="block text-sm font-medium text-gray-700">
-                        Agent Contact Number:
-                        </label>
-                        <input
-                        type="text"
-                        id="agentContactNumber"
-                        name="agentContactNumber"
-                        value={propertyAgent.agentContactNumber || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="agentEmail" className="block text-sm font-medium text-gray-700">
-                        Agent Email:
-                        </label>
-                        <input
-                        type="email"
-                        id="agentEmail"
-                        name="agentEmail"
-                        value={propertyAgent.agentEmail || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="agentAddress" className="block text-sm font-medium text-gray-700">
-                        Agent Address:
-                        </label>
-                        <input
-                        type="text"
-                        id="agentAddress"
-                        name="agentAddress"
-                        value={propertyAgent.agentAddress || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="agentWhyDescription" className="block text-sm font-medium text-gray-700">
-                        Why should you be the agent?:
-                        </label>
-                        <textarea
-                        id="agentWhyDescription"
-                        name="agentWhyDescription"
-                        value={propertyAgent.agentWhyDescription || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="agentSoldDescription" className="block text-sm font-medium text-gray-700">
-                        Description of properties sold:
-                        </label>
-                        <textarea
-                        id="agentSoldDescription"
-                        name="agentSoldDescription"
-                        value={propertyAgent.agentSoldDescription || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
+                        <div className="mb-4">
+                            <label htmlFor="agentName" className="block text-sm font-medium text-gray-700">
+                                Agent Name:
+                            </label>
+                            <input
+                                type="text"
+                                id="agentName"
+                                name="agentName"
+                                value={propertyAgent.agentName || ""}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="agentEmail" className="flex flex-row text-sm font-medium text-gray-700">
+                                Agent ID:
+                                <Info
+                                    size={16}
+                                    className="ml-2 text-red-500 cursor-pointer"
+                                    data-tooltip-id="propertyAgentTooltip"
+                                />
+                            </label>
+                            <input
+                                type="email"
+                                id="agentEmail"
+                                name="agentEmail"
+                                value={propertyAgent.agentEmail || ""}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+
+                        <Tooltip id="propertyAgentTooltip" place="right">
+                          This is the trusted agent that will manage the listing on your behalf.
+                        </Tooltip>
+
+                        <div className='flex flex-row justify-between'>
+                        {/* Previous and Next Buttons for Step 5 */}
+                        <div className="flex justify-between w-full">
+                            <button
+                            type="button"
+                            onClick={handlePrevStep}
+                            className="w-32 bg-gray-300 text-white py-2 rounded-md hover:bg-gray-400 transition"
+                            >
+                            Previous
+                            </button>
+                            <button
+                            type="button"
+                            onClick={handleNextStep}
+                            className="w-32 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                            >
+                            Next
+                            </button>
+                        </div>
+                        </div>
                     </div>
                 )}
 
                 {/* Conditional fields for agent application if the user is applying */}
-                {propertyAgent.isAgent === "apply" && (
+                {!propertyAgent.isAgent && (
                     <div>
-                    <div className="mb-4">
-                        <label htmlFor="agentName" className="block text-sm font-medium text-gray-700">
-                        Your Name (Agent Application):
-                        </label>
-                        <input
-                        type="text"
-                        id="agentName"
-                        name="agentName"
-                        value={propertyAgent.agentName || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
+                        <div className="mb-4">
+                            <label htmlFor="agentName" className="block text-sm font-medium text-gray-700">
+                                Your Name:
+                            </label>
+                            <input
+                                type="text"
+                                id="agentName"
+                                name="agentName"
+                                value={propertyAgent.agentName || ""}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="agentContactNumber" className="block text-sm font-medium text-gray-700">
+                                Your Contact Number:
+                            </label>
+                            <input
+                                type="text"
+                                id="agentContactNumber"
+                                name="agentContactNumber"
+                                value={propertyAgent.agentContactNumber || ""}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="agentEmail" className="block text-sm font-medium text-gray-700">
+                                Your Email:
+                            </label>
+                            <input
+                                type="email"
+                                id="agentEmail"
+                                name="agentEmail"
+                                value={propertyAgent.agentEmail || ""}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="agentAddress" className="block text-sm font-medium text-gray-700">
+                                Your Address:
+                            </label>
+                            <input
+                                type="text"
+                                id="agentAddress"
+                                name="agentAddress"
+                                value={propertyAgent.agentAddress || ""}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="agentWhyDescription" className="flex flex-row text-sm font-medium text-gray-700">
+                                Why do you want to be the agent?
+                                <Info
+                                    size={16}
+                                    className="ml-2 text-red-500 cursor-pointer"
+                                    data-tooltip-id="agentWhyTooltip"
+                                />
+                            </label>
+                            <textarea
+                                id="agentWhyDescription"
+                                name="agentWhyDescription"
+                                value={propertyAgent.agentWhyDescription || ""}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+
+                        <Tooltip id="agentWhyTooltip" place="right">
+                          This will help you gain trust with others.
+                        </Tooltip>
+
+                        <div className='flex flex-row justify-between'>
+                        {/* Previous and Next Buttons for Step 5 */}
+                        <div className="flex justify-between w-full">
+                            <button
+                            type="button"
+                            onClick={handlePrevStep}
+                            className="w-32 bg-gray-300 text-white py-2 rounded-md hover:bg-gray-400 transition"
+                            >
+                            Previous
+                            </button>
+                            <button
+                            type="button"
+                            onClick={handleNextStep}
+                            className="w-32 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                            >
+                            Next
+                            </button>
+                        </div>
+                        </div>
                     </div>
-                    <div className="mb-4">
-                        <label htmlFor="agentContactNumber" className="block text-sm font-medium text-gray-700">
-                        Your Contact Number (Agent Application):
-                        </label>
-                        <input
-                        type="text"
-                        id="agentContactNumber"
-                        name="agentContactNumber"
-                        value={propertyAgent.agentContactNumber || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="agentEmail" className="block text-sm font-medium text-gray-700">
-                        Your Email (Agent Application):
-                        </label>
-                        <input
-                        type="email"
-                        id="agentEmail"
-                        name="agentEmail"
-                        value={propertyAgent.agentEmail || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="agentAddress" className="block text-sm font-medium text-gray-700">
-                        Your Address (Agent Application):
-                        </label>
-                        <input
-                        type="text"
-                        id="agentAddress"
-                        name="agentAddress"
-                        value={propertyAgent.agentAddress || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="agentWhyDescription" className="block text-sm font-medium text-gray-700">
-                        Why do you want to be the agent? (Agent Application):
-                        </label>
-                        <textarea
-                        id="agentWhyDescription"
-                        name="agentWhyDescription"
-                        value={propertyAgent.agentWhyDescription || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    </div>
+                    
                 )}
+                </form>
+            </div>
+            )}
+
+            {/* Final Step: Submit (Step 5) */}
+            {currentStep === 5 && (
+            <div>
+                <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
+                  <div
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${progressPercentage}%` }}
+                  ></div>
+              </div>
 
                 {/* Image Upload */}
                 <div className="mb-4">
@@ -913,18 +989,7 @@ const AddPropertyButton: React.FC = () => {
                     className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
-                </form>
-            </div>
-            )}
 
-
-            {/* Final Step: Submit (Preview at Step 5) */}
-            {currentStep === 5 && (
-            <div>
-                <h3 className="text-xl font-semibold mb-4">Final Step: Submit</h3>
-                <h3 className='bg-red-700'>Property Preview</h3>
-                <div className='flex flex-row justify-between'>
-                {/* Previous and Next Buttons for Step 5 */}
                 <div className="flex justify-between w-full">
                     <button
                     type="button"
@@ -942,10 +1007,9 @@ const AddPropertyButton: React.FC = () => {
                     </button>
                 </div>
                 </div>
-            </div>
             )}
 
-            {/* Final Step: Submit (Step 6) */}
+            {/* Final Step: Submit (Step 5) */}
             {currentStep === 6 && (
             <div>
                 <h3 className="text-xl font-semibold mb-4">Final Step: Submit</h3>
@@ -959,6 +1023,7 @@ const AddPropertyButton: React.FC = () => {
                     Submit Property
                     </button>
                 </form>
+
                 <button
                     type="button"
                     onClick={handlePrevStep}
