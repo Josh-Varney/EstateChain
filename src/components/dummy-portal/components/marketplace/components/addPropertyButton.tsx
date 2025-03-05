@@ -1,11 +1,40 @@
 import React, { useState } from 'react';
 import { Info } from 'lucide-react';
 import { Tooltip } from "react-tooltip";
+import { validateAgentAddress, validateAgentContactNumber, validateAgentEmail, validateAgentName, validateAgentSoldDescription, validateAgentWhyDescription, validatePropertyAddress, validatePropertyBathrooms, validatePropertyBedrooms, validatePropertyCity, validatePropertyCountry, validatePropertyDescription, validatePropertyKeywords, validatePropertyName, validatePropertyPostcode, validatePropertyPrice, validatePropertyRental, validatePropertySettlement, validatePropertySize, validatePropertyStreet, validatePropertyStreetNum, validatePropertyTenure, validatePropertyTokensLeft, validatePropertyType, validateRentalDistribution } from '../../../../../managers/dummy-portal/propertyManager';
 
 const AddPropertyButton: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1); // Track current step
-  const [images, setImages] = useState<FileList | null>(null);
+  const [images, setImages] = useState<File[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState({
+    propertyName: "",
+    propertyAddress: "",
+    propertyTenure: "",
+    propertyPrice: "",
+    propertyTokensLeft: "",
+    propertyType: "",
+    propertyRental: "",
+    propertySettlement: "",
+    propertyPostcode: "",
+    propertyCountry: "",
+    propertyCity: "",
+    propertyStreet: "",
+    propertyStreetNum: "",
+    propertySize: "",
+    propertyBedrooms: "",
+    propertyBathrooms: "",
+    propertyDescription: "",
+    propertyKeywords: "",
+    rentalDistributionExpectancy: "",
+    agentName: "",
+    agentEmail: "",
+    agentContactNumber: "",
+    agentAddress: "",
+    agentWhyDescription: "",
+    agentSoldDescription: "",
+  })
 
   const totalSteps = 6; // Update if you have more steps
   const progressPercentage = (currentStep / totalSteps) * 100;
@@ -45,13 +74,11 @@ const AddPropertyButton: React.FC = () => {
     propertyType: '',
     propertyPostcode: '',
     propertyRental: false,
-    propertyImage: '',
     propertyFeatured: false,
     propertyTenure: '',
     propertyGarden: false,
     propertyAccessibility: false,
     propertyKeywords: '',
-    propertyKeyFeatures: '',
   });
 
   const openPopup = () => setIsPopupOpen(true);
@@ -59,16 +86,102 @@ const AddPropertyButton: React.FC = () => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setImages(e.target.files);
+      const fileArray = Array.from(e.target.files);
+      
+      // Allowed file types
+      const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+      // Filter valid files and set error for invalid ones
+      const validFiles = fileArray.filter(file => allowedTypes.includes(file.type));
+      const invalidFiles = fileArray.filter(file => !allowedTypes.includes(file.type));
+
+      if (invalidFiles.length > 0) {
+        setError("Some files were rejected. Only JPG, PNG, GIF, and WEBP are allowed.");
+      } else {
+        setError(null);
+      }
+
+      setImages((prevImages) => [...prevImages, ...validFiles]);
     }
   };
 
-  const handleInputChange = (e:any) => {
+
+  const handleRemoveImage = (index: number) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setPropertyData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+  
+    // Validate the input based on the field name
+    if (name === "propertyName") {
+      validatePropertyName(value, setErrors);
+    } else if (name === "propertyAddress") {
+      validatePropertyAddress(value, setErrors);
+    } else if (name === "propertyTenure") {
+      validatePropertyTenure(value, setErrors);
+    } else if (name === "propertyPrice") {
+      validatePropertyPrice(value, setErrors);
+    } else if (name === "propertyTokensLeft") {
+      validatePropertyTokensLeft(value, setErrors);
+    } else if (name === "propertyType") {
+      validatePropertyType(value, setErrors);
+    } else if (name === "propertyRental") {
+      validatePropertyRental(value, setErrors);
+    } else if (name === "propertySettlement") {
+      validatePropertySettlement(value, setErrors);
+    } else if (name === "propertyCountry") {
+      validatePropertyCountry(value, setErrors);
+    } else if (name === "propertyCity") {
+      validatePropertyCity(value, setErrors);
+    } else if (name === "propertyStreet") {
+      validatePropertyStreet(value, setErrors);
+    } else if (name === "propertyStreetNum") {
+      validatePropertyStreetNum(value, setErrors);
+    } else if (name === "propertyPostcode") {
+      validatePropertyPostcode(value, setErrors);
+    } else if (name === "propertySize") {
+      validatePropertySize(value, setErrors);
+    } else if (name === "propertyBedrooms") {
+      validatePropertyBedrooms(value, setErrors);
+    } else if (name === "propertyBathrooms") {
+      validatePropertyBathrooms(value, setErrors);
+    } else if (name === "propertyDescription") {
+      validatePropertyDescription(value, setErrors);
+    } else if (name === "propertyKeywords") {
+      validatePropertyKeywords(value, setErrors);
+    } else if (name === "rentalDistributionExpectancy") {
+      validateRentalDistribution(value, setErrors);
+    } 
+}
+
+  
+
+  const handleInputChangeAgent = (e:any) => {
+    const { name, value } = e.target;
+    setPropertyAgent((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+    if (name === "agentName") {
+      validateAgentName(value, setErrors); // Validate agent name
+    } else if (name === "agentEmail") {
+      validateAgentEmail(value, setErrors); // Validate agent email
+    } else if (name === "agentContactNumber") {
+      validateAgentContactNumber(value, setErrors); // Validate agent contact number
+    } else if (name === "agentAddress") {
+      validateAgentAddress(value, setErrors);
+    } else if (name === "agentWhyDescription") {
+      validateAgentWhyDescription(value, setErrors);
+    } else if (name === "agentSoldDescription") {
+      validateAgentSoldDescription(value, setErrors);
+    }
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +203,8 @@ const AddPropertyButton: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Submitted Property:', propertyData);
-    console.log('Submitted Agent')
+    console.log('Submitted Agent', propertyAgent)
+    console.log('Submitted Images', images)
     
     setPropertyAgent({
         agentID: '',
@@ -126,21 +240,48 @@ const AddPropertyButton: React.FC = () => {
       propertyType: '',
       propertyPostcode: '',
       propertyRental: false,
-      propertyImage: '',
       propertyFeatured: false,
       propertyTenure: '',
       propertyGarden: false,
       propertyAccessibility: false,
       propertyKeywords: '',
-      propertyKeyFeatures: '',
     });
-    setImages(null);
-    setCurrentStep(1); // Reset to the first step
+    setImages([]);
+    setCurrentStep(1);
     closePopup();
   };
 
-  const handleNextStep = () => setCurrentStep(currentStep + 1);
-  const handlePrevStep = () => setCurrentStep(currentStep - 1);
+    const handleNextStep = () => {
+      // Check if there are any errors
+      const hasErrors = Object.values(errors).some((error) => error !== "");
+    
+      if (hasErrors) {
+        console.log("There are errors, cannot proceed.");
+        return; // Prevent proceeding to the next step
+      }
+    
+      // If no errors, proceed with the current step
+      console.log(propertyData);
+      console.log(propertyAgent);
+      console.log(images);
+    
+      // Move to the next step
+      setCurrentStep(currentStep + 1);
+  };
+
+    const handlePrevStep = () => {
+      // Check if there are any errors
+      const hasErrors = Object.values(errors).some((error) => error !== "");
+    
+      if (hasErrors) {
+        console.log("There are errors, cannot go back.");
+        return; // Prevent going back to the previous step
+      }
+    
+      // If no errors, go to the previous step
+      setCurrentStep(currentStep - 1);
+    };
+  
 
     // Function to convert postcode to latitude & longitude
     const handleNextStepWithGeocoding = async () => {
@@ -191,7 +332,7 @@ const AddPropertyButton: React.FC = () => {
           <div className="bg-white p-8 rounded-lg w-full max-w-lg relative shadow-xl overflow-hidden">
             <button
               onClick={closePopup}
-              className="text-2xl absolute top-3 right-3 hover:text-gray-600"
+              className="text-3xl text-red-400 absolute top-3 right-3 hover:text-gray-600"
             >
               &times;
             </button>
@@ -206,17 +347,22 @@ const AddPropertyButton: React.FC = () => {
                       style={{ width: `${progressPercentage}%` }}
                   ></div>
               </div>
+
                 <form>
                      {/* Property Name */}
                     <div className="mb-4">
                         
-                        <label htmlFor="propertyName" className="text-sm font-medium text-gray-700 flex items-center">
+                        <label htmlFor="propertyName" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
                             Property Name:
                             <Info
                             size={16}
-                            className="ml-2 text-red-500 cursor-pointer"
+                            className="ml-2 text-blue-500 cursor-pointer"
                             data-tooltip-id="propertyNameTooltip"
                             />
+                            {errors.propertyName && (
+                                <p className="text-sm text-red-500">{errors.propertyName}</p>
+                            )}
+
                         </label>
 
                         <Tooltip id="propertyNameTooltip" place="right">
@@ -236,8 +382,16 @@ const AddPropertyButton: React.FC = () => {
                         
                   {/* Property Address */}
                   <div className="mb-4">
-                    <label htmlFor="propertyAddress" className="text-sm font-medium text-gray-700 flex items-center">
-                        Property Address:
+                    <label htmlFor="propertyAddress" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                          <div className='flex flex-row space-x-3'>
+                            <div>
+                              Property Address:
+                            </div>
+                            {errors.propertyAddress && (
+                                <p className="text-sm text-red-500">{errors.propertyAddress}</p>
+                            )}
+                          </div>
+                       
                     </label>
 
 
@@ -254,13 +408,16 @@ const AddPropertyButton: React.FC = () => {
 
                      {/* Property Tenure */}
                     <div className="mb-4">
-                      <label htmlFor="propertyTenure" className="text-sm font-medium text-gray-700 flex items-center">
+                      <label htmlFor="propertyTenure" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
                         Property Tenure:
                         <Info
                           size={16}
-                          className="ml-2 text-red-500 cursor-pointer"
+                          className="ml-2 text-blue-500 cursor-pointer"
                           data-tooltip-id="propertyTenureTooltip"
                           />
+                        {errors.propertyTenure && (
+                            <p className="text-sm text-red-500">{errors.propertyTenure}</p>
+                        )}
                       </label>
                       <select
                         id="propertyTenure"
@@ -281,13 +438,20 @@ const AddPropertyButton: React.FC = () => {
 
                   {/* Property Price */}
                   <div className="mb-4">
-                    <label htmlFor="propertyPrice" className="text-sm font-medium text-gray-700 flex items-center">
-                      Property Valuation:
-                      <Info
-                        size={16}
-                        className="ml-2 text-red-500 cursor-pointer"
-                        data-tooltip-id="propertyPriceTooltip"
-                        />
+                    <label htmlFor="propertyPrice" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                      <div className='flex flex-row'>
+                        Property Valuation:
+                        <Info
+                          size={16}
+                          className="ml-2 text-blue-500 cursor-pointer"
+                          data-tooltip-id="propertyPriceTooltip"
+                          />
+                      </div>
+                      <div>
+                        {errors.propertyPrice && (
+                              <p className="text-sm text-red-500">{errors.propertyPrice}</p>
+                          )}
+                      </div>
                     </label>
                     <input
                       type="number"
@@ -305,18 +469,25 @@ const AddPropertyButton: React.FC = () => {
 
                   {/* Property Tokens */}
                   <div className="mb-4">
-                    <label htmlFor="propertyTokens" className="text-sm font-medium text-gray-700 flex items-center">
-                      Property Tokens:
-                      <Info
-                        size={16}
-                        className="ml-2 text-red-500 cursor-pointer"
-                        data-tooltip-id="propertyTokensTooltip"
-                        />
+                    <label htmlFor="propertyTokensLeft" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                      <div className='flex flex-row'>
+                        Property Tokens:
+                        <Info
+                          size={16}
+                          className="ml-2 text-blue-500 cursor-pointer"
+                          data-tooltip-id="propertyTokensTooltip"
+                          />
+                      </div>
+                      <div>
+                        {errors.propertyTokensLeft && (
+                              <p className="text-sm text-red-500">{errors.propertyTokensLeft}</p>
+                          )}
+                      </div>
                     </label>
                     <input
                       type="number"
-                      id="propertyTokens"
-                      name="propertyTokens"
+                      id="propertyTokensLeft"
+                      name="propertyTokensLeft"
                       value={propertyData.propertyTokensLeft}
                       onChange={handleInputChange}
                       className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -329,13 +500,20 @@ const AddPropertyButton: React.FC = () => {
 
                   {/* Property Type */}
                   <div className="mb-4">
-                    <label htmlFor="propertyType" className="text-sm font-medium text-gray-700 flex items-center">
-                      Property Type:
-                      <Info
-                        size={16}
-                        className="ml-2 text-red-500 cursor-pointer"
-                        data-tooltip-id="propertyTypeTooltip"
-                        />
+                    <label htmlFor="propertyType" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                      <div className='flex flex-row'> 
+                        Property Type:
+                        <Info
+                          size={16}
+                          className="ml-2 text-blue-500 cursor-pointer"
+                          data-tooltip-id="propertyTypeTooltip"
+                          />
+                      </div>
+                      <div>
+                        {errors.propertyType && (
+                              <p className="text-sm text-red-500">{errors.propertyType}</p>
+                          )}
+                      </div>
                     </label>
                     <select
                       id="propertyType"
@@ -395,6 +573,7 @@ const AddPropertyButton: React.FC = () => {
                         className="ml-2 text-red-500 cursor-pointer"
                         data-tooltip-id="propertyRentalTypeTooltip"
                         />
+                        
                     </label>
                     <select
                         id="propertyRental"
@@ -414,13 +593,21 @@ const AddPropertyButton: React.FC = () => {
 
                 {/* Property Settlement */}
                 <div className="mb-4">
-                    <label htmlFor="propertySettlement" className="text-sm font-medium text-gray-700 flex items-center">
-                      Property Type:
-                      <Info
-                        size={16}
-                        className="ml-2 text-red-500 cursor-pointer"
-                        data-tooltip-id="propertySettlementTooltip"
-                        />
+                    <label htmlFor="propertySettlement" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                      <div className='flex flex-row'>
+                        Property Situation:
+                        <Info
+                          size={16}
+                          className="ml-2 text-red-500 cursor-pointer"
+                          data-tooltip-id="propertySettlementTooltip"
+                          />
+                      </div>
+                      <div>
+                        {errors.propertySettlement && (
+                              <p className="text-sm text-red-500">{errors.propertySettlement}</p>
+                          )}
+                      </div>
+                      
                     </label>
                     <select
                       id="propertySettlement"
@@ -450,20 +637,22 @@ const AddPropertyButton: React.FC = () => {
 
                 {/* Postcode */}
                 <div className="mb-4">
-                    <label htmlFor="postcode" className="text-sm font-medium text-gray-700 flex items-center">
-                    Postcode:
+                    <label htmlFor="propertyPostcode" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                      <div>
+                        Postcode:
+                      </div>
+                      <div>
+                        {errors.propertyPostcode && (
+                        <p className="text-sm text-red-500">{errors.propertyPostcode}</p>
+                      )}
+                      </div>
                     </label>
                     <input
                     type="text"
-                    id="postcode"
-                    name="postcode"
+                    id="propertyPostcode"
+                    name="propertyPostcode"
                     value={propertyData.propertyPostcode}
-                    onChange={(e) =>
-                        setPropertyData({
-                        ...propertyData,
-                        propertyPostcode: e.target.value,
-                        })
-                    }
+                    onChange={handleInputChange}
                     placeholder="e.g., CV7 7LA"
                     className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
@@ -471,14 +660,20 @@ const AddPropertyButton: React.FC = () => {
 
                 {/* Country */}
                 <div className="mb-4">
-                    <label htmlFor="country" className="block text-sm font-medium text-gray-700 items-center">
-                    Country:
+                    <label htmlFor="propertyCountry" className="flex flex-row text-sm font-medium text-gray-700 items-center space-x-3">
+                      <div>
+                        Country:
+                      </div>
+                      <div>
+                        {errors.propertyCountry && <p className="text-sm text-red-500">{errors.propertyCountry}</p>}
+                      </div>
                     </label>
                     <input
                     type="text"
-                    id="country"
-                    name="country"
+                    id="propertyCountry"
+                    name="propertyCountry"
                     value={propertyData.propertyCountry}
+                    onChange={handleInputChange}
                     placeholder="e.g., United Kingdom"
                     className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
@@ -486,14 +681,21 @@ const AddPropertyButton: React.FC = () => {
 
                 {/* City */}
                 <div className="mb-4">
-                    <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-                    City:
+                    <label htmlFor="propertyCity" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                      <div>
+                      City:
+                      </div>
+                      <div>
+                        {errors.propertyCity && <p className="text-sm text-red-500">{errors.propertyCity}</p>}
+                      </div>
+            
                     </label>
                     <input
                     type="text"
-                    id="city"
-                    name="city"
+                    id="propertyCity"
+                    name="propertyCity"
                     value={propertyData.propertyCity}
+                    onChange={handleInputChange}
                     placeholder="e.g., London"
                     className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
@@ -501,14 +703,20 @@ const AddPropertyButton: React.FC = () => {
 
                 {/* Street */}
                 <div className="mb-4">
-                    <label htmlFor="street" className="block text-sm font-medium text-gray-700">
-                    Street:
+                    <label htmlFor="propertyStreet" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                      <div>
+                        Street:
+                      </div>
+                      <div> 
+                        {errors.propertyStreet && <p className="text-sm text-red-500">{errors.propertyStreet}</p>}
+                      </div>
                     </label>
                     <input
                     type="text"
-                    id="street"
-                    name="street"
+                    id="propertyStreet"
+                    name="propertyStreet"
                     value={propertyData.propertyStreet}
+                    onChange={handleInputChange}
                     placeholder="e.g., First Street"
                     className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
@@ -516,14 +724,20 @@ const AddPropertyButton: React.FC = () => {
 
                 {/* Street Number */}
                 <div className="mb-4">
-                    <label htmlFor="streetNum" className="block text-sm font-medium text-gray-700">
-                    Street Number:
+                    <label htmlFor="propertyStreetNum" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                      <div> 
+                        Street Number:
+                      </div>
+                      <div>
+                        {errors.propertyStreetNum && <p className="text-sm text-red-500">{errors.propertyStreetNum}</p>}
+                      </div>
                     </label>
                     <input
                     type="text"
-                    id="streetNum"
-                    name="streetNum"
+                    id="propertyStreetNum"
+                    name="propertyStreetNum"
                     value={propertyData.propertyStreetNum}
+                    onChange={handleInputChange}
                     placeholder="e.g., 11"
                     className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
@@ -565,20 +779,18 @@ const AddPropertyButton: React.FC = () => {
                 <div className="mb-4">
                     <label htmlFor="propertySize" className="block text-sm font-medium text-gray-700">
                     Property Size (sq ft / sq m):
+                    {errors.propertySize && (
+                      <p className="text-sm text-red-500">{errors.propertySize}</p>
+                    )}
                     </label>
                     <input
                     type="text"
                     id="propertySize"
                     name="propertySize"
                     value={propertyData.propertySize}
-                    onChange={(e) =>
-                        setPropertyData({
-                        ...propertyData,
-                        propertySize: e.target.value,
-                        })
-                    }
+                    onChange={handleInputChange}
                     placeholder="e.g., 1200 sq ft"
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
 
@@ -586,6 +798,9 @@ const AddPropertyButton: React.FC = () => {
                 <div className="mb-4">
                     <label htmlFor="propertyBedrooms" className="text-sm font-medium text-gray-700 flex items-center">
                       Property Bedrooms:
+                      {errors.propertyBedrooms && (
+                        <p className="text-sm text-red-500">{errors.propertyBedrooms}</p>
+                      )}
                     </label>
                     <input
                       type="number"
@@ -601,6 +816,9 @@ const AddPropertyButton: React.FC = () => {
                 <div className="mb-4">
                     <label htmlFor="propertyBathrooms" className="text-sm font-medium text-gray-700 flex items-center">
                       Property Bathrooms:
+                      {errors.propertyBathrooms && (
+                        <p className="text-sm text-red-500">{errors.propertyBathrooms}</p>
+                      )}
                     </label>
                     <input
                       type="number"
@@ -621,17 +839,15 @@ const AddPropertyButton: React.FC = () => {
                         className="ml-2 text-red-500 cursor-pointer"
                         data-tooltip-id="propertyDescriptionTooltip"
                     />
+                    {errors.propertyDescription && (
+                      <p className="text-sm text-red-500">{errors.propertyDescription}</p>
+                    )}
                     </label>
                     <textarea
                     id="propertyDescription"
                     name="propertyDescription"
                     value={propertyData.propertyDescription}
-                    onChange={(e) =>
-                        setPropertyData({
-                        ...propertyData,
-                        propertyDescription: e.target.value,
-                        })
-                    }
+                    onChange={handleInputChange}
                     placeholder="Enter details about the property..."
                     rows={4}
                     className="mt-1 block w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -685,18 +901,16 @@ const AddPropertyButton: React.FC = () => {
                         className="ml-2 text-red-500 cursor-pointer"
                         data-tooltip-id="propertyKeywordsTooltip"
                     />
+                    {errors.propertyKeywords && (
+                      <p className="text-sm text-red-500">{errors.propertyKeywords}</p>
+                    )}
                     </label>
                     <input
                     type="text"
                     id="propertyKeywords"
                     name="propertyKeywords"
                     value={propertyData.propertyKeywords}
-                    onChange={(e) =>
-                        setPropertyData({
-                        ...propertyData,
-                        propertyKeywords: e.target.value,
-                        })
-                    }
+                    onChange={handleInputChange}
                     placeholder="e.g., garden, parking, sea view"
                     className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
@@ -727,7 +941,7 @@ const AddPropertyButton: React.FC = () => {
             </div>
             )}
 
-            {/* Step 4: Upload Images */}
+            {/* Step 4: Agent */}
             {currentStep === 4 && (
             <div>
                 <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
@@ -759,6 +973,9 @@ const AddPropertyButton: React.FC = () => {
                           <div className="flex flex-row">
                               <label htmlFor="rentalDistributionExpectancy" className="block text-sm font-medium text-gray-700">
                                   Rental Income Expectancy Per Month:
+                                  {errors.rentalDistributionExpectancy && (
+                                    <p className="text-sm text-red-500">{errors.rentalDistributionExpectancy}</p>
+                                  )}
                               </label>
                               <Info
                                   size={16}
@@ -770,8 +987,8 @@ const AddPropertyButton: React.FC = () => {
                               type="text"
                               id="rentalDistributionExpectancy"
                               name="rentalDistributionExpectancy"
-                              value={propertyData.rentalDistributionExpectancy || ""}
-                              onChange={handleInputChange} // Ensure this is always present
+                              value={propertyData.rentalDistributionExpectancy}
+                              onChange={handleInputChange} 
                               placeholder="e.g., £200 a month"
                               className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                           />
@@ -807,14 +1024,17 @@ const AddPropertyButton: React.FC = () => {
                         <div className="mb-4">
                             <label htmlFor="agentName" className="block text-sm font-medium text-gray-700">
                                 Agent Name:
+                                {errors.agentName && (
+                                  <p className="text-sm text-red-500">{errors.agentName}</p>
+                                )}
                             </label>
                             <input
                                 type="text"
                                 id="agentName"
                                 name="agentName"
-                                value={propertyAgent.agentName || ""}
-                                onChange={handleInputChange}
-                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                value={propertyAgent.agentName}
+                                onChange={handleInputChangeAgent}
+                                className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
                         <div className="mb-4">
@@ -825,14 +1045,17 @@ const AddPropertyButton: React.FC = () => {
                                     className="ml-2 text-red-500 cursor-pointer"
                                     data-tooltip-id="propertyAgentTooltip"
                                 />
+                                {errors.agentEmail && (
+                                  <p className="text-sm text-red-500">{errors.agentEmail}</p>
+                                )}
                             </label>
                             <input
                                 type="email"
                                 id="agentEmail"
                                 name="agentEmail"
-                                value={propertyAgent.agentEmail || ""}
-                                onChange={handleInputChange}
-                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                value={propertyAgent.agentEmail}
+                                onChange={handleInputChangeAgent}
+                                className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
 
@@ -868,58 +1091,73 @@ const AddPropertyButton: React.FC = () => {
                         <div className="mb-4">
                             <label htmlFor="agentName" className="block text-sm font-medium text-gray-700">
                                 Your Name:
+                                {errors.agentName && (
+                                  <p className="text-sm text-red-500">{errors.agentName}</p>
+                                )}
                             </label>
                             <input
                                 type="text"
                                 id="agentName"
                                 name="agentName"
-                                value={propertyAgent.agentName || ""}
-                                onChange={handleInputChange}
-                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                value={propertyAgent.agentName}
+                                onChange={handleInputChangeAgent}
+                                className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
                         <div className="mb-4">
                             <label htmlFor="agentContactNumber" className="block text-sm font-medium text-gray-700">
                                 Your Contact Number:
+                                {errors.agentContactNumber && (
+                                  <p className="text-sm text-red-500">{errors.agentContactNumber}</p>
+                                )}
                             </label>
                             <input
                                 type="text"
                                 id="agentContactNumber"
                                 name="agentContactNumber"
-                                value={propertyAgent.agentContactNumber || ""}
-                                onChange={handleInputChange}
-                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                value={propertyAgent.agentContactNumber}
+                                onChange={handleInputChangeAgent}
+                                className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
                         <div className="mb-4">
                             <label htmlFor="agentEmail" className="block text-sm font-medium text-gray-700">
                                 Your Email:
+                                {errors.agentEmail && (
+                                  <p className="text-sm text-red-500">{errors.agentEmail}</p>
+                                )}
                             </label>
                             <input
                                 type="email"
                                 id="agentEmail"
                                 name="agentEmail"
-                                value={propertyAgent.agentEmail || ""}
-                                onChange={handleInputChange}
-                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                value={propertyAgent.agentEmail}
+                                onChange={handleInputChangeAgent}
+                                className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
                         <div className="mb-4">
                             <label htmlFor="agentAddress" className="block text-sm font-medium text-gray-700">
                                 Your Address:
+                                {errors.agentAddress && (
+                                  <p className="text-sm text-red-500">{errors.agentAddress}</p>
+                                )}
                             </label>
                             <input
                                 type="text"
                                 id="agentAddress"
                                 name="agentAddress"
-                                value={propertyAgent.agentAddress || ""}
-                                onChange={handleInputChange}
-                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                value={propertyAgent.agentAddress}
+                                onChange={handleInputChangeAgent}
+                                className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
                         <div className="mb-4">
                             <label htmlFor="agentWhyDescription" className="flex flex-row text-sm font-medium text-gray-700">
                                 Why do you want to be the agent?
+                                {errors.agentWhyDescription && (
+                                  <p className="text-sm text-red-500">{errors.agentWhyDescription}</p>
+                                )}
                                 <Info
                                     size={16}
                                     className="ml-2 text-red-500 cursor-pointer"
@@ -929,13 +1167,38 @@ const AddPropertyButton: React.FC = () => {
                             <textarea
                                 id="agentWhyDescription"
                                 name="agentWhyDescription"
-                                value={propertyAgent.agentWhyDescription || ""}
-                                onChange={handleInputChange}
-                                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                value={propertyAgent.agentWhyDescription}
+                                onChange={handleInputChangeAgent}
+                                className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
 
                         <Tooltip id="agentWhyTooltip" place="right">
+                          This will help you gain trust with others.
+                        </Tooltip>
+
+                        <div className="mb-4">
+                            <label htmlFor="agentSoldDescription" className="flex flex-row text-sm font-medium text-gray-700">
+                                Have you sold any properties before?
+                                {errors.agentSoldDescription && (
+                                  <p className="text-sm text-red-500">{errors.agentSoldDescription}</p>
+                                )}
+                                <Info
+                                    size={16}
+                                    className="ml-2 text-red-500 cursor-pointer"
+                                    data-tooltip-id="agentSoldDescriptionTooltip"
+                                />
+                            </label>
+                            <textarea
+                                id="agentSoldDescription"
+                                name="agentSoldDescription"
+                                value={propertyAgent.agentSoldDescription}
+                                onChange={handleInputChangeAgent}
+                                className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+
+                        <Tooltip id="agentSoldDescriptionTooltip" place="right">
                           This will help you gain trust with others.
                         </Tooltip>
 
@@ -977,17 +1240,41 @@ const AddPropertyButton: React.FC = () => {
 
                 {/* Image Upload */}
                 <div className="mb-4">
-                    <label htmlFor="propertyImage" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="propertyImage" className="block text-sm font-medium text-gray-700">
                     Property Images:
-                    </label>
-                    <input
+                  </label>
+                  <input
                     type="file"
                     id="propertyImage"
                     name="propertyImage"
                     multiple
+                    accept="image/*"
                     onChange={handleImageChange}
                     className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    />
+                  />
+
+                  {/* Display error message */}
+                  {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+
+                  {/* Display file names with remove button */}
+                  {images.length > 0 && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      <p className="font-semibold">Uploaded Files:</p>
+                      <ul className="list-disc pl-5">
+                        {images.map((image, index) => (
+                          <li key={index} className="flex items-center justify-between">
+                            {image.name}
+                            <button
+                              onClick={() => handleRemoveImage(index)}
+                              className="ml-2 text-red-500 hover:text-red-700 text-xs font-semibold"
+                            >
+                              ❌
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex justify-between w-full">
