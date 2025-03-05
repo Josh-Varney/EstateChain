@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Info } from 'lucide-react';
 import { Tooltip } from "react-tooltip";
 import { validateAgentAddress, validateAgentContactNumber, validateAgentEmail, validateAgentName, validateAgentSoldDescription, validateAgentWhyDescription, validatePropertyAddress, validatePropertyBathrooms, validatePropertyBedrooms, validatePropertyCity, validatePropertyCountry, validatePropertyDescription, validatePropertyKeywords, validatePropertyName, validatePropertyPostcode, validatePropertyPrice, validatePropertyRental, validatePropertySettlement, validatePropertySize, validatePropertyStreet, validatePropertyStreetNum, validatePropertyTenure, validatePropertyTokensLeft, validatePropertyType, validateRentalDistribution } from '../../../../../managers/dummy-portal/propertyManager';
+import { findAgent, submitAgentData, submitPropertyData } from '../../../../../managers/dummy-portal/propertyManager2';
 
 const AddPropertyButton: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -41,7 +42,6 @@ const AddPropertyButton: React.FC = () => {
 
   const [propertyAgent, setPropertyAgent] = useState({
     isAgent: false,
-    agentID: '',
     agentName: '',
     agentContactNumber: '',
     agentEmail: '',
@@ -200,14 +200,52 @@ const AddPropertyButton: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Submitted Property:', propertyData);
     console.log('Submitted Agent', propertyAgent)
     console.log('Submitted Images', images)
+
     
+    // Example usage:
+    if (!propertyAgent.isAgent) {
+
+      // Submit property agent data and handle the returned agentID
+      submitAgentData('http://localhost:3001/api/submitAgent', propertyAgent)
+        .then(response => {
+          console.log('Response from server:', response);
+          
+          if (response) {
+            console.log('Received agentID:', response);
+
+            // Calculate the token value
+            const propertyTokenValue = propertyData.propertyPrice / propertyData.propertyTokensLeft;
+            propertyData.propertyTokenPrice = propertyTokenValue;
+            
+            const preprocessedData = {
+              agentID: response,
+              uuid: localStorage.getItem("uuid"),
+              ...propertyData
+            }
+
+            submitPropertyData('http://localhost:3001/api/submitProperty', preprocessedData);
+
+          } else {
+            console.log('No agentID received.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+
+
+      // submitData('http://localhost:3001/api/submitProperty', propertyData); 
+    } else {
+      console.log("No New Agent");
+    }
+    
+
     setPropertyAgent({
-        agentID: '',
         isAgent: false,
         agentName: '',
         agentAddress: '',
@@ -253,43 +291,113 @@ const AddPropertyButton: React.FC = () => {
 
     const handleNextStep = () => {
       // Check if there are any errors
-      const hasErrors = Object.values(errors).some((error) => error !== "");
+      const errors: any = {};
+
+      console.log(currentStep);
+
+      if (currentStep === 1) {
+        const requiredFields = {
+            propertyName: "Property Name is required",
+            propertyAddress: "Property Address is required",
+            propertyTenure: "Property Tenure is required",
+            propertyPrice: "Property Price is required",
+            propertyTokensLeft: "Property Tokens are required",
+            propertyType: "Property Type is required"
+        };
     
+        Object.keys(requiredFields).forEach(field => {
+            if (!propertyData[field] || (typeof propertyData[field] === "string" && !propertyData[field].trim())) {
+                errors[field] = requiredFields[field];
+            }
+        });
+    
+        setErrors(errors);
+      }    
+      else if (currentStep == 3) {
+        const requiredFields = {
+            propertySize: "Property Size is required",
+            propertyBedrooms: "Number of Bedrooms is required",
+            propertyBathrooms: "Number of Bathrooms is required",
+            propertyDescription: "Property Description is required",
+            propertyKeywords: "Keywords are required"
+        };
+    
+        Object.keys(requiredFields).forEach(field => {
+            if (!propertyData[field] || (typeof propertyData[field] === "string" && !propertyData[field].trim())) {
+                errors[field] = requiredFields[field];
+            }
+        });
+    
+        setErrors(errors);
+      }    
+      else if (currentStep == 4) {
+        if (propertyData.propertyRental && !propertyData.rentalDistributionExpectancy) {
+            errors.rentalDistributionExpectancy = "Rental Distribution Expectancy is required";
+        }
+    
+        const requiredFields = ["agentName", "agentEmail"];
+        
+        if (!propertyAgent.isAgent) {
+            requiredFields.push("agentContactNumber", "agentAddress", "agentWhyDescription", "agentSoldDescription");
+        }
+    
+        requiredFields.forEach(field => {
+            if (!propertyAgent[field]) {
+                errors[field] = `${field.replace(/([A-Z])/g, ' $1')} is required`.toLowerCase();
+            }
+        });
+    
+        setErrors(errors);
+    }
+
+
+      const hasErrors = Object.values(errors).some((error) => error !== "");
+
       if (hasErrors) {
+        console.log("Errors: ", errors);
         console.log("There are errors, cannot proceed.");
         return; // Prevent proceeding to the next step
       }
-    
-      // If no errors, proceed with the current step
-      console.log(propertyData);
-      console.log(propertyAgent);
-      console.log(images);
     
       // Move to the next step
       setCurrentStep(currentStep + 1);
   };
 
     const handlePrevStep = () => {
-      // Check if there are any errors
-      const hasErrors = Object.values(errors).some((error) => error !== "");
-    
-      if (hasErrors) {
-        console.log("There are errors, cannot go back.");
-        return; // Prevent going back to the previous step
-      }
-    
-      // If no errors, go to the previous step
       setCurrentStep(currentStep - 1);
     };
   
 
     // Function to convert postcode to latitude & longitude
     const handleNextStepWithGeocoding = async () => {
-        const postcode = propertyData.propertyPostcode;
-        if (!postcode) {
-        alert("Please enter a postcode.");
-        return;
+        const errors: any = {};
+        
+        const requiredFields = {
+          propertySettlement: "Property Situation is required",
+          propertyPostcode: "Postcode is required",
+          propertyCountry: "Country is required",
+          propertyCity: "City is required",
+          propertyStreet: "Street is required",
+          propertyStreetNum: "Street Number is required"
+        };
+      
+        Object.keys(requiredFields).forEach(field => {
+            if (!propertyData[field]?.trim()) {
+                errors[field] = requiredFields[field];
+            }
+        });
+      
+      setErrors(errors);
+
+        const hasErrors = Object.values(errors).some((error) => error !== "");
+
+        if (hasErrors) {
+          console.log("Errors: ", errors)
+          console.log("There are errors, cannot proceed.");
+          return; // Prevent proceeding to the next step
         }
+
+        const postcode = propertyData.propertyPostcode;
 
         try {
         const response = await fetch(
@@ -352,7 +460,7 @@ const AddPropertyButton: React.FC = () => {
                      {/* Property Name */}
                     <div className="mb-4">
                         
-                        <label htmlFor="propertyName" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                        <label htmlFor="propertyName" className="text-sm font-medium text-gray-700 flex items-center space-x-3 whitespace-nowrap">
                             Property Name:
                             <Info
                             size={16}
@@ -382,7 +490,7 @@ const AddPropertyButton: React.FC = () => {
                         
                   {/* Property Address */}
                   <div className="mb-4">
-                    <label htmlFor="propertyAddress" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                    <label htmlFor="propertyAddress" className="text-sm font-medium text-gray-700 flex items-center space-x-3 whitespace-nowrap">
                           <div className='flex flex-row space-x-3'>
                             <div>
                               Property Address:
@@ -408,7 +516,7 @@ const AddPropertyButton: React.FC = () => {
 
                      {/* Property Tenure */}
                     <div className="mb-4">
-                      <label htmlFor="propertyTenure" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                      <label htmlFor="propertyTenure" className="text-sm font-medium text-gray-700 flex items-center space-x-3 whitespace-nowrap">
                         Property Tenure:
                         <Info
                           size={16}
@@ -438,7 +546,7 @@ const AddPropertyButton: React.FC = () => {
 
                   {/* Property Price */}
                   <div className="mb-4">
-                    <label htmlFor="propertyPrice" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                    <label htmlFor="propertyPrice" className="text-sm font-medium text-gray-700 flex items-center space-x-3 whitespace-nowrap">
                       <div className='flex flex-row'>
                         Property Valuation:
                         <Info
@@ -469,7 +577,7 @@ const AddPropertyButton: React.FC = () => {
 
                   {/* Property Tokens */}
                   <div className="mb-4">
-                    <label htmlFor="propertyTokensLeft" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                    <label htmlFor="propertyTokensLeft" className="text-sm font-medium text-gray-700 flex items-center space-x-3 whitespace-nowrap">
                       <div className='flex flex-row'>
                         Property Tokens:
                         <Info
@@ -500,9 +608,9 @@ const AddPropertyButton: React.FC = () => {
 
                   {/* Property Type */}
                   <div className="mb-4">
-                    <label htmlFor="propertyType" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                    <label htmlFor="propertyType" className="text-sm font-medium text-gray-700 flex items-center space-x-3 whitespace-nowrap">
                       <div className='flex flex-row'> 
-                        Property Type:
+                        Property Use:
                         <Info
                           size={16}
                           className="ml-2 text-blue-500 cursor-pointer"
@@ -564,33 +672,6 @@ const AddPropertyButton: React.FC = () => {
                   ></div>
               </div>
                 <form>
-                    {/* Property Tokenization Type */}
-                    <div className="mb-4">
-                    <label htmlFor="propertyRental" className="text-sm font-medium text-gray-700 flex items-center">
-                        Tokenization Type:
-                        <Info
-                        size={16}
-                        className="ml-2 text-red-500 cursor-pointer"
-                        data-tooltip-id="propertyRentalTypeTooltip"
-                        />
-                        
-                    </label>
-                    <select
-                        id="propertyRental"
-                        name="propertyRental"
-                        value={propertyData.propertyRental ? "Rental" : "Non-Rental"} // Correcting the value here
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    >
-                        <option value="Rental">Rental</option>
-                        <option value="Non-Rental">Non-Rental</option>
-                    </select>
-                </div>
-
-                <Tooltip id="propertyRentalTypeTooltip" place="right">
-                    Enter the property rental.
-                </Tooltip>
-
                 {/* Property Settlement */}
                 <div className="mb-4">
                     <label htmlFor="propertySettlement" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
@@ -777,11 +858,15 @@ const AddPropertyButton: React.FC = () => {
                 <form>
                 {/* Property Size */}
                 <div className="mb-4">
-                    <label htmlFor="propertySize" className="block text-sm font-medium text-gray-700">
-                    Property Size (sq ft / sq m):
-                    {errors.propertySize && (
-                      <p className="text-sm text-red-500">{errors.propertySize}</p>
-                    )}
+                    <label htmlFor="propertySize" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                      <div>
+                        Property Size:
+                      </div>
+                      <div>
+                        {errors.propertySize && (
+                        <p className="text-sm text-red-500">{errors.propertySize}</p>
+                      )}
+                      </div>
                     </label>
                     <input
                     type="text"
@@ -796,11 +881,15 @@ const AddPropertyButton: React.FC = () => {
 
                 {/* Property Bedrooms */}
                 <div className="mb-4">
-                    <label htmlFor="propertyBedrooms" className="text-sm font-medium text-gray-700 flex items-center">
-                      Property Bedrooms:
-                      {errors.propertyBedrooms && (
-                        <p className="text-sm text-red-500">{errors.propertyBedrooms}</p>
-                      )}
+                    <label htmlFor="propertyBedrooms" className="flex flex-row text-sm font-medium text-gray-700 items-center space-x-3">
+                      <div>
+                        Property Bedrooms:
+                      </div>
+                      <div>
+                        {errors.propertyBedrooms && (
+                          <p className="text-sm text-red-500">{errors.propertyBedrooms}</p>
+                        )}
+                      </div>
                     </label>
                     <input
                       type="number"
@@ -814,11 +903,15 @@ const AddPropertyButton: React.FC = () => {
 
                   {/* Property Bedrooms */}
                 <div className="mb-4">
-                    <label htmlFor="propertyBathrooms" className="text-sm font-medium text-gray-700 flex items-center">
-                      Property Bathrooms:
-                      {errors.propertyBathrooms && (
-                        <p className="text-sm text-red-500">{errors.propertyBathrooms}</p>
-                      )}
+                    <label htmlFor="propertyBathrooms" className="text-sm font-medium text-gray-700 flex items-center space-x-3">
+                      <div>
+                        Property Bathrooms:
+                      </div>
+                      <div>
+                        {errors.propertyBathrooms && (
+                          <p className="text-sm text-red-500">{errors.propertyBathrooms}</p>
+                        )}
+                      </div>
                     </label>
                     <input
                       type="number"
@@ -832,16 +925,22 @@ const AddPropertyButton: React.FC = () => {
 
                 {/* Property Description */}
                 <div className="mb-4">
-                    <label htmlFor="propertyDescription" className="flex flex-row text-sm font-medium text-gray-700">
-                    Property Description:
-                    <Info
-                        size={16}
-                        className="ml-2 text-red-500 cursor-pointer"
-                        data-tooltip-id="propertyDescriptionTooltip"
-                    />
-                    {errors.propertyDescription && (
-                      <p className="text-sm text-red-500">{errors.propertyDescription}</p>
-                    )}
+                    <label htmlFor="propertyDescription" className="flex flex-row text-sm font-medium text-gray-700 space-x-3 items-center">
+                      <div className='flex flex-row items-center'> 
+                       Property Description:
+                       <Info
+                          size={16}
+                          className="ml-2 text-blue-500 cursor-pointer"
+                          data-tooltip-id="propertyDescriptionTooltip"
+                        />
+                      </div>
+                      <div> 
+                        
+                        {errors.propertyDescription && (
+                          <p className="text-sm text-red-500">{errors.propertyDescription}</p>
+                        )}
+                      </div>
+                    
                     </label>
                     <textarea
                     id="propertyDescription"
@@ -894,16 +993,21 @@ const AddPropertyButton: React.FC = () => {
 
                 {/* Keywords */}
                 <div className="mb-4">
-                    <label htmlFor="propertyKeywords" className="flex flex-row text-sm font-medium text-gray-700">
-                    Keywords (comma-separated): 
-                    <Info
-                        size={16}
-                        className="ml-2 text-red-500 cursor-pointer"
-                        data-tooltip-id="propertyKeywordsTooltip"
-                    />
-                    {errors.propertyKeywords && (
-                      <p className="text-sm text-red-500">{errors.propertyKeywords}</p>
-                    )}
+                    <label htmlFor="propertyKeywords" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                      <div className='flex flex-row items-center'>
+                        Keywords (comma-separated): 
+                        <Info
+                            size={16}
+                            className="ml-2 text-blue-500 cursor-pointer"
+                            data-tooltip-id="propertyKeywordsTooltip"
+                        />
+                      </div>
+                      <div>
+                        {errors.propertyKeywords && (
+                        <p className="text-sm text-red-500">{errors.propertyKeywords}</p>
+                        )}
+                      </div>
+                    
                     </label>
                     <input
                     type="text"
@@ -1022,11 +1126,15 @@ const AddPropertyButton: React.FC = () => {
                 {propertyAgent.isAgent && (
                     <div>
                         <div className="mb-4">
-                            <label htmlFor="agentName" className="block text-sm font-medium text-gray-700">
-                                Agent Name:
-                                {errors.agentName && (
-                                  <p className="text-sm text-red-500">{errors.agentName}</p>
-                                )}
+                            <label htmlFor="agentName" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                                <div>
+                                  Agent Name:
+                                </div>
+                                <div>
+                                  {errors.agentName && (
+                                    <p className="text-sm text-red-500">{errors.agentName}</p>
+                                  )}
+                                </div>
                             </label>
                             <input
                                 type="text"
@@ -1038,16 +1146,21 @@ const AddPropertyButton: React.FC = () => {
                             />
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="agentEmail" className="flex flex-row text-sm font-medium text-gray-700">
-                                Agent ID:
-                                <Info
+                            <label htmlFor="agentEmail" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                                <div className='flex flex-row items-center'>
+                                  Agent ID:
+                                  <Info
                                     size={16}
-                                    className="ml-2 text-red-500 cursor-pointer"
+                                    className="ml-2 text-blue-500 cursor-pointer"
                                     data-tooltip-id="propertyAgentTooltip"
-                                />
-                                {errors.agentEmail && (
-                                  <p className="text-sm text-red-500">{errors.agentEmail}</p>
-                                )}
+                                  />
+                                </div>
+                                <div>
+                                  {errors.agentEmail && (
+                                    <p className="text-sm text-red-500">{errors.agentEmail}</p>
+                                  )}
+                                </div>
+                                
                             </label>
                             <input
                                 type="email"
@@ -1089,11 +1202,15 @@ const AddPropertyButton: React.FC = () => {
                 {!propertyAgent.isAgent && (
                     <div>
                         <div className="mb-4">
-                            <label htmlFor="agentName" className="block text-sm font-medium text-gray-700">
-                                Your Name:
-                                {errors.agentName && (
-                                  <p className="text-sm text-red-500">{errors.agentName}</p>
-                                )}
+                            <label htmlFor="agentName" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                                <div>
+                                  Your Name:
+                                </div>
+                                <div>
+                                  {errors.agentName && (
+                                    <p className="text-sm text-red-500">{errors.agentName}</p>
+                                  )}
+                                </div>
                             </label>
                             <input
                                 type="text"
@@ -1105,11 +1222,15 @@ const AddPropertyButton: React.FC = () => {
                             />
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="agentContactNumber" className="block text-sm font-medium text-gray-700">
-                                Your Contact Number:
-                                {errors.agentContactNumber && (
-                                  <p className="text-sm text-red-500">{errors.agentContactNumber}</p>
-                                )}
+                            <label htmlFor="agentContactNumber" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                                <div>
+                                  Your Contact Number:
+                                </div>
+                                <div>
+                                  {errors.agentContactNumber && (
+                                    <p className="text-sm text-red-500">{errors.agentContactNumber}</p>
+                                  )}
+                                </div>
                             </label>
                             <input
                                 type="text"
@@ -1121,11 +1242,15 @@ const AddPropertyButton: React.FC = () => {
                             />
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="agentEmail" className="block text-sm font-medium text-gray-700">
-                                Your Email:
-                                {errors.agentEmail && (
-                                  <p className="text-sm text-red-500">{errors.agentEmail}</p>
-                                )}
+                            <label htmlFor="agentEmail" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                                <div>
+                                  Your Email:
+                                </div>
+                                <div> 
+                                  {errors.agentEmail && (
+                                    <p className="text-sm text-red-500">{errors.agentEmail}</p>
+                                  )}
+                                </div>
                             </label>
                             <input
                                 type="email"
@@ -1137,11 +1262,15 @@ const AddPropertyButton: React.FC = () => {
                             />
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="agentAddress" className="block text-sm font-medium text-gray-700">
-                                Your Address:
-                                {errors.agentAddress && (
-                                  <p className="text-sm text-red-500">{errors.agentAddress}</p>
-                                )}
+                            <label htmlFor="agentAddress" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                                <div>
+                                  Your Address:
+                                </div>
+                                <div>
+                                  {errors.agentAddress && (
+                                    <p className="text-sm text-red-500">{errors.agentAddress}</p>
+                                  )}
+                                </div>
                             </label>
                             <input
                                 type="text"
@@ -1153,16 +1282,21 @@ const AddPropertyButton: React.FC = () => {
                             />
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="agentWhyDescription" className="flex flex-row text-sm font-medium text-gray-700">
-                                Why do you want to be the agent?
-                                {errors.agentWhyDescription && (
-                                  <p className="text-sm text-red-500">{errors.agentWhyDescription}</p>
-                                )}
-                                <Info
-                                    size={16}
-                                    className="ml-2 text-red-500 cursor-pointer"
-                                    data-tooltip-id="agentWhyTooltip"
-                                />
+                            <label htmlFor="agentWhyDescription" className="text-sm font-medium text-gray-700">
+                                  <div className='whitespace-nowrap flex flex-row items-center'>
+                                    Why do you want to be the agent?
+                                    <Info
+                                        size={16}
+                                        className="ml-2 text-blue-500 cursor-pointer"
+                                        data-tooltip-id="agentWhyTooltip"
+                                    />
+                                  </div>
+                                  <div>
+                                    {errors.agentWhyDescription && (
+                                    <p className="text-sm text-red-500">{errors.agentWhyDescription}</p>
+                                  )}
+                                  </div>
+                                
                             </label>
                             <textarea
                                 id="agentWhyDescription"
@@ -1178,16 +1312,20 @@ const AddPropertyButton: React.FC = () => {
                         </Tooltip>
 
                         <div className="mb-4">
-                            <label htmlFor="agentSoldDescription" className="flex flex-row text-sm font-medium text-gray-700">
-                                Have you sold any properties before?
-                                {errors.agentSoldDescription && (
-                                  <p className="text-sm text-red-500">{errors.agentSoldDescription}</p>
-                                )}
-                                <Info
-                                    size={16}
-                                    className="ml-2 text-red-500 cursor-pointer"
-                                    data-tooltip-id="agentSoldDescriptionTooltip"
-                                />
+                            <label htmlFor="agentSoldDescription" className="text-sm font-medium text-gray-700">
+                                <div className="whitespace-nowrap flex flex-row items-center">
+                                  Have you sold any properties before?
+                                  <Info
+                                      size={16}
+                                      className="ml-2 text-blue-500 cursor-pointer"
+                                      data-tooltip-id="agentSoldDescriptionTooltip"
+                                  />
+                                </div>
+                                <div>
+                                  {errors.agentSoldDescription && (
+                                    <p className="text-sm text-red-500">{errors.agentSoldDescription}</p>
+                                  )}
+                                </div>
                             </label>
                             <textarea
                                 id="agentSoldDescription"
@@ -1296,31 +1434,85 @@ const AddPropertyButton: React.FC = () => {
                 </div>
             )}
 
-            {/* Final Step: Submit (Step 5) */}
             {currentStep === 6 && (
-            <div>
-                <h3 className="text-xl font-semibold mb-4">Final Step: Submit</h3>
-                <h3 className='bg-red-700'>Property Preview</h3>
-                <div className='flex flex-row justify-between'>
-                <form onSubmit={handleSubmit} className="w-full">
-                    <button
-                    type="submit"
-                    className="w-32 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
-                    >
-                    Submit Property
-                    </button>
-                </form>
-
-                <button
-                    type="button"
-                    onClick={handlePrevStep}
-                    className="w-32 bg-gray-300 text-white py-2 rounded-md hover:bg-gray-400 transition"
-                >
-                    Previous
-                </button>
+              <div className="text-black">
+                
+                {/* Property Image */}
+                <div className="w-full h-64 rounded-lg overflow-hidden mb-4">
+                  <img
+                    src={"https://via.placeholder.com/600x400?text=No+Image+Available"}
+                    alt="Property"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-            </div>
+
+                {/* Property Preview Card */}
+                <div className="bg-white p-2 rounded-lg shadow-md border">
+                  <h3 className="text-xl font-semibold mb-2 text-gray-900">{propertyData.propertyName}</h3>
+                  <p className="text-gray-600 text-sm mb-4">
+                    {propertyData.propertyAddress}, {propertyData.propertyCity}, {propertyData.propertyCountry}, {propertyData.propertyPostcode}
+                  </p>
+
+                  {/* Grid Layout for Property Details */}
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <p><strong>🏡 Type:</strong> {propertyData.propertyType}</p>
+                      <p><strong>📍 Settlement:</strong> {propertyData.propertySettlement}</p>
+                      <p><strong>🔑 Tenure:</strong> {propertyData.propertyTenure}</p>
+                      <p><strong>💰 Price:</strong> £{propertyData.propertyPrice}</p>
+                      <p><strong>🎟️ Tokens Left:</strong> {propertyData.propertyTokensLeft}</p>
+                      <p><strong>💵 Token Price:</strong> £{propertyData.propertyTokenPrice}</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p><strong>📏 Size:</strong> {propertyData.propertySize} sq ft</p>
+                      <p><strong>🛏 Bedrooms:</strong> {propertyData.propertyBedrooms}</p>
+                      <p><strong>🛁 Bathrooms:</strong> {propertyData.propertyBathrooms}</p>
+                      <p><strong>🌳 Garden:</strong> {propertyData.propertyGarden ? "Yes" : "No"}</p>
+                      <p><strong>♿ Accessibility:</strong> {propertyData.propertyAccessibility ? "Yes" : "No"}</p>
+                      <p><strong>🏠 Rental:</strong> {propertyData.propertyRental ? `Yes (£${propertyData.rentalDistributionExpectancy}/month)` : "No"}</p>
+                    </div>
+                  </div>
+
+                  {/* Description Section */}
+                  <div className="mt-4">
+                    <h4 className="font-semibold">📄 Description:</h4>
+                    <p className="text-gray-700 text-sm">{propertyData.propertyDescription || "No description provided"}</p>
+                  </div>
+
+                  {/* Keywords Section */}
+                  {propertyData.propertyKeywords && (
+                    <div className="mt-4">
+                      <h4 className="font-semibold">🔎 Keywords:</h4>
+                      <p className="text-gray-700 text-sm">{propertyData.propertyKeywords}</p>
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="flex justify-between mt-6">
+                    <button
+                      type="button"
+                      onClick={handlePrevStep}
+                      className="w-32 bg-gray-300 text-gray-800 py-2 rounded-md hover:bg-gray-400 transition font-medium"
+                    >
+                      Previous
+                    </button>
+
+                    <form onSubmit={handleSubmit}>
+                      <button
+                        type="submit"
+                        className="w-32 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition font-medium"
+                      >
+                        Submit
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
             )}
+
+
+
 
           </div>
         </div>

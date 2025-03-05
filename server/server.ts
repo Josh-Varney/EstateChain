@@ -264,6 +264,137 @@ app.get("/api/checkClient", async (req: Request, res: Response) => {
 });
 
 
+app.post("/api/submitAgent", async (req, res) => {
+  try {
+    const propertyAgent = req.body; // Get the property agent data sent from frontend
+
+    // Log the received agent data for debugging purposes
+    console.log('Received Agent:', propertyAgent);
+
+    // Filter the relevant fields to send to the Gin backend
+    const filteredAgentData = {
+      agentName: propertyAgent.agentName,
+      agentIcon: propertyAgent.agentIcon || '', // Default to empty string if missing
+      agentContactNumber: propertyAgent.agentContactNumber,
+      agentEmail: propertyAgent.agentEmail,
+      agentAddress: propertyAgent.agentAddress,
+      agentWhyDescription: propertyAgent.agentWhyDescription,
+      agentSoldDescription: propertyAgent.agentSoldDescription,
+    };
+
+    // Send filtered data to the Gin API at http://localhost:8080/add-agent
+    const response = await fetch('http://localhost:8080/add-agent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(filteredAgentData), // Send the filtered data
+    });
+
+    // Handle non-OK responses from the Gin API
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error: ${response.statusText}\n${errorText}`);
+    }
+
+    // Parse the response from the Gin API
+    const responseData = await response.json();
+
+    // Check if the response contains agentID (assuming it returns it)
+    if (!responseData.agentID) {
+      throw new Error('Agent ID not returned from Gin API.');
+    }
+
+    // Respond with the success message and data from Gin API, including the agentID
+    res.status(200).json({
+      message: 'Agent submitted successfully',
+      agentID: responseData.agentID, // Include the agentID
+      data: responseData, // You can include all the data returned from the Gin API
+    });
+  } catch (error) {
+    console.error('Error submitting agent:', error);
+    res.status(500).json({ message: 'Internal Server Error', error: error });
+  }
+});
+
+
+app.post("/api/submitProperty", async (req: Request, res: Response) => {
+  try {
+    const propertyData = req.body; // Get the property data sent from frontend
+
+    console.log('Received Property:', propertyData);
+
+    const filteredPropertyData = {
+        "propertyName": propertyData.propertyName,
+        "propertyAddress": propertyData.propertyAddress,
+        "propertyGeoLat": propertyData.propertyLocation.latitude,
+        "propertyGeoLong": propertyData.propertyLocation.longitude,
+        "propertyDescription": propertyData.propertyDescription,
+        "propertyAddedBy": propertyData.uuid,
+        "propertyKeywords": propertyData.propertyKeywords,
+        "propertyPrice": propertyData.propertyPrice,
+        "propertyLocationLatitude": propertyData.propertyLocation.latitude,
+        "propertyLocationLongitude": propertyData.propertyLocation.longitude,
+        "propertySize": propertyData.propertySize,
+        "propertyBedrooms": propertyData.propertyBedrooms,
+        "propertyBathrooms": propertyData.propertyBathrooms,
+        "propertyTokenPrice": propertyData.propertyTokenPrice,
+        "propertyTokensLeft": propertyData.propertyTokensLeft,
+        "propertyType": propertyData.propertyType,
+        "propertyPostcode": propertyData.propertyPostcode,
+        "propertyImage": "N/A",
+        "propertyFeatured": false,
+        "propertyRental": propertyData.propertyRental,
+        "propertySettlement": propertyData.propertySettlement,
+        "propertyCountry": propertyData.propertyCountry,
+        "propertyCity": propertyData.propertyCity,
+        "propertyPostalCode": propertyData.propertyPostcode,
+        "propertyStreet": propertyData.propertyStreet,
+        "propertyStreetNum": propertyData.propertyStreetNum,
+        "propertyGarden": propertyData.propertyGarden,
+        "propertyAccessibility": propertyData.propertyAccessibility,
+        "propertyTenure": propertyData.propertyTenure,
+        "propertyAgentID": propertyData.agentID, 
+    }
+
+    // console.log("Serialization", filteredPropertyData);
+
+    // Get PropertyID
+    // const filteredContractData = {
+    //     "pValuation": propertyData.propertyPrice,
+    //     "pTotalTokens": propertyData.propertyTokensLeft,
+    //     "pTokenRemaining": propertyData.propertyTokensLeft,
+    //     "pTokenValue": "tokenValue",
+    //     "pSmartAddress": "N/A",
+    //     "pID": "N/A"
+    // };
+
+    // console.log(filteredContractData);
+
+    const response = await fetch('http://localhost:8080/add-property', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(filteredPropertyData), 
+  });
+
+  if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error: ${response.status} - ${response.statusText}\n${errorText}`);
+  }
+
+  const responseData = await response.json();
+  console.log("Property Added Successfully:", responseData);
+
+
+    res.status(200).json({ message: 'Property submitted successfully' });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 // Start the server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

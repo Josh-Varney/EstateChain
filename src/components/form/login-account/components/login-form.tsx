@@ -40,6 +40,8 @@ const LoginForm: React.FC = () => {
           params: { uuid: userCredentials.uid }
         })
 
+        localStorage.setItem("uuid", userCredentials.uid);
+
         if (response.data.exists == false){
           setTimeout(() => navigate("/selector"), 2000); //
         }

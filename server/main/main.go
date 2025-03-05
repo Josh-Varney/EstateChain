@@ -61,19 +61,23 @@ func main() {
 
 	router.Use(cors.Default())
 
+	// router.GET("/find-agent/:agentName/:agentEmail/:agentContactNumber", func(c *gin.Context) {
+	// 	agent.FindAgent(db, c) 
+	// })	
+	
 	// Define route and pass the db instance to the handler
 	router.POST("/add-agent", func(c *gin.Context) {
-		agent.AddAgent(db, c) // Pass the db instance to the handler
+		agent.AddAgent(db, c) 
 	})
 
 	// Define route to get agent by ID
 	router.GET("/get-agent/:agentID", func(c *gin.Context) {
-		agent.GetAgent(db, c) // Pass the db instance to the handler
+		agent.GetAgent(db, c) 
 	})
-	
+
 	// DELETE route for removing an agent by ID
 	router.DELETE("/remove-agent/:agentID", func(c *gin.Context) {
-		agent.RemoveAgent(db, c) // Pass the db instance to the handler
+		agent.RemoveAgent(db, c) 
 	})
 
 	// Define route and pass db instance 

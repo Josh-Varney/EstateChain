@@ -6,7 +6,7 @@ export const validatePropertyName = (value: string, setErrors: Function) => {
     if (!value) {
         errorMessage = "Property name is required.";
     } else if (value.length < 3) {
-        errorMessage = "Property name must be at least 3 characters long.";
+        errorMessage = "Must be at least 3 characters long.";
     }
 
     // Update the errors state
@@ -22,7 +22,7 @@ export const validatePropertyAddress = (value: string, setErrors: Function) => {
     if (!value) {
       errorMessage = "Property address is required.";
     } else if (value.length < 10) {
-      errorMessage = "Property address must be at least 10 characters long.";
+      errorMessage = "Must be at least 10 characters long.";
     }
   
     setErrors((prevErrors) => ({
@@ -51,7 +51,7 @@ export const validatePropertyPrice = (value: string, setErrors: Function) => {
     if (!value) {
         errorMessage = "Property valuation is required.";
     } else if (isNaN(Number(value)) || Number(value) <= 0) {
-        errorMessage = "Please enter a valid property price greater than 0.";
+        errorMessage = "Price must greater than 0.";
     }
 
     setErrors((prevErrors) => ({
@@ -67,7 +67,7 @@ export const validatePropertyTokensLeft = (value: string, setErrors: Function) =
     if (!value) {
       errorMessage = "Property tokens left is required.";
     } else if (isNaN(Number(value)) || Number(value) <= 0) {
-      errorMessage = "Please enter a valid number greater than 0 for property tokens.";
+      errorMessage = "Token number must be greater than 0";
     }
   
     setErrors((prevErrors) => ({

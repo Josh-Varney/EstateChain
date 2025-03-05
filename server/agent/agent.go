@@ -9,21 +9,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Function to handle the POST request to add an agent
-func AddAgent(db *sql.DB, c *gin.Context,) {
+func AddAgent(db *sql.DB, c *gin.Context) {
     var request struct {
-        AgentName          string `json:"agentName"`
-        AgentIcon          string `json:"agentIcon"`
-        AgentContactNumber string `json:"agentContactNumber"`
-        AgentEmail         string `json:"agentEmail"`
+        AgentName           string `json:"agentName"`
+        AgentIcon           string `json:"agentIcon"`
+        AgentContactNumber  string `json:"agentContactNumber"`
+        AgentEmail          string `json:"agentEmail"`
+        AgentAddress        string `json:"agentAddress"`
+        AgentWhyDescription string `json:"agentWhyDescription"`
+        AgentSoldDescription string `json:"agentSoldDescription"`
     }
 
+    // Bind the JSON request body to the request struct
     if err := c.BindJSON(&request); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
         return
     }
 
-    // Validate field lengths
+    // Validate field lengths (to avoid any SQL issues)
     if len(request.AgentName) > 100 {
         c.JSON(http.StatusBadRequest, gin.H{"error": "Agent name exceeds maximum length of 100 characters"})
         return
@@ -36,24 +39,37 @@ func AddAgent(db *sql.DB, c *gin.Context,) {
         c.JSON(http.StatusBadRequest, gin.H{"error": "Email exceeds maximum length of 255 characters"})
         return
     }
-    fmt.Println("DB STATE IN AGENT", db);
+
+    fmt.Println("DB STATE IN AGENT", db)
+
+    // Define the query with named parameters for inserting agent data
     query := `
-        INSERT INTO PropertyAgent (agentName, agentIcon, agentContactNumber, agentEmail)
-        VALUES (@AgentName, @AgentIcon, @AgentContactNumber, @AgentEmail)
-    `
-    _, err := db.Exec(query,
+        INSERT INTO PropertyAgent (agentName, agentIcon, agentContactNumber, agentEmail, agentAddress, agentWhyDescription, agentSoldRecentlyDescription)
+        VALUES (@AgentName, @AgentIcon, @AgentContactNumber, @AgentEmail, @AgentAddress, @AgentWhyDescription, @AgentSoldDescription);
+        SELECT SCOPE_IDENTITY();` // Added SELECT SCOPE_IDENTITY()
+
+    // Execute the query and get the last inserted agentID using SCOPE_IDENTITY
+    var agentID int
+    err := db.QueryRow(query,
         sql.Named("AgentName", request.AgentName),
         sql.Named("AgentIcon", request.AgentIcon),
         sql.Named("AgentContactNumber", request.AgentContactNumber),
         sql.Named("AgentEmail", request.AgentEmail),
-    )
+        sql.Named("AgentAddress", request.AgentAddress),
+        sql.Named("AgentWhyDescription", request.AgentWhyDescription),
+        sql.Named("AgentSoldDescription", request.AgentSoldDescription),
+    ).Scan(&agentID)
+
+    // Handle any errors that occurred during the insertion or retrieval of the ID
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error inserting data: %s", err.Error())})
         return
     }
 
-    c.JSON(http.StatusOK, gin.H{"message": "Agent added successfully"})
+    // Return the success message and the inserted agentID
+    c.JSON(http.StatusOK, gin.H{"message": "Agent added successfully", "agentID": agentID})
 }
+
 
 // Function to get an agent by ID
 func GetAgent(db *sql.DB, c *gin.Context) {
@@ -106,6 +122,60 @@ func GetAgent(db *sql.DB, c *gin.Context) {
     // Return the agent data in JSON format
     c.JSON(http.StatusOK, gin.H{"agent": agent})
 }
+
+func FindAgent(db *sql.DB, c *gin.Context) {
+    agentName := c.Param("agentName")       // Retrieve agentName
+    agentEmail := c.Param("agentEmail")     // Retrieve agentEmail
+    agentContactNumber := c.Param("agentContactNumber") // Retrieve agentContactNumber
+
+    // Ensure the agentName, agentEmail, and agentContactNumber are not empty
+    if agentName == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Agent Name is required"})
+        return
+    }
+    if agentEmail == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Agent Email is required"})
+        return
+    }
+    if agentContactNumber == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Agent Contact Number is required"})
+        return
+    }
+
+    // Define a variable to hold the AgentID
+    var agentID int
+
+    // Query to find the AgentID by name, email, and contact number
+    query := `
+        SELECT agentID
+        FROM PropertyAgent
+        WHERE agentName = @AgentName
+          AND agentEmail = @AgentEmail
+          AND agentContactNumber = @AgentContactNumber
+    `
+
+    // Execute the query with parameters
+    row := db.QueryRow(query,
+        sql.Named("AgentName", agentName),
+        sql.Named("AgentEmail", agentEmail),
+        sql.Named("AgentContactNumber", agentContactNumber),
+    )
+
+    // Scan the result into the agentID variable
+    err := row.Scan(&agentID)
+    if err != nil {
+        if err == sql.ErrNoRows {
+            c.JSON(http.StatusNotFound, gin.H{"error": "Agent not found"})
+        } else {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error retrieving agent: %s", err.Error())})
+        }
+        return
+    }
+
+    // Return the found AgentID
+    c.JSON(http.StatusOK, gin.H{"agentID": agentID})
+}
+
 
 
 // Function to remove an agent by ID

@@ -12,42 +12,43 @@ import (
 // Function to handle the POST request to add a property
 func AddProperty(db *sql.DB, c *gin.Context) {
     var request struct {
-        PropertyName          string  `json:"propertyName"`
-        PropertyAddress       string  `json:"propertyAddress"`
-        PropertyGeoLat        string  `json:"propertyGeoLat"`
-        PropertyGeoLong       string  `json:"propertyGeoLong"`
-        PropertyDescription   string  `json:"propertyDescription"`
-        PropertyAddedBy       string  `json:"propertyAddedBy"` // Wallet Address
-        PropertyKeywords      string  `json:"propertyKeywords"` // JSON or CSV
-        PropertyPrice         float64 `json:"propertyPrice"`
+        PropertyName          string    `json:"propertyName"`
+        PropertyAddress       string    `json:"propertyAddress"`
+        PropertyGeoLat        float64   `json:"propertyGeoLat"`
+        PropertyGeoLong       float64   `json:"propertyGeoLong"`
+        PropertyDescription   string    `json:"propertyDescription"`
+        PropertyAddedBy       string    `json:"propertyAddedBy"`
+        PropertyKeywords      string  `json:"propertyKeywords"`
+        PropertyPrice         float64   `json:"propertyPrice"`
         PropertyLocationLatitude  float64 `json:"propertyLocationLatitude"`
         PropertyLocationLongitude float64 `json:"propertyLocationLongitude"`
-        PropertySize          string  `json:"propertySize"`
-        PropertyBedrooms      int     `json:"propertyBedrooms"`
-        PropertyBathrooms     int     `json:"propertyBathrooms"`
-        PropertyTokenPrice    float64 `json:"propertyTokenPrice"`
-        PropertyTokensLeft    int     `json:"propertyTokensLeft"`
-        PropertyType          string  `json:"propertyType"`
-        PropertyPostcode      string  `json:"propertyPostcode"`
-        PropertyImage         string  `json:"propertyImage"`
-        PropertyFeatured      bool    `json:"propertyFeatured"` // True/False
-        PropertyRental        bool    `json:"propertyRental"` // True/False
-        PropertySettlement    string  `json:"propertySettlement"`
-        PropertyCountry       string  `json:"propertyCountry"`
-        PropertyCity          string  `json:"propertyCity"`
-        PropertyPostalCode    string  `json:"propertyPostalCode"`
-        PropertyStreet        string  `json:"propertyStreet"`
-        PropertyStreetNum     string  `json:"propertyStreetNum"`
-        PropertyAgentID       int     `json:"propertyAgentID"`
+        PropertySize          float64   `json:"propertySize"`
+        PropertyBedrooms      int       `json:"propertyBedrooms"`
+        PropertyBathrooms     int       `json:"propertyBathrooms"`
+        PropertyTokenPrice    float64   `json:"propertyTokenPrice"`
+        PropertyTokensLeft    int       `json:"propertyTokensLeft"`
+        PropertyType          string    `json:"propertyType"`
+        PropertyPostcode      string    `json:"propertyPostcode"`
+        PropertyImage         string    `json:"propertyImage"`
+        PropertyFeatured      bool      `json:"propertyFeatured"`
+        PropertyRental        bool      `json:"propertyRental"`
+        PropertySettlement    string    `json:"propertySettlement"`
+        PropertyCountry       string    `json:"propertyCountry"`
+        PropertyCity          string    `json:"propertyCity"`
+        PropertyPostalCode    string    `json:"propertyPostalCode"`
+        PropertyStreet        string    `json:"propertyStreet"`
+        PropertyStreetNum     string    `json:"propertyStreetNum"`
+        PropertyGarden        bool      `json:"propertyGarden"`
+        PropertyAccessibility bool      `json:"propertyAccessibility"`
+        PropertyTenure        string    `json:"propertyTenure"`
+        PropertyAgentID       int       `json:"propertyAgentID"`
     }
 
-    // Bind JSON body to the request struct
     if err := c.BindJSON(&request); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
         return
     }
 
-    // Prepare the SQL query to insert a property
     query := `
         INSERT INTO Property (
             propertyName, propertyAddress, propertyGeoLat, propertyGeoLong, propertyDescription, 
@@ -55,19 +56,21 @@ func AddProperty(db *sql.DB, c *gin.Context) {
             propertyLocationLongitude, propertySize, propertyBedrooms, propertyBathrooms, 
             propertyTokenPrice, propertyTokensLeft, propertyType, propertyPostcode, propertyImage, 
             propertyFeatured, propertyRental, propertySettlement, propertyCountry, propertyCity, 
-            propertyPostalCode, propertyStreet, propertyStreetNum, propertyAgentID
+            propertyPostalCode, propertyStreet, propertyStreetNum, propertyGarden, 
+            propertyAccessibility, propertyTenure, propertyAgentID
         ) VALUES (
             @PropertyName, @PropertyAddress, @PropertyGeoLat, @PropertyGeoLong, @PropertyDescription, 
             @PropertyAddedBy, @PropertyKeywords, @PropertyPrice, @PropertyLocationLatitude, 
             @PropertyLocationLongitude, @PropertySize, @PropertyBedrooms, @PropertyBathrooms, 
             @PropertyTokenPrice, @PropertyTokensLeft, @PropertyType, @PropertyPostcode, @PropertyImage, 
             @PropertyFeatured, @PropertyRental, @PropertySettlement, @PropertyCountry, @PropertyCity, 
-            @PropertyPostalCode, @PropertyStreet, @PropertyStreetNum, @PropertyAgentID
-        )
-    `
+            @PropertyPostalCode, @PropertyStreet, @PropertyStreetNum, @PropertyGarden, 
+            @PropertyAccessibility, @PropertyTenure, @PropertyAgentID
+        );
+        SELECT SCOPE_IDENTITY();`
 
-    // Execute the query with the request parameters
-    _, err := db.Exec(query,
+    var propertyID int
+    err := db.QueryRow(query,
         sql.Named("PropertyName", request.PropertyName),
         sql.Named("PropertyAddress", request.PropertyAddress),
         sql.Named("PropertyGeoLat", request.PropertyGeoLat),
@@ -94,17 +97,18 @@ func AddProperty(db *sql.DB, c *gin.Context) {
         sql.Named("PropertyPostalCode", request.PropertyPostalCode),
         sql.Named("PropertyStreet", request.PropertyStreet),
         sql.Named("PropertyStreetNum", request.PropertyStreetNum),
+        sql.Named("PropertyGarden", request.PropertyGarden),
+        sql.Named("PropertyAccessibility", request.PropertyAccessibility),
+        sql.Named("PropertyTenure", request.PropertyTenure),
         sql.Named("PropertyAgentID", request.PropertyAgentID),
-    )
+    ).Scan(&propertyID)
 
-    // Handle error during query execution
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error inserting property: %s", err.Error())})
         return
     }
 
-    // If successful, return a success message
-    c.JSON(http.StatusOK, gin.H{"message": "Property added successfully"})
+    c.JSON(http.StatusOK, gin.H{"message": "Property added successfully", "propertyID": propertyID})
 }
 
 // Function to get a property by ID
