@@ -56,33 +56,32 @@ export default function ManageProperties() {
   const [showApprovalModal, setShowApprovalModal] = useState<boolean>(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
 
-  // Fetch properties from your API
+
+  // Fetch properties from API on component mount
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchProperties(); // Call the async function and get the data
-      const propertyArray = Object.values(data); 
-      setProperties(propertyArray); // Update the state with the fetched data
+      const data = await fetchProperties();
+      setProperties(Object.values(data));
     };
-    
-    fetchData(); // Fetch and store data
+    fetchData();
   }, []);
 
-  const approvePropertyHandler = (createdAt: string) => {
-    console.log(`Property ${createdAt} approved!`);
+  const approvePropertyHandler = (propertyID: Number) => {
+    console.log(propertyID);
   };
 
-  const rejectPropertyHandler = (createdAt: string) => {
-    console.log(`Property ${createdAt} rejected!`);
+  const rejectPropertyHandler = (propertyID: Number) => {
+    console.log(propertyID);
   };
 
-  const removePropertyHandler = (createdAt: string) => {
-    console.log(`Property ${createdAt} removed!`);
+  const removePropertyHandler = (propertyID: Number) => {
+    console.log(propertyID)
   };
 
-  const submitFeedbackHandler = (createdAt: string) => {
-    const feedback = adminFeedback[createdAt];
+  const submitFeedbackHandler = (propertyID: number) => {
+    const feedback = adminFeedback[propertyID];
     if (!feedback) return;
-    console.log(`Feedback for property ${createdAt}: ${feedback}`);
+    console.log(`Feedback for property ${propertyID}: ${feedback}`);
   };
 
   const handleCardClick = (property: Property) => {
@@ -106,21 +105,22 @@ export default function ManageProperties() {
     setSelectedProperty(null);
   };
 
-  const handleFeedbackChange = (createdAt: string, feedback: string) => {
-    setAdminFeedback({ ...adminFeedback, [createdAt]: feedback });
+  const handleFeedbackChange = (propertyID: number, feedback: string) => {
+    setAdminFeedback((prev) => ({ ...prev, [propertyID]: feedback }));
   };
 
-  const handleRejectAndSendFeedback = (createdAt: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent triggering other click handlers
+  // Reject property & send feedback
+  const handleRejectAndSendFeedback = (propertyID: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering card click
 
-    const feedback = adminFeedback[createdAt];
+    const feedback = adminFeedback[propertyID];
     if (!feedback || feedback.trim() === "") {
       alert("Feedback is required to reject the property.");
-      return; // Stop execution if feedback is not provided
+      return;
     }
 
-    rejectPropertyHandler(createdAt);
-    submitFeedbackHandler(createdAt);
+    rejectPropertyHandler(propertyID);
+    submitFeedbackHandler(propertyID);
   };
 
   return (
@@ -135,17 +135,18 @@ export default function ManageProperties() {
                 onClick={() => handleCardClick(property)} // Show raw modal on card click
               >
                 <h2 className="font-semibold text-lg mb-2">{property.propertyAddress}</h2>
-                <p className="text-gray-600 mb-1">{property.propertyDescription || "No description provided."}</p>
                 <p className="text-sm text-gray-500 mb-3">Agent: {property.agentName}</p>
-                <p className="text-sm text-gray-500 mb-3">Location: {property.propertyCity}, {property.propertyCountry}</p>
-                <p className="text-sm text-gray-500 mb-3">Price: {atob(property.propertyPrice)}</p>
-                <p className="text-sm text-gray-500 mb-3">Bedrooms: {property.propertyBedrooms} | Bathrooms: {property.propertyBathrooms}</p>
+                <p className="text-sm text-gray-500 mb-3">Location: {property.propertyCity}, {property.propertyCountry}, {property.agentAddress}, {property.propertyPostcode}</p>
                 <p className="text-sm text-gray-500 mb-3">Status: {property.pApproved ? "Approved" : "Pending"}</p>
 
                 <Textarea
                   placeholder="Add your feedback..."
                   value={adminFeedback[property.propertyID] || ""}
-                  onChange={(e) => handleFeedbackChange(property.propertyID, e.target.value)}
+                  onChange={(e) => {
+                    e.stopPropagation(); // Prevents triggering the card click
+                    handleFeedbackChange(property.propertyID, e.target.value);
+                  }}
+                  onClick={(e) => e.stopPropagation()} // Prevent card click on focus
                   className="mt-2"
                 />
               </Card>
@@ -213,11 +214,41 @@ export default function ManageProperties() {
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full h-auto">
             <h2 className="text-2xl font-semibold mb-4">Contract Details</h2>
             <div className="overflow-y-auto max-h-96">
-              <pre className="bg-gray-100 p-4 rounded">{JSON.stringify(selectedProperty, null, 2)}</pre>
+              <pre className="bg-gray-100 p-4 rounded">
+              {JSON.stringify(
+                {
+                  propertyName: selectedProperty.propertyName,
+                  address: selectedProperty.propertyAddress,
+                  city: selectedProperty.propertyCity,
+                  country: selectedProperty.propertyCountry,
+                  agentName: selectedProperty.agentName,
+                  agentEmail: selectedProperty.agentEmail,
+                  price: atob(selectedProperty.propertyPrice), // Decoded price
+                  size: selectedProperty.propertySize,
+                  bedrooms: selectedProperty.propertyBedrooms,
+                  bathrooms: selectedProperty.propertyBathrooms,
+                  status: selectedProperty.pApproved ? "Approved" : "Pending",
+                },
+                null,
+                2
+              )}
+              </pre>
             </div>
             <div className="mt-4 flex justify-end gap-2">
+              {/* Close Button */}
               <Button variant="outline" onClick={closeApprovalModal}>
                 Close
+              </Button>
+              
+              {/* Accept Button */}
+              <Button
+                variant="default"
+                onClick={() => {
+                  approvePropertyHandler(selectedProperty.propertyID);
+                  closeApprovalModal();
+                }}
+              >
+                Accept
               </Button>
             </div>
           </div>
