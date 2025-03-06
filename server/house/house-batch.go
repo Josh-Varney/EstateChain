@@ -72,6 +72,7 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
             Property p
         LEFT JOIN 
             PropertyAgent a ON p.propertyAgentID = a.agentID
+		WHERE pApproved = 1;
     `
 	// Execute the query
 	rows, err := db.Query(query)

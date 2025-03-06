@@ -29,6 +29,7 @@ const AddPropertyButton: React.FC = () => {
     propertyDescription: "",
     propertyKeywords: "",
     rentalDistributionExpectancy: "",
+    agentID: "",
     agentName: "",
     agentEmail: "",
     agentContactNumber: "",
@@ -42,6 +43,7 @@ const AddPropertyButton: React.FC = () => {
 
   const [propertyAgent, setPropertyAgent] = useState({
     isAgent: false,
+    agentID: '',
     agentName: '',
     agentContactNumber: '',
     agentEmail: '',
@@ -181,6 +183,8 @@ const AddPropertyButton: React.FC = () => {
       validateAgentWhyDescription(value, setErrors);
     } else if (name === "agentSoldDescription") {
       validateAgentSoldDescription(value, setErrors);
+    } else if (name === "agentID"){
+      console.log("Needs Implementation");
     }
   };
 
@@ -202,10 +206,6 @@ const AddPropertyButton: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitted Property:', propertyData);
-    console.log('Submitted Agent', propertyAgent)
-    console.log('Submitted Images', images)
-
     
     // Example usage:
     if (!propertyAgent.isAgent) {
@@ -228,25 +228,44 @@ const AddPropertyButton: React.FC = () => {
               ...propertyData
             }
 
-            submitPropertyData('http://localhost:3001/api/submitProperty', preprocessedData);
+            const res = submitPropertyData('http://localhost:3001/api/submitProperty', preprocessedData);
+
+            console.log("FINAL RESULT OF COMPUTATION", res);
+
 
           } else {
-            console.log('No agentID received.');
+            console.log(propertyAgent);
+            console.log(propertyData);
           }
         })
         .catch(error => {
           console.error('Error:', error);
         });
-
-
-      // submitData('http://localhost:3001/api/submitProperty', propertyData); 
     } else {
       console.log("No New Agent");
+
+      // Calculate the token value
+      const propertyTokenValue = propertyData.propertyPrice / propertyData.propertyTokensLeft;
+      propertyData.propertyTokenPrice = propertyTokenValue;
+      
+      // NEEDS VALIDATION PLEASE
+      const preprocessedData = {
+        agentID: propertyAgent.agentID,
+        uuid: localStorage.getItem("uuid"),
+        ...propertyData
+      }
+
+      console.log(preprocessedData);
+
+      const res = submitPropertyData('http://localhost:3001/api/submitProperty', preprocessedData);
+
+      console.log("FINAL RESULT OF COMPUTATION", res);
     }
     
 
     setPropertyAgent({
         isAgent: false,
+        agentID: '',
         agentName: '',
         agentAddress: '',
         agentContactNumber: '',
@@ -335,7 +354,7 @@ const AddPropertyButton: React.FC = () => {
             errors.rentalDistributionExpectancy = "Rental Distribution Expectancy is required";
         }
     
-        const requiredFields = ["agentName", "agentEmail"];
+        const requiredFields = ["agentName"];
         
         if (!propertyAgent.isAgent) {
             requiredFields.push("agentContactNumber", "agentAddress", "agentWhyDescription", "agentSoldDescription");
@@ -1146,7 +1165,7 @@ const AddPropertyButton: React.FC = () => {
                             />
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="agentEmail" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
+                            <label htmlFor="agentID" className="flex flex-row text-sm font-medium text-gray-700 space-x-3">
                                 <div className='flex flex-row items-center'>
                                   Agent ID:
                                   <Info
@@ -1156,17 +1175,17 @@ const AddPropertyButton: React.FC = () => {
                                   />
                                 </div>
                                 <div>
-                                  {errors.agentEmail && (
-                                    <p className="text-sm text-red-500">{errors.agentEmail}</p>
+                                  {errors.agentID && (
+                                    <p className="text-sm text-red-500">{errors.agentID}</p>
                                   )}
                                 </div>
                                 
                             </label>
                             <input
-                                type="email"
-                                id="agentEmail"
-                                name="agentEmail"
-                                value={propertyAgent.agentEmail}
+                                type="number"
+                                id="agentID"
+                                name="agentID"
+                                value={propertyAgent.agentID}
                                 onChange={handleInputChangeAgent}
                                 className="mt-1 block w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />

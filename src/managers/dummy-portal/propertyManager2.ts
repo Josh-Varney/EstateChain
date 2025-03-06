@@ -52,7 +52,7 @@ export const submitAgentData = (url, data) => {
   };
 
 // Submit Property Data (after agentID is retrieved)
-export const submitPropertyData = (url, data) => {
+export const submitPropertyData = async (url, data) => {
     return fetch(url, {
       method: 'POST',
       headers: {

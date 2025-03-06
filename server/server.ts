@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import axios from "axios";
 import { ethers } from 'ethers';
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { formatUnits } from 'ethers/lib/utils';
+import { formatUnits, parseBytes32String } from 'ethers/lib/utils';
 import { error } from 'console';
 
 dotenv.config();
@@ -322,54 +322,40 @@ app.post("/api/submitProperty", async (req: Request, res: Response) => {
   try {
     const propertyData = req.body; // Get the property data sent from frontend
 
-    console.log('Received Property:', propertyData);
-
     const filteredPropertyData = {
-        "propertyName": propertyData.propertyName,
-        "propertyAddress": propertyData.propertyAddress,
-        "propertyGeoLat": propertyData.propertyLocation.latitude,
-        "propertyGeoLong": propertyData.propertyLocation.longitude,
-        "propertyDescription": propertyData.propertyDescription,
-        "propertyAddedBy": propertyData.uuid,
-        "propertyKeywords": propertyData.propertyKeywords,
-        "propertyPrice": propertyData.propertyPrice,
-        "propertyLocationLatitude": propertyData.propertyLocation.latitude,
-        "propertyLocationLongitude": propertyData.propertyLocation.longitude,
-        "propertySize": propertyData.propertySize,
-        "propertyBedrooms": propertyData.propertyBedrooms,
-        "propertyBathrooms": propertyData.propertyBathrooms,
-        "propertyTokenPrice": propertyData.propertyTokenPrice,
-        "propertyTokensLeft": propertyData.propertyTokensLeft,
-        "propertyType": propertyData.propertyType,
-        "propertyPostcode": propertyData.propertyPostcode,
-        "propertyImage": "N/A",
-        "propertyFeatured": false,
-        "propertyRental": propertyData.propertyRental,
-        "propertySettlement": propertyData.propertySettlement,
-        "propertyCountry": propertyData.propertyCountry,
-        "propertyCity": propertyData.propertyCity,
-        "propertyPostalCode": propertyData.propertyPostcode,
-        "propertyStreet": propertyData.propertyStreet,
-        "propertyStreetNum": propertyData.propertyStreetNum,
-        "propertyGarden": propertyData.propertyGarden,
-        "propertyAccessibility": propertyData.propertyAccessibility,
-        "propertyTenure": propertyData.propertyTenure,
-        "propertyAgentID": propertyData.agentID, 
-    }
+      "propertyName": propertyData.propertyName,
+      "propertyAddress": propertyData.propertyAddress,
+      "propertyGeoLat": String(propertyData.propertyLocation.latitude.toFixed(6)), 
+      "propertyGeoLong": String(propertyData.propertyLocation.longitude.toFixed(6)), 
+      "propertyLocationLatitude": parseFloat(propertyData.propertyLocation.latitude),  // Here
+      "propertyLocationLongitude": parseFloat(propertyData.propertyLocation.longitude), // Here
+      "propertyKeyFeatures" : "N/A",
+      "propertyDescription": propertyData.propertyDescription,
+      "propertyAddedBy": String(propertyData.uuid), 
+      "propertyKeywords": propertyData.propertyKeywords,
+      "propertyPrice": parseFloat(propertyData.propertyPrice), 
+      "propertySize": parseInt(propertyData.propertySize), 
+      "propertyBedrooms": parseInt(propertyData.propertyBedrooms), 
+      "propertyBathrooms": parseInt(propertyData.propertyBathrooms), 
+      "propertyTokenPrice": parseFloat(propertyData.propertyTokenPrice), 
+      "propertyTokensLeft": parseInt(propertyData.propertyTokensLeft), 
+      "propertyType": propertyData.propertyType,
+      "propertyPostcode": propertyData.propertyPostcode,
+      "propertyImage": "N/A",
+      "propertyFeatured": Boolean(propertyData.propertyFeatured), 
+      "propertyRental": Boolean(propertyData.propertyRental),
+      "propertySettlement": propertyData.propertySettlement,
+      "propertyCountry": propertyData.propertyCountry,
+      "propertyCity": propertyData.propertyCity,
+      "propertyPostalCode": propertyData.propertyPostcode, 
+      "propertyStreet": propertyData.propertyStreet,
+      "propertyStreetNum": propertyData.propertyStreetNum,
+      "propertyGarden": Boolean(propertyData.propertyGarden), 
+      "propertyAccessibility": Boolean(propertyData.propertyAccessibility), 
+      "propertyTenure": propertyData.propertyTenure,
+      "propertyAgentID": parseInt(propertyData.agentID) 
+  };
 
-    // console.log("Serialization", filteredPropertyData);
-
-    // Get PropertyID
-    // const filteredContractData = {
-    //     "pValuation": propertyData.propertyPrice,
-    //     "pTotalTokens": propertyData.propertyTokensLeft,
-    //     "pTokenRemaining": propertyData.propertyTokensLeft,
-    //     "pTokenValue": "tokenValue",
-    //     "pSmartAddress": "N/A",
-    //     "pID": "N/A"
-    // };
-
-    // console.log(filteredContractData);
 
     const response = await fetch('http://localhost:8080/add-property', {
       method: 'POST',
@@ -377,16 +363,59 @@ app.post("/api/submitProperty", async (req: Request, res: Response) => {
           'Content-Type': 'application/json',
       },
       body: JSON.stringify(filteredPropertyData), 
-  });
+    });
 
-  if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Error: ${response.status} - ${response.statusText}\n${errorText}`);
-  }
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error: ${response.status} - ${response.statusText}\n${errorText}`);
+    }
 
-  const responseData = await response.json();
-  console.log("Property Added Successfully:", responseData);
+    const responseData = await response.json();
+    console.log("Property Added Successfully:", responseData.propertyID);
 
+    if (responseData.propertyID){
+      // Get PropertyID
+      const filteredContractData = {
+        "propertyValuation":  parseFloat(propertyData.propertyPrice), 
+        "propertyTokens": parseInt(propertyData.propertyTokensLeft), 
+        "propertyTokensLeft": parseInt(propertyData.propertyTokensLeft), 
+        "propertyTokenValue": propertyData.propertyTokensLeft > 0 
+        ? parseFloat((propertyData.propertyPrice / propertyData.propertyTokensLeft).toString()) 
+        : 0,  // Prevent division by zero
+        "propertyRental": Boolean(propertyData.propertyRental), // Convert to boolean
+        "rentalDistributionExpectancy": parseFloat(propertyData.rentalDistributionExpectancy) || 0, // Handle as decimal (money)
+        "propertyID": responseData.propertyID
+      };
+
+      console.log(filteredContractData)
+
+      // Call new endpoint
+      const response = await fetch('http://localhost:8080/add-tokenize', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(filteredContractData), 
+      })
+
+      // Handle the response
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Success:", data.message);
+
+        // Return the data if needed
+        return data;  // Returning the data to the calling function
+      } else {
+        const errorData = await response.json();
+        console.log("Error:", errorData.error);
+
+        return errorData.error;
+      }
+    }
+    else 
+    {
+      console.log("Could not get propertyID")
+    }
 
     res.status(200).json({ message: 'Property submitted successfully' });
   } catch (error) {

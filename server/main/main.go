@@ -5,6 +5,7 @@ import (
 	"estatechain/server/agent"
 	"estatechain/server/house"
 	"estatechain/server/user_package"
+	"estatechain/server/tokenize"
 	"fmt"
 	"log"
 	"os"
@@ -87,6 +88,10 @@ func main() {
 
 	router.GET("/get-properties", func(c *gin.Context) {
 		house.GetAllProperties(db, c)
+	})
+
+	router.POST("/add-tokenize", func(c *gin.Context) {
+		tokenize.TokenizeRecord(db, c)
 	})
 
 	router.POST("/add-user", func(c *gin.Context){
