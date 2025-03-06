@@ -115,6 +115,10 @@ func main() {
 	router.GET("/get-all-unapproved", func(c *gin.Context){
 		admin.GetAllPropertiesNotApproved(db, c)
 	})
+	
+	router.PUT("/add-approval/:propertyID", func(c *gin.Context) {
+		admin.ApproveProperty(db, c)
+	})
 
 	router.POST("/send-notification", func(c * gin.Context){
 		notification.SendNotification(db, c)

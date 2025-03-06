@@ -75,3 +75,39 @@ func GetAllPropertiesNotApproved(db *sql.DB, c *gin.Context) {
 	// Return the properties as JSON with the structure { propertyID: { ... } }
 	c.JSON(http.StatusOK, properties)
 }
+
+func ApproveProperty(db *sql.DB, c *gin.Context) {
+    // Get the propertyID from the URL parameter
+    propertyID := c.Param("propertyID")
+
+    // Prepare the SQL query with a parameterized value
+    query := "UPDATE Property SET pApproved = @pApproved WHERE propertyID = @propertyID"
+
+    // Execute the query with parameters
+    result, err := db.Exec(query, 
+        sql.Named("pApproved", true), // Assuming true is for approval (you can also use 1)
+        sql.Named("propertyID", propertyID),
+    )
+    if err != nil {
+        fmt.Println("Error updating property approval:", err)
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to approve property"})
+        return
+    }
+
+    // Check if any rows were affected
+    rowsAffected, err := result.RowsAffected()
+    if err != nil {
+        fmt.Println("Error checking affected rows:", err)
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to check affected rows"})
+        return
+    }
+
+    // If no rows were affected, the property might not exist
+    if rowsAffected == 0 {
+        c.JSON(http.StatusNotFound, gin.H{"error": "Property not found"})
+        return
+    }
+
+    // Return a success message
+    c.JSON(http.StatusOK, gin.H{"message": "Property approved successfully"})
+}
