@@ -3,10 +3,8 @@ import path from 'path';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import axios from "axios";
-import { ethers } from 'ethers';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { formatUnits, parseBytes32String } from 'ethers/lib/utils';
-import { error } from 'console';
 
 dotenv.config();
 

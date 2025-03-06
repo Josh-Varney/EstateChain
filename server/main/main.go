@@ -62,9 +62,9 @@ func main() {
 
 	router.Use(cors.Default())
 
-	// router.GET("/find-agent/:agentName/:agentEmail/:agentContactNumber", func(c *gin.Context) {
-	// 	agent.FindAgent(db, c) 
-	// })	
+	router.GET("/find-agent/:agentName/:agentEmail/:agentContactNumber", func(c *gin.Context) {
+		agent.FindAgent(db, c) 
+	})	
 	
 	// Define route and pass the db instance to the handler
 	router.POST("/add-agent", func(c *gin.Context) {
