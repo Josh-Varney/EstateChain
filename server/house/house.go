@@ -16,7 +16,7 @@ func AddProperty(db *sql.DB, c *gin.Context) {
 		PropertyGeoLat            string `json:"propertyGeoLat"`
 		PropertyGeoLong           string `json:"propertyGeoLong"`
 		PropertyLocationLatitude  float64 `json:"propertyLocationLatitude"`
-		propertyLocationLongitude float64 `json:"propertyLocationLongitude"`
+		PropertyLocationLongitude float64 `json:"propertyLocationLongitude"`
 		PropertyKeyFeatures		  string  `json:"propertyKeyFeatures"`
 		PropertyDescription       string  `json:"propertyDescription"`
 		PropertyAddedBy           string  `json:"propertyAddedBy"`
@@ -155,7 +155,7 @@ func AddProperty(db *sql.DB, c *gin.Context) {
 		sql.Named("PropertyGeoLat", request.PropertyGeoLat),
 		sql.Named("PropertyGeoLong", request.PropertyGeoLong),
 		sql.Named("PropertyLocationLatitude", request.PropertyLocationLatitude),
-		sql.Named("propertyLocationLongitude", request.propertyLocationLongitude),
+		sql.Named("propertyLocationLongitude", request.PropertyLocationLongitude),
 		sql.Named("PropertyKeyFeatures", request.PropertyKeyFeatures),
 		sql.Named("PropertyDescription", request.PropertyDescription),
 		sql.Named("PropertyAddedBy", request.PropertyAddedBy),

@@ -2,7 +2,7 @@ module estatechain
 
 go 1.21.0
 
-toolchain go1.24.1
+toolchain go1.21.13
 
 require (
 	github.com/gin-contrib/cors v1.7.3

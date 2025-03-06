@@ -6,6 +6,8 @@ import (
 	"estatechain/server/house"
 	"estatechain/server/user_package"
 	"estatechain/server/tokenize"
+	"estatechain/server/admin"
+	"estatechain/server/notification"
 	"fmt"
 	"log"
 	"os"
@@ -109,6 +111,18 @@ func main() {
 	router.GET("/check-admin", func(c *gin.Context) {
 		user_package.CheckUserType(db, c)
 	})
+
+	router.GET("/get-all-unapproved", func(c *gin.Context){
+		admin.GetAllPropertiesNotApproved(db, c)
+	})
+
+	router.POST("/send-notification", func(c * gin.Context){
+		notification.SendNotification(db, c)
+	})
+
+	router.GET("/get-notifications/:uuid", func(c *gin.Context) {
+        notification.GetNotificationsByUUID(db, c)
+    })
 
 	// Start server
 	router.Run(":8080")
