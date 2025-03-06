@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HeaderBar from "./components/header-bar";
 import ManageFAQ from "./components/manage-faq";
+import ManageProperties from "./components/manage-prop";
 
 const LiveHub: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -45,8 +46,9 @@ const LiveHub: React.FC = () => {
           </div>
         ) : activeScreen === "listings" ? (
           <div className="flex w-full h-full items-center justify-center">
-            <h2 className="text-2xl font-semibold">Manage Listings</h2>
-            {/* Add Listing management content here */}
+            <div className="flex w-full h-full">
+            <ManageProperties />
+            </div>
           </div>
         ) : (
           <div className="flex w-full h-full items-center justify-center">
