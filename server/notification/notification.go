@@ -110,3 +110,35 @@ func GetNotificationsByUUID(db *sql.DB, c *gin.Context) {
     // Respond with the list of notifications
     c.JSON(http.StatusOK, gin.H{"notifications": notifications})
 }
+
+func PropertyNotified(db *sql.DB, c *gin.Context) {
+    // Get propertyID from the query string
+    propertyID := c.Param("propertyID"); // Fetching 'propertyID' from query parameters
+
+    if propertyID == "" {
+        // If propertyID is not provided, return an error
+        c.JSON(http.StatusBadRequest, gin.H{
+            "message": "propertyID is required",
+        })
+        return
+    }
+
+    // Prepare the query to update the 'notified' field using parameterized query
+    query := `UPDATE Property SET notified = 1 WHERE propertyID = @propertyID`
+
+    // Execute the query with the given propertyID, using the @parameter syntax for Azure SQL
+    _, err := db.Exec(query, sql.Named("propertyID", propertyID))
+    if err != nil {
+        // Log the error and return a response with status 500
+        fmt.Printf("Error updating 'notified' field: %v", err)
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "message": "Failed to update the 'notified' status.",
+        })
+        return
+    }
+
+    // Return a success response
+    c.JSON(http.StatusOK, gin.H{
+        "message": "Property notified status updated successfully.",
+    })
+}

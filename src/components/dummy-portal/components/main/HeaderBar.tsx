@@ -10,9 +10,10 @@ interface HeaderBarProps {
   onProfileClick: () => void;
   onNotiicationClick: () => void;
   notificationCount?: number;
+  titleName: string;
 }
 
-const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, onProfileClick, onNotiicationClick, onToggleBuyerSeller, isBuyer, notificationCount = 0 }) => {
+const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, onProfileClick, onNotiicationClick, onToggleBuyerSeller, isBuyer, titleName, notificationCount = 0  }) => {
   const bgColor = darkMode ? "bg-gray-800" : "";
   const textColor = darkMode ? "text-gray-100" : "text-gray-800";
   const hoverColor = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200";
@@ -34,7 +35,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ darkMode, onWalletClick, onProfil
           />
 
           {/* Page Title */}
-          <h1 className="text-lg sm:text-xl font-semibold">Dashboard</h1>
+          <h1 className="text-lg sm:text-xl font-semibold">{titleName}</h1>
         </div>
       </div>
 

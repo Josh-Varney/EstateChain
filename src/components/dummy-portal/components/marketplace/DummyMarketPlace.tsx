@@ -68,6 +68,7 @@ const DummyMarket: React.FC = () => {
           onProfileClick={toggleProfilePrompt}
           onNotiicationClick={toggleNotificationPrompt} 
           onToggleBuyerSeller={toggleBuyerSeller}    
+          titleName="Mock Marketplace"
         />
 
         <HouseDisplay darkMode={darkMode} />

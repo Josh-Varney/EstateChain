@@ -4,7 +4,7 @@ import { Textarea } from "../../../shadcn-components/ui/textarea";
 import { Card } from "../../../shadcn-components/ui/card";
 import { Send, Trash, CheckCircle, XCircle } from "lucide-react"; // Icons
 import React from "react";
-import { fetchProperties } from "../admin-manager/get-prop";
+import { approvePropertyAndSendNotification, fetchProperties, rejectAndSubmitFeedback } from "../admin-manager/get-prop";
 
 // Property interface based on your data
 interface Property {
@@ -18,6 +18,7 @@ interface Property {
   agentWhyDescription: string;
   pApproved: boolean;
   pId: number;
+  propertyAddedBy: string;
   propertyAddress: string;
   propertyAgentID: number;
   propertyBathrooms: number;
@@ -55,7 +56,7 @@ export default function ManageProperties() {
   const [showRawModal, setShowRawModal] = useState<boolean>(false);
   const [showApprovalModal, setShowApprovalModal] = useState<boolean>(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-
+  const [refetch, setRefetch] = useState(false);
 
   // Fetch properties from API on component mount
   useEffect(() => {
@@ -63,26 +64,15 @@ export default function ManageProperties() {
       const data = await fetchProperties();
       setProperties(Object.values(data));
     };
+
     fetchData();
-  }, []);
+  }, [refetch]);
 
-  const approvePropertyHandler = (propertyID: Number) => {
-    console.log(propertyID);
+  const approvePropertyHandler = async (propertyID: number, propertyAddedBy: string) => {
+    await approvePropertyAndSendNotification(propertyID, propertyAddedBy);
+    setRefetch(true); 
   };
 
-  const rejectPropertyHandler = (propertyID: Number) => {
-    console.log(propertyID);
-  };
-
-  const removePropertyHandler = (propertyID: Number) => {
-    console.log(propertyID)
-  };
-
-  const submitFeedbackHandler = (propertyID: number) => {
-    const feedback = adminFeedback[propertyID];
-    if (!feedback) return;
-    console.log(`Feedback for property ${propertyID}: ${feedback}`);
-  };
 
   const handleCardClick = (property: Property) => {
     setSelectedProperty(property);
@@ -110,7 +100,7 @@ export default function ManageProperties() {
   };
 
   // Reject property & send feedback
-  const handleRejectAndSendFeedback = (propertyID: number, e: React.MouseEvent) => {
+  const handleRejectAndSendFeedback = async (propertyID: number, propertyAddedBy: string, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent triggering card click
 
     const feedback = adminFeedback[propertyID];
@@ -118,9 +108,18 @@ export default function ManageProperties() {
       alert("Feedback is required to reject the property.");
       return;
     }
+    if (feedback && propertyID && propertyAddedBy){
+      const boolVal = await rejectAndSubmitFeedback(propertyID, propertyAddedBy, feedback);
 
-    rejectPropertyHandler(propertyID);
-    submitFeedbackHandler(propertyID);
+      if (boolVal){
+        console.log("Success");
+        setRefetch(true); // Trigger refetch after success
+      }
+      else {
+        console.log("Failure");
+        alert("Property Rejection Failed");
+      }
+    }
   };
 
   return (
@@ -135,6 +134,7 @@ export default function ManageProperties() {
                 onClick={() => handleCardClick(property)} // Show raw modal on card click
               >
                 <h2 className="font-semibold text-lg mb-2">{property.propertyAddress}</h2>
+                <p className="text-sm text-gray-500 mb-3">Client: {property.propertyAddedBy}</p>
                 <p className="text-sm text-gray-500 mb-3">Agent: {property.agentName}</p>
                 <p className="text-sm text-gray-500 mb-3">Location: {property.propertyCity}, {property.propertyCountry}, {property.agentAddress}, {property.propertyPostcode}</p>
                 <p className="text-sm text-gray-500 mb-3">Status: {property.pApproved ? "Approved" : "Pending"}</p>
@@ -165,27 +165,18 @@ export default function ManageProperties() {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={(e) => handleRejectAndSendFeedback(property.propertyID, e)}
+                  onClick={(e) => handleRejectAndSendFeedback(property.propertyID, property.propertyAddedBy, e)}
                   className="flex-1 flex items-center gap-2"
                 >
                   <XCircle className="w-4 h-4" /> Reject & Send Feedback
-                </Button>
-                {/* Remove Button */}
-                <Button
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent triggering card click
-                    removePropertyHandler(property.propertyID);
-                  }}
-                  className="flex-1 flex items-center gap-2"
-                >
-                  <Trash className="w-4 h-4" /> Remove
                 </Button>
               </div>
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500 w-full">No properties available for review.</p>
+          <div className="col-span-full flex justify-center items-center w-full h-[50vh]">
+            <p className="text-xl font-bold text-green-400 text-center">No pending Property Listings.</p>
+          </div>
         )}
       </div>
 
@@ -213,21 +204,54 @@ export default function ManageProperties() {
         <div className="fixed inset-0 text-black bg-gray-500 bg-opacity-50 flex items-center justify-center z-10">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full h-auto">
             <h2 className="text-2xl font-semibold mb-4">Contract Details</h2>
+            <div className="mt-6 mb-6 space-y-6">
+              {selectedProperty.propertyRental ? (
+                <div className="p-6">
+                  <p className="text-lg text-gray-700 mt-2">
+                    The client wishes to tokenize the property into{" "}
+                    <span className="font-bold text-indigo-700">{selectedProperty.propertyTokensLeft}</span> tokens, 
+                    for a price of{" "}
+                    <span className="font-bold text-green-700">{atob(selectedProperty.propertyTokenPrice)}</span> per token, 
+                    with a total property valuation of{" "}
+                    <span className="font-bold text-blue-700">{atob(selectedProperty.propertyPrice)}</span>.
+                  </p>
+                  <p className="text-lg text-gray-700 mt-4">
+                    As this is a rental property, the client is required to pay{" "}
+                    <span className="font-bold text-red-600">{selectedProperty.rentalDistributionExpectancy }</span> 
+                    {" "} to the owners of the property as part of the rental agreement.
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                  <h1 className="text-2xl font-semibold text-gray-900">
+                    Tokenization Details
+                  </h1>
+                  <p className="text-lg text-gray-700 mt-2">
+                    The client wishes to split the property into{" "}
+                    <span className="font-bold text-indigo-700">{selectedProperty.propertyTokensLeft}</span> tokens, 
+                    each priced at{" "}
+                    <span className="font-bold text-green-700">{atob(selectedProperty.propertyTokenPrice)}</span>, 
+                    with a total property valuation of{" "}
+                    <span className="font-bold text-blue-700">{atob(selectedProperty.propertyPrice)}</span>.
+                  </p>
+                </div>
+              )}
+            </div>
             <div className="overflow-y-auto max-h-96">
               <pre className="bg-gray-100 p-4 rounded">
               {JSON.stringify(
                 {
-                  propertyName: selectedProperty.propertyName,
                   address: selectedProperty.propertyAddress,
                   city: selectedProperty.propertyCity,
                   country: selectedProperty.propertyCountry,
-                  agentName: selectedProperty.agentName,
-                  agentEmail: selectedProperty.agentEmail,
+                  postcode: selectedProperty.propertyPostcode,
+                  isRental: selectedProperty.propertyRental,
+                  clientPaysToOwners: selectedProperty.rentalDistributionExpectancy,
                   price: atob(selectedProperty.propertyPrice), // Decoded price
-                  size: selectedProperty.propertySize,
-                  bedrooms: selectedProperty.propertyBedrooms,
-                  bathrooms: selectedProperty.propertyBathrooms,
-                  status: selectedProperty.pApproved ? "Approved" : "Pending",
+                  tokenPrice: atob(selectedProperty.propertyTokenPrice),
+                  tokenNumber: selectedProperty.propertyTokensLeft,
+                  agentID: selectedProperty.agentID,
+                  agentEmail: selectedProperty.agentEmail,
                 },
                 null,
                 2
@@ -244,7 +268,7 @@ export default function ManageProperties() {
               <Button
                 variant="default"
                 onClick={() => {
-                  approvePropertyHandler(selectedProperty.propertyID);
+                  approvePropertyHandler(selectedProperty.propertyID, selectedProperty.propertyAddedBy);
                   closeApprovalModal();
                 }}
               >

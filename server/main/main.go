@@ -115,7 +115,7 @@ func main() {
 	router.GET("/get-all-unapproved", func(c *gin.Context){
 		admin.GetAllPropertiesNotApproved(db, c)
 	})
-	
+
 	router.PUT("/add-approval/:propertyID", func(c *gin.Context) {
 		admin.ApproveProperty(db, c)
 	})
@@ -127,6 +127,10 @@ func main() {
 	router.GET("/get-notifications/:uuid", func(c *gin.Context) {
         notification.GetNotificationsByUUID(db, c)
     })
+
+	router.PUT("/property-status/:propertyID", func(c *gin.Context){
+		notification.PropertyNotified(db, c)
+	})
 
 	// Start server
 	router.Run(":8080")

@@ -18,7 +18,7 @@ func GetAllPropertiesNotApproved(db *sql.DB, c *gin.Context) {
 		FROM Property p
 		LEFT JOIN PropertyAgent a ON p.propertyAgentID = a.agentID
 		INNER JOIN PropertyTokenised pt ON p.propertyID = pt.pId
-		WHERE p.pApproved = 0;
+		WHERE p.pApproved = 0 AND p.notified = 0;
 	`
 
 	// Execute the query

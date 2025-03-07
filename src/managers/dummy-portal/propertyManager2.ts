@@ -52,7 +52,7 @@ export const submitAgentData = (url, data) => {
   };
 
 // Submit Property Data (after agentID is retrieved)
-export const submitPropertyData = async (url, data) => {
+export const submitPropertyData = (url, data) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -66,11 +66,14 @@ export const submitPropertyData = async (url, data) => {
   
         if (responseData.propertyID) {
           console.log('Property submitted successfully with ID:', responseData.propertyID);
+          return true;
         } else {
           console.log('Property submission failed.');
+          return false;
         }
       })
       .catch(error => {
         console.error(`Error submitting property to ${url}:`, error);
+        return false;
       });
   };

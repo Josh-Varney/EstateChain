@@ -3,6 +3,7 @@ import { Info } from 'lucide-react';
 import { Tooltip } from "react-tooltip";
 import { validateAgentAddress, validateAgentContactNumber, validateAgentEmail, validateAgentName, validateAgentSoldDescription, validateAgentWhyDescription, validatePropertyAddress, validatePropertyBathrooms, validatePropertyBedrooms, validatePropertyCity, validatePropertyCountry, validatePropertyDescription, validatePropertyKeywords, validatePropertyName, validatePropertyPostcode, validatePropertyPrice, validatePropertyRental, validatePropertySettlement, validatePropertySize, validatePropertyStreet, validatePropertyStreetNum, validatePropertyTenure, validatePropertyTokensLeft, validatePropertyType, validateRentalDistribution } from '../../../../../managers/dummy-portal/propertyManager';
 import { findAgent, submitAgentData, submitPropertyData } from '../../../../../managers/dummy-portal/propertyManager2';
+import axios from 'axios';
 
 const AddPropertyButton: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -212,7 +213,7 @@ const AddPropertyButton: React.FC = () => {
 
       // Submit property agent data and handle the returned agentID
       submitAgentData('http://localhost:3001/api/submitAgent', propertyAgent)
-        .then(response => {
+        .then(async response => {
           console.log('Response from server:', response);
           
           if (response) {
@@ -228,10 +229,21 @@ const AddPropertyButton: React.FC = () => {
               ...propertyData
             }
 
-            const res = submitPropertyData('http://localhost:3001/api/submitProperty', preprocessedData);
+            submitPropertyData('http://localhost:3001/api/submitProperty', preprocessedData);
 
-            console.log("FINAL RESULT OF COMPUTATION", res);
+            const notificationResponse = await axios.post("http://localhost:8080/send-notification", {
+              uuid: localStorage.getItem("uuid"),  // Assuming propertyAddedBy is a valid UUID here
+              message: `Your property listing was sent. Please wait for confirmation`,
+              type: "info",
+              related_table: "Property",
+              wasRead: false
+            });
 
+            if (notificationResponse.status >= 200 && notificationResponse.status < 300) {
+                console.log("Approval notification sent successfully");
+            } else {
+                console.log("Error sending approval notification", notificationResponse.statusText);
+            }
 
           } else {
             console.log(propertyAgent);
@@ -255,11 +267,22 @@ const AddPropertyButton: React.FC = () => {
         ...propertyData
       }
 
-      console.log(preprocessedData);
+      submitPropertyData('http://localhost:3001/api/submitProperty', preprocessedData);
 
-      const res = submitPropertyData('http://localhost:3001/api/submitProperty', preprocessedData);
 
-      console.log("FINAL RESULT OF COMPUTATION", res);
+      const notificationResponse = await axios.post("http://localhost:8080/send-notification", {
+        uuid: localStorage.getItem("uuid"),  // Assuming propertyAddedBy is a valid UUID here
+        message: `Your property listing was sent. Please wait for confirmation`,
+        type: "info",
+        related_table: "Property",
+        wasRead: false
+      });
+
+      if (notificationResponse.status >= 200 && notificationResponse.status < 300) {
+        console.log("Approval notification sent successfully");
+      } else {
+          console.log("Error sending approval notification", notificationResponse.statusText);
+      }
     }
     
 
