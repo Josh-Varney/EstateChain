@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { FaMoon, FaWallet } from "react-icons/fa";
-import Sidebar from "./components/Sidebar";
-import Card from "./components/HomeCard";
-import WalletPrompt from "./components/WalletWarningPrompt";
-import WalletDropdown from "./components/WalletConnected";
-import CardGrid from "./components/CardGrid";
-import HeaderBar from "./components/HeaderBar";
+import Sidebar from "./components/main/Sidebar";
+import CardGrid from "./components/main/CardGrid";
+import HeaderBar from "./components/main/HeaderBar";
+import Prompts from "./components/prompts/Prompts";
 
-const HomeScreen: React.FC = () => {
+const DummyDashboard: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [isBuyer, setIsBuyer] = useState(true);
   const [walletConnectPrompt, setWalletConnectPrompt] = useState(false);
   const [walletConnectedPrompt, setWalletConnectedPrompt] = useState(false);
+  const [notificationPrompt , setNotificationPrompt] = useState(false); 
+  const [profilePrompt, setProfilePrompt] = useState(false);
 
   const toggleWalletPrompt = () => {
     if (localStorage.getItem("connectedAccount")) {
@@ -20,9 +20,26 @@ const HomeScreen: React.FC = () => {
     }
   };
 
+  const toggleBuyerSeller = () => {
+    setIsBuyer((prevState) => !prevState);
+  };
+
+  // const toggleIsBuyer = () => {
+  //   setIsBuyer((prevIsBuyer) => !prevIsBuyer);
+  // };
+
+  const toggleProfilePrompt = () => {
+    setProfilePrompt((prev) => !prev);
+  };
+
+  const toggleNotificationPrompt = () => {
+    setNotificationPrompt((prev) => !prev);
+  }
+
   const toggleDarkMode = () => {
-    setDarkMode((prev) => !prev);
-    localStorage.setItem("theme", !darkMode ? "dark" : "light");
+    const newTheme = !darkMode ? "dark" : "light";
+    setDarkMode(!darkMode);
+    localStorage.setItem("theme", newTheme);
   };
 
   useEffect(() => {
@@ -43,24 +60,24 @@ const HomeScreen: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex flex-col w-full h-full ml-20">
-        <HeaderBar darkMode={darkMode} onWalletClick={toggleWalletPrompt}/>
+        <HeaderBar darkMode={darkMode} onWalletClick={toggleWalletPrompt} onProfileClick={toggleProfilePrompt} onNotiicationClick={toggleNotificationPrompt} onToggleBuyerSeller={toggleBuyerSeller} isBuyer={isBuyer} titleName="Dashboard"/>
 
-        {/* Main Content Area */}
-        <CardGrid darkMode={darkMode} />
+        {/* Main Con tent Area */}
+        <CardGrid darkMode={darkMode} mode={isBuyer ? "buyer" : "seller"} />
 
-        {/* Wallet Prompts */}
-        {walletConnectPrompt && (
-          <WalletPrompt close={() => setWalletConnectPrompt(false)} />
-        )}
-        {walletConnectedPrompt && (
-          <WalletDropdown
-            close={() => setWalletConnectedPrompt(false)}
-            isOpen={true}
-          />
-        )}
+        <Prompts
+          walletConnectPrompt={walletConnectPrompt}
+          walletConnectedPrompt={walletConnectedPrompt}
+          profilePrompt={profilePrompt}
+          notificationPrompt={notificationPrompt}
+          closeWalletConnectPrompt={() => setWalletConnectPrompt(false)}
+          closeWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
+          closeProfilePrompt={() => setProfilePrompt(false)}
+          closeNotificationPrompt={() => setNotificationPrompt(false)}
+        />
       </div>
     </div>
   );
 };
 
-export default HomeScreen;
+export default DummyDashboard;

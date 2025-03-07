@@ -19,7 +19,7 @@ const PrivacyPolicyPage: React.FC = () => {
     };
 
     return (
-        <div className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+        <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-gray-800 dark:text-gray-100">
             {/* Header */}
             <header data-aos="fade-down">
                 <LandingHeader />

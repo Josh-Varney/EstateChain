@@ -10,7 +10,7 @@ const CallToAction: React.FC = () => (
         Join our platform to explore the next generation of real estate tokenization. Smarter, faster, and global investment opportunities await.
       </p>
       <button onClick={() => {
-        window.location.href = "/home"
+        window.location.href = "/login"
       }}className="mt-8 bg-teal-500 text-white py-3 px-8 rounded-full shadow-lg hover:bg-teal-600 transition-transform transform hover:scale-105">
         Get Started Now
       </button>
