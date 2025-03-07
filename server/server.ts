@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import axios from "axios";
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { formatUnits, parseBytes32String } from 'ethers/lib/utils';
+import { formatUnits } from 'ethers';
 
 dotenv.config();
 
@@ -77,12 +77,12 @@ app.get("/api/getBalancesTestNet", async (req: Request, res: Response) => {
       const balance = await provider.getBalance(address);
 
       // Format the balance to Ether
-      const formattedBalance = formatUnits(balance); 
+      // const formattedBalance = formatUnits(balance); 
 
-      console.log(`Balance for ${address} on ${network}:`, formattedBalance, networkConfig.symbol);
+      // console.log(`Balance for ${address} on ${network}:`, formattedBalance, networkConfig.symbol);
 
       // Send response with balance and symbol
-      return res.json({ balance: formattedBalance, symbol: networkConfig.symbol });
+      // return res.json({ balance: formattedBalance, symbol: networkConfig.symbol });
   } catch (error) {
       console.error(`Error fetching balance for ${network}:`, error);
 
