@@ -10,7 +10,7 @@ describe("PropertyERC20 Contract", function (){
     const tokenPrice = hre.ethers.parseEther("0.1"); // 0.1 ETH per token
     const totalSupply = 1000;
 
-    describe("Deployment should work on test network", function () {
+    describe("Check Deployment of Token Ownership Contract", function () {
         it("should deploy correctly", async function () {
             // Get the signers (i.e., the test accounts)
             [owner, addr1, addr2] = await hre.ethers.getSigners();
@@ -23,8 +23,6 @@ describe("PropertyERC20 Contract", function (){
                 tokenPrice,             // _tokenPrice
                 owner.address           // _propertyOwner
             ]);
-            
-            const ownerOfContract = await propertyERC20.ownerOf();
 
             const buyersInContract = await propertyERC20.getBuyers();
 
@@ -33,5 +31,4 @@ describe("PropertyERC20 Contract", function (){
             expect(buyersInContract).to.have.lengthOf(0);
         });
     });
-    
 });

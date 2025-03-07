@@ -22,5 +22,7 @@ export type { IERC20 } from "./@openzeppelin/contracts/token/ERC20/IERC20";
 export { IERC20__factory } from "./factories/@openzeppelin/contracts/token/ERC20/IERC20__factory";
 export type { ReentrancyGuard } from "./@openzeppelin/contracts/utils/ReentrancyGuard";
 export { ReentrancyGuard__factory } from "./factories/@openzeppelin/contracts/utils/ReentrancyGuard__factory";
+export type { RentalPropertyERC20 } from "./contracts/RentalTokenOwnership.sol/RentalPropertyERC20";
+export { RentalPropertyERC20__factory } from "./factories/contracts/RentalTokenOwnership.sol/RentalPropertyERC20__factory";
 export type { PropertyERC20 } from "./contracts/TokenOwnership.sol/PropertyERC20";
 export { PropertyERC20__factory } from "./factories/contracts/TokenOwnership.sol/PropertyERC20__factory";

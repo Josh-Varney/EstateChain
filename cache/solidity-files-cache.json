@@ -338,6 +338,45 @@
       "artifacts": [
         "IERC20Metadata"
       ]
+    },
+    "/Users/josh-v/Desktop/BlockChain/FinalYear/EstateChain/contracts/RentalTokenOwnership.sol": {
+      "lastModificationDate": 1741370828697,
+      "contentHash": "b824293d36c9f71633ff18c94a72f0cb",
+      "sourceName": "contracts/RentalTokenOwnership.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RentalPropertyERC20"
+      ]
     }
   }
 }
