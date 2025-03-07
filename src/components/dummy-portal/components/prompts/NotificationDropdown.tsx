@@ -1,9 +1,21 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
+// Define the NotificationType interface as provided
+interface NotificationType {
+  nid: number;
+  uuid: string;
+  message: string;
+  type: 'info' | 'rejection'; // Add more types if needed
+  related_table: string;
+  related_id: number;
+  wasRead: boolean;
+}
+
+// Update NotificationDropdownProps to use the new NotificationType
 interface NotificationDropdownProps {
   close: () => void;
-  notifications: { id: number; message: string; type: 'success' | 'error' }[];
+  notifications: NotificationType[]; // Use NotificationType[] instead of the simplified type
   isOpen: boolean; // Tracks if the dropdown is open
 }
 
@@ -58,18 +70,18 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ close, noti
         {notifications.length > 0 ? (
           notifications.map((notification) => (
             <div
-              key={notification.id}
+              key={notification.nid}  // Use nid for the key instead of id
               className={`flex items-center space-x-3 p-4 text-sm transition duration-150 ease-in-out hover:bg-gray-200 dark:hover:bg-gray-700 ${
-                notification.type === 'success' ? 'text-green-600' : 'text-red-600'
+                notification.type === 'info' ? 'text-blue-600' : 'text-red-600' // Color based on type
               }`}
               role="menuitem"
             >
-              {notification.type === 'success' ? (
-                <FaCheckCircle className="text-green-500 dark:text-green-400" />
+              {notification.type === 'info' ? (
+                <FaCheckCircle className="text-blue-500 dark:text-blue-400" />
               ) : (
                 <FaTimesCircle className="text-red-500 dark:text-red-400" />
               )}
-              <span>{notification.message}</span>
+              <span>{notification.message}</span> {/* Display message */}
             </div>
           ))
         ) : (

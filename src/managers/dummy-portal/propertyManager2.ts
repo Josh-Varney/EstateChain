@@ -1,7 +1,7 @@
 import axios from "axios"
 
 // Define the function to call the FindAgent endpoint
-export async function findAgent(agentName, agentEmail, agentContactNumber) {
+export async function findAgent(agentName: any, agentEmail: any, agentContactNumber: any) {
     try {
         // Make the GET request to the Go server
         const response = await axios.get(`http://localhost:8080/find-agent/${agentName}/${agentEmail}/${agentContactNumber}`);
@@ -24,7 +24,7 @@ export async function findAgent(agentName, agentEmail, agentContactNumber) {
     }
 }
 
-export const submitAgentData = (url, data) => {
+export const submitAgentData = (url: string | URL | Request, data: { isAgent: boolean; agentID: string; agentName: string; agentContactNumber: string; agentEmail: string; agentAddress: string; agentWhyDescription: string; agentSoldDescription: string; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -52,7 +52,7 @@ export const submitAgentData = (url, data) => {
   };
 
 // Submit Property Data (after agentID is retrieved)
-export const submitPropertyData = (url, data) => {
+export const submitPropertyData = (url: string | URL | Request, data: { propertyName: string; propertyAddress: string; propertySettlement: string; propertyDescription: string; propertyPrice: number; propertyLocation: { latitude: number; longitude: number; }; rentalDistributionExpectancy: number; propertyStreetNum: string; propertyStreet: string; propertyCity: string; propertyCountry: string; propertySize: string; propertyBedrooms: number; propertyBathrooms: number; propertyTokenPrice: number; propertyTokensLeft: number; propertyType: string; propertyPostcode: string; propertyRental: boolean; propertyFeatured: boolean; propertyTenure: string; propertyGarden: boolean; propertyAccessibility: boolean; propertyKeywords: string; agentID: any; uuid: string | null; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {

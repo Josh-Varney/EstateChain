@@ -222,6 +222,21 @@ const AddPropertyButton: React.FC = () => {
             // Calculate the token value
             const propertyTokenValue = propertyData.propertyPrice / propertyData.propertyTokensLeft;
             propertyData.propertyTokenPrice = propertyTokenValue;
+
+            const notify = await axios.post("http://localhost:8080/send-notification", {
+              uuid: localStorage.getItem("uuid"),  // Assuming propertyAddedBy is a valid UUID here
+              message: `Your application to become an agent will be reviewed`,
+              type: "info",
+              related_table: "Property",
+              wasRead: false
+            });
+
+            if (notify.status >= 200 && notify.status < 300) {
+                console.log("Approval notification sent successfully");
+            } else {
+                console.log("Error sending approval notification", notify.statusText);
+            }
+
             
             const preprocessedData = {
               agentID: response,
@@ -254,7 +269,6 @@ const AddPropertyButton: React.FC = () => {
           console.error('Error:', error);
         });
     } else {
-      console.log("No New Agent");
 
       // Calculate the token value
       const propertyTokenValue = propertyData.propertyPrice / propertyData.propertyTokensLeft;
