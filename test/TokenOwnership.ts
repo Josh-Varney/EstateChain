@@ -31,8 +31,6 @@ describe("PropertyERC20 Contract", function (){
             // Check Initialisation 
             expect(buyersInContract).to.be.an('array');
             expect(buyersInContract).to.have.lengthOf(0);
-
-            expect("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", ownerOfContract);
         });
     });
     
