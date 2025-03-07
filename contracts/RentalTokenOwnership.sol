@@ -62,4 +62,47 @@ contract RentalPropertyERC20 is ERC20, ReentrancyGuard {
             buyers.push(msg.sender);
         }
     }
+
+    // Function to distribute fixed monthly income to buyers based on their token holdings
+    function distributeIncome() external nonReentrant {
+        require(msg.sender == propertyOwner, "Only the property owner can distribute income");
+        require(block.timestamp >= lastIncomeDistribution + 30 days, "Monthly income distribution is not due yet");
+
+        // Ensure there is enough ETH in the contract to distribute
+        require(address(this).balance >= monthlyIncome, "Not enough ETH in the contract to distribute");
+
+        uint256 totalTokenSupply = propertyTotalSupply; // Total token supply
+        uint256 totalIncomeForBuyers = monthlyIncome;    // Total income to distribute to buyers
+
+        // Distribute the income portion to buyers
+        for (uint256 i = 0; i < buyers.length; i++) {
+            address buyer = buyers[i];
+            uint256 buyerShare = (buyerTokens[buyer] * totalIncomeForBuyers) / totalTokenSupply; // Calculate buyer's share based on their token holdings
+            payable(buyer).transfer(buyerShare); // Send buyer their portion of the income
+        }
+
+        // Update the last income distribution timestamp
+        lastIncomeDistribution = block.timestamp;
+    }
+    
+    // Function to get the list of all buyers
+    function getBuyers() external view returns (address[] memory) {
+        return buyers;
+    }
+
+    // Function to get the number of tokens bought by a specific address
+    function getTokensBought(address buyer) external view returns (uint256) {
+        return buyerTokens[buyer];
+    }
+
+    // Function to get the propertyOwner address
+    function ownerOf() external view returns (address) {
+        return propertyOwner;
+    }
+
+    // Function to set a new monthly income amount (only the owner can set)
+    function setMonthlyIncome(uint256 _newMonthlyIncome) external {
+        require(msg.sender == propertyOwner, "Only the property owner can set the income");
+        monthlyIncome = _newMonthlyIncome;
+    }
 }
