@@ -270,6 +270,68 @@ describe("PropertyERC20 Contract", function () {
                 hardhatToken.initializeSale(tokenSupply, tokenPrice, propertyOwner, isRentalProperty, monthlyIncome)
             ).to.be.revertedWith("Sale already initialized");
         });
+
+        it("Valid parameters in initialization", async function () {
+            const tokenPrice = ethers.parseEther("0.1"); // Token price of 0.1 ETH
+            const tokenSupply = 1000; // Property token supply
+            const propertyOwner = owner.address;
+            const isRentalProperty = true; // Setting it as a rental property
+            const monthlyIncome = ethers.parseEther("1"); // Rental income of 1 ETH per month
+            
+            hardhatToken.initializeSale(tokenSupply, tokenPrice, propertyOwner, isRentalProperty, monthlyIncome)
+        });
     });    
 
+    describe("Check the User Can Buy Token", function () {
+        let hardhatToken;
+        let owner;
+        let addr1;
+    
+        beforeEach(async function () {
+            // Get buyer and seller simulation
+            [owner, addr1] = await ethers.getSigners();
+    
+            // Deploy the contract before each test
+            hardhatToken = await ethers.deployContract("PropertyERC20", [
+                "MockProp", "MPT"
+            ]);
+            await hardhatToken.waitForDeployment(); // Ensure deployment completes
+    
+            // Initialize the property sale
+            await hardhatToken.initializeSale(
+                1000, 
+                ethers.parseEther("0.1"),  // Token price = 0.1 ETH per token
+                owner.address,
+                false, // Not a rental property
+                ethers.parseEther("0") // No rental income
+            );
+        });
+    
+        describe("Token Buy Test", function () {
+            it("Should have no buyers initially", async function () {
+
+                const buyers = await hardhatToken.getBuyers();
+                expect(buyers).to.deep.equal([]);
+            });
+
+            it("Should allow user to buy", async function () {
+                
+                const tokenAmount = 1;
+                const buyerAddr = addr1.address;
+
+                console.log(buyerAddr)
+
+                // Buyer sends ETH to purchase tokens
+                await hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("0.1")});
+
+                const buyers = await hardhatToken.getBuyers();
+
+                console.log(buyers[0]);
+
+                expect(buyers[0]).to.be.equal(buyerAddr);
+
+
+            })
+        });
+    });    
 });
