@@ -3,53 +3,97 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "hardhat/console.sol";
 
 contract PropertyERC20 is ERC20, ReentrancyGuard {
-    // Property & Sale Details
-    uint256 public propertyTotalSupply;  // Renamed from totalSupply to avoid conflict
-    uint256 public tokenPrice;           // Price per token in ETH
-    address public propertyOwner;        // Address that receives funds from token sales
-    
-    // Mapping to track buyer's token contributions
-    mapping(address => uint256) public buyerTokens;
+    // --- Property Token Sale Details ---
+    uint256 public propertyTokenSupply;
+    uint256 public propertyTotalSupplyLeft; 
+    uint256 public tokenPrice;
+    address public propertyOwner;
 
-    // Array to store all buyers' addresses
+    mapping(address => uint256) public buyerTokens;
     address[] public buyers;
 
-    // Sets the initial parameters and mints the tokens
+    // --- Rental Income Distribution Details ---
+    uint256 public monthlyIncome;
+    uint256 public lastIncomeDistribution;
+
+    // --- Property Type Flag ---
+    bool public isRentalProperty;  // Flag to determine if this is a rental property or a one-time sale
+
+    // --- Constructor ---
     constructor(
         string memory _name, 
-        string memory _symbol, 
-        uint256 _totalSupply, 
-        uint256 _tokenPrice, 
-        address _propertyOwner
+        string memory _symbol
     ) 
         ERC20(_name, _symbol)
-    {
-        propertyTotalSupply = _totalSupply * (10 ** uint256(decimals()));  // Set total supply in base units
-        tokenPrice = _tokenPrice;                                          // Set the price of each token in ETH
-        propertyOwner = _propertyOwner;                                    // Set the property owner's address
+    {}
 
-        // Mint the total supply of tokens to the contract itself
-        _mint(address(this), propertyTotalSupply);
+    // --- Property Token Sale Initialization ---
+    function initializeSale(
+        uint256 _totalSupply, 
+        uint256 _tokenPrice, 
+        address _propertyOwner,
+        bool _isRentalProperty,  // Flag to specify if this is a rental property or a regular sale
+        uint256 _monthlyIncome   // Monthly rental income (if it's a rental property)
+    ) external {
+        require(propertyTotalSupplyLeft == 0, "Sale already initialized"); // Ensure sale is only initialized once
+        
+        propertyTokenSupply = _totalSupply;
+        propertyTotalSupplyLeft = _totalSupply;  // Keep it as whole numbers
+
+        require(propertyTotalSupplyLeft > 0, "Property Token Supply must be greater than 0");
+        require(propertyTotalSupplyLeft <= 10**24, "Total supply is too large");
+
+
+        tokenPrice = _tokenPrice;            
+
+        require(_tokenPrice > 0, "Token price must be greater than zero");
+                           
+        propertyOwner = _propertyOwner;          
+
+        require(_propertyOwner != address(0), "Invalid property owner address");
+                          
+        isRentalProperty = _isRentalProperty;  // Set the flag to indicate if this is a rental property
+        
+        _mint(address(this), propertyTotalSupplyLeft);
+
+        // If the property is a rental, initialize the rental income
+        if (isRentalProperty) {
+            require(_monthlyIncome > 0, "Rental income must be greater than zero");
+            initializeRentalIncome(_monthlyIncome);
+        }
     }
+
+    // --- Rental Income Distribution Initialization ---
+    function initializeRentalIncome(uint256 _monthlyIncome) internal {
+        require(isRentalProperty, "This is not a rental property"); // Ensure the property is a rental property
+        require(monthlyIncome == 0, "Sale already initialized"); // Ensure rental income is only initialized once
+        monthlyIncome = _monthlyIncome;
+        lastIncomeDistribution = block.timestamp;
+    }
+
+    // --- Property Token Sale Module ---
 
     // Buy tokens function
     function buyTokens(uint256 _tokenAmount) external payable nonReentrant {
         uint256 totalCost = _tokenAmount * tokenPrice;
+
+        require(propertyTotalSupplyLeft > 0, "Insufficient Tokens Left");
         require(msg.value >= totalCost, "Insufficient ETH sent");
+        require(propertyTotalSupplyLeft >= _tokenAmount, "Not enough tokens available");
 
-        // Refund excess ETH if buyer sent too much
-        if (msg.value > totalCost) {
-            uint256 excess = msg.value - totalCost;
-            payable(msg.sender).transfer(excess); // Refund excess ETH
-        }
-
+        // Calculate the excess ETH if buyer sent more than require
         // Transfer tokens to the buyer (from contract)
         _transfer(address(this), msg.sender, _tokenAmount);
-
+        
         // Update the buyer's token contribution
         buyerTokens[msg.sender] += _tokenAmount;
+
+        // Now simply subtract whole numbers
+        propertyTotalSupplyLeft -= _tokenAmount;
+
 
         // Transfer ETH to the property owner
         payable(propertyOwner).transfer(msg.value);
@@ -60,18 +104,82 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
         }
     }
 
-    // Function to get the list of all buyers
+    // --- Rental Income Distribution Module ---
+
+    // Function to distribute fixed monthly income to buyers based on their token holdings
+    function distributeIncome() external payable nonReentrant {
+        require(isRentalProperty, "This is not a rental property");  
+        require(msg.sender == propertyOwner, "Only the property owner can distribute income");
+        require(block.timestamp >= lastIncomeDistribution + 30 days, "Monthly income distribution is not due yet");
+        require(msg.value >= monthlyIncome, "Not enough ETH sent for distribution");
+        require(propertyTokenSupply > 0, "Total token supply cannot be zero");
+
+        uint256 totalTokenSupply = propertyTokenSupply;
+        uint256 totalIncomeForBuyers = msg.value; // Use the ETH sent by the owner
+
+        for (uint256 i = 0; i < buyers.length; i++){
+            address buyer = buyers[i];
+            uint256 tokenOwned = buyerTokens[buyer]; // Get the number of tokens the buyer owns
+
+            // console.log("Buyer address: ", buyer);
+            // console.log("Tokens owned by buyer: ", tokenOwned);
+
+            // Calculate the buyer's share of the total income based on their token holdings
+            if (tokenOwned > 0) {
+                uint256 buyerShare = (tokenOwned * totalIncomeForBuyers) / totalTokenSupply;
+                // Transfer the buyer's share of ETH to the buyer
+                payable(buyer).transfer(buyerShare);
+
+                console.log("Transferred ", buyerShare, " ETH to buyer: ", buyer);
+            }
+        }
+    }
+
+    // --- View Functions (Property Token Sale) ---
     function getBuyers() external view returns (address[] memory) {
         return buyers;
     }
 
-    // Function to get the number of tokens bought by a specific address
     function getTokensBought(address buyer) external view returns (uint256) {
         return buyerTokens[buyer];
     }
 
-    // Function to get the propertyOwner address
     function ownerOf() external view returns (address) {
         return propertyOwner;
+    }
+
+    // --- View Functions (Rental Income Distribution) ---
+    function getMonthlyIncome() external view returns (uint256) {
+        return monthlyIncome;
+    }
+
+    function getLastIncomeDistribution() external view returns (uint256) {
+        return lastIncomeDistribution;
+    }
+
+    function getIsRentalProperty() external view returns (bool) {
+        return isRentalProperty;
+    }
+
+    function getTokenSupply() external view returns (uint256) {
+        return propertyTotalSupplyLeft;
+    }
+
+    function getWhatRentalIncome() external view returns (uint256) {
+        require(isRentalProperty, "This is not a rental property");
+        return monthlyIncome;
+    }
+
+    // Temporary
+    function setLastIncomeDistribution(uint256 _timestamp) external {
+        require(msg.sender == propertyOwner, "Only the owner can set this");
+        lastIncomeDistribution = _timestamp;
+    }
+
+    // --- Admin Functions (Rental Income) ---
+    function setMonthlyIncome(uint256 _newMonthlyIncome) external {
+        require(msg.sender == propertyOwner, "Only the property owner can set the income");
+        require(isRentalProperty, "This is not a rental property");
+        monthlyIncome = _newMonthlyIncome;
     }
 }
