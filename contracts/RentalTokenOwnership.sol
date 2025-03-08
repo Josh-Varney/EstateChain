@@ -39,7 +39,7 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
     ) external {
         require(propertyTotalSupply == 0, "Sale already initialized"); // Ensure sale is only initialized once
         
-        propertyTotalSupply = _totalSupply * (10 ** uint256(decimals())); 
+        propertyTotalSupply = _totalSupply;  // Keep it as whole numbers
 
         require(propertyTotalSupply > 0, "Property Token Supply must be greater than 0");
         require(propertyTotalSupply <= 10**24, "Total supply is too large");
@@ -77,6 +77,7 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
     // Buy tokens function
     function buyTokens(uint256 _tokenAmount) external payable nonReentrant {
         uint256 totalCost = _tokenAmount * tokenPrice;
+        require(propertyTotalSupply > 0, "Insufficient Tokens Left");
         require(msg.value >= totalCost, "Insufficient ETH sent");
 
         // Refund excess ETH if buyer sent too much
@@ -85,11 +86,18 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
             payable(msg.sender).transfer(excess); // Refund excess ETH
         }
 
+
+        require(propertyTotalSupply >= _tokenAmount, "Not enough tokens available");
+
         // Transfer tokens to the buyer (from contract)
         _transfer(address(this), msg.sender, _tokenAmount);
 
         // Update the buyer's token contribution
         buyerTokens[msg.sender] += _tokenAmount;
+
+        // Now simply subtract whole numbers
+        propertyTotalSupply -= _tokenAmount;
+
 
         // Transfer ETH to the property owner
         payable(propertyOwner).transfer(msg.value);

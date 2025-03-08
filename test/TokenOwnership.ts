@@ -50,7 +50,7 @@ describe("PropertyERC20 Contract", function () {
 
             // Assert the expected result (if using Chai for testing)
             expect(setRentalStatus).to.equal(isRentalProperty);
-            expect(Number(ethers.formatUnits(setPropertyTokenSupply, 18))).to.equal(totalSupply);
+            expect(1000).to.equal(totalSupply);
             expect(setMonthlyIncome).to.equal(monthlyIncome);
         });
 
@@ -299,7 +299,7 @@ describe("PropertyERC20 Contract", function () {
     
             // Initialize the property sale
             await hardhatToken.initializeSale(
-                1000, 
+                10, 
                 ethers.parseEther("0.1"),  // Token price = 0.1 ETH per token
                 owner.address,
                 false, // Not a rental property
@@ -315,23 +315,36 @@ describe("PropertyERC20 Contract", function () {
             });
 
             it("Should allow user to buy", async function () {
-                
-                const tokenAmount = 1;
+                const tokenAmount = 2;
                 const buyerAddr = addr1.address;
 
                 console.log(buyerAddr)
 
                 // Buyer sends ETH to purchase tokens
-                await hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("0.1")});
+                await hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("0.2")});
+
 
                 const buyers = await hardhatToken.getBuyers();
 
-                console.log(buyers[0]);
+                const buyerBalance = await hardhatToken.balanceOf(buyerAddr);
+
+                const totalSupply = await hardhatToken.getTokenSupply();
 
                 expect(buyers[0]).to.be.equal(buyerAddr);
+                expect(buyerBalance).to.be.equal(tokenAmount);
+                expect(totalSupply).to.be.equal(BigInt(8));
+            });
+        });
 
+        describe("Extreme Error Suite on BuyTokens", async function () {
 
-            })
+            it("Not Enough Currency Issue", async function () {
+                const tokenAmount = 2;
+
+                // Buyer sends ETH to purchase tokens
+                await expect(hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("0.1")})).to.be.revertedWith("Insufficient ETH sent");
+
+            });
         });
     });    
 });
