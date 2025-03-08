@@ -90,7 +90,7 @@ describe("PropertyERC20 Contract", function () {
             expect(await hardhatToken.getIsRentalProperty()).to.equal(rentalProp);
         });
 
-        it("Test Non-Rental Implementation", async function () {
+        it("Test Non-Rental Implementation and Error Thrown", async function () {
             const [owner] = await ethers.getSigners();
             const propertyOwner = owner.address;
             const nonRental = false;
@@ -115,6 +115,10 @@ describe("PropertyERC20 Contract", function () {
 
             // Verify the non-rental status
             expect(await hardhatToken.getIsRentalProperty()).to.equal(nonRental);
+
+            // Error thrown to show clear seperation
+            await expect(hardhatToken.getWhatRentalIncome()).to.be.revertedWith("This is not a rental property");
+            
         });
 
     });
