@@ -39,9 +39,20 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
     ) external {
         require(propertyTotalSupply == 0, "Sale already initialized"); // Ensure sale is only initialized once
         
-        propertyTotalSupply = _totalSupply * (10 ** uint256(decimals()));  
-        tokenPrice = _tokenPrice;                                       
-        propertyOwner = _propertyOwner;                                    
+        propertyTotalSupply = _totalSupply * (10 ** uint256(decimals())); 
+
+        require(propertyTotalSupply > 0, "Property Token Supply must be greater than 0");
+        require(propertyTotalSupply <= 10**24, "Total supply is too large");
+
+
+        tokenPrice = _tokenPrice;            
+
+        require(_tokenPrice > 0, "Token price must be greater than zero");
+                           
+        propertyOwner = _propertyOwner;          
+
+        require(_propertyOwner != address(0), "Invalid property owner address");
+                          
         isRentalProperty = _isRentalProperty;  // Set the flag to indicate if this is a rental property
         
         _mint(address(this), propertyTotalSupply);
@@ -54,9 +65,9 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
     }
 
     // --- Rental Income Distribution Initialization ---
-    function initializeRentalIncome(uint256 _monthlyIncome) public {
+    function initializeRentalIncome(uint256 _monthlyIncome) internal {
         require(isRentalProperty, "This is not a rental property"); // Ensure the property is a rental property
-        require(monthlyIncome == 0, "Rental income already initialized"); // Ensure rental income is only initialized once
+        require(monthlyIncome == 0, "Sale already initialized"); // Ensure rental income is only initialized once
         monthlyIncome = _monthlyIncome;
         lastIncomeDistribution = block.timestamp;
     }

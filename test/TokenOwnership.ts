@@ -120,7 +120,156 @@ describe("PropertyERC20 Contract", function () {
             await expect(hardhatToken.getWhatRentalIncome()).to.be.revertedWith("This is not a rental property");
             
         });
-
     });
+
+    describe("Extreme Error Suite on initializeSale", function () {
+
+        let hardhatToken;
+        let owner;
+    
+        // Deploy the contract before each test
+        beforeEach(async function () {
+            [owner] = await ethers.getSigners();
+    
+            // Deploy the contract before each test
+            hardhatToken = await ethers.deployContract("PropertyERC20", [
+                "MockProp", "MPT"
+            ]);
+            await hardhatToken.waitForDeployment(); // Ensure deployment completes
+        });
+    
+        it("Should revert if rental income is 0", async function () {
+            const tokenPrice = 10;
+            const tokenSupply = 10;
+            const propRetal = true;
+            const monthlyIncome = 0;  // Invalid monthly income for rental property
+    
+            // Expect the contract to revert with the "Rental income must be greater than zero" error
+            await expect(
+                hardhatToken.initializeSale(
+                    tokenSupply, 
+                    tokenPrice, 
+                    owner.address, 
+                    propRetal, 
+                    monthlyIncome
+                )
+            ).to.be.revertedWith("Rental income must be greater than zero");
+        });
+    
+        it("Should revert if property token supply is 0", async function () {
+            const tokenPrice = 10;
+            const tokenSupply = 0;  // Invalid token supply (must be greater than 0)
+            const propRetal = true;
+            const monthlyIncome = 10;  // Valid monthly income for rental property
+    
+            // Expect the contract to revert with the "Property Token Supply must be greater than 0" error
+            await expect(
+                hardhatToken.initializeSale(
+                    tokenSupply, 
+                    tokenPrice, 
+                    owner.address, 
+                    propRetal, 
+                    monthlyIncome
+                )
+            ).to.be.revertedWith("Property Token Supply must be greater than 0");
+        });
+
+        it("Should revert if the sale is already initialized", async function () {
+            const tokenPrice = 10;
+            const tokenSupply = 1000;
+            const propertyOwner = owner.address;
+            const isRentalProperty = false;
+            const monthlyIncome = 0;
+        
+            // Initialize the sale for the first time
+            await hardhatToken.initializeSale(
+                tokenSupply, 
+                tokenPrice, 
+                propertyOwner, 
+                isRentalProperty, 
+                monthlyIncome
+            );
+        
+            // Try to initialize again and expect it to revert
+            await expect(
+                hardhatToken.initializeSale(
+                    tokenSupply, 
+                    tokenPrice, 
+                    propertyOwner, 
+                    isRentalProperty, 
+                    monthlyIncome
+                )
+            ).to.be.revertedWith("Sale already initialized");
+        });
+        
+        it("Should throw a TypeError if the total token supply is too large", async function () {
+            const tokenPrice = 10;
+            const tokenSupply = BigInt(10)**BigInt(25); // Using BigInt to ensure we are working with large numbers
+            const propertyOwner = owner.address;
+            const isRentalProperty = false;
+            const monthlyIncome = 0;
+        
+            // Expect a TypeError to be thrown due to the large number being handled
+            await expect(
+                hardhatToken.initializeSale(
+                    tokenSupply, 
+                    tokenPrice, 
+                    propertyOwner, 
+                    isRentalProperty, 
+                    monthlyIncome
+                )
+            ).to.be.revertedWith("Total supply is too large"); // Depending on the issue, you may get this revert instead
+        });
+
+        it("Should revert if the property owner is the zero address", async function () {
+            const tokenPrice = 10;
+            const tokenSupply = 1000;
+            const propertyOwner = "0x0000000000000000000000000000000000000000"; // Zero address
+            const isRentalProperty = false;
+            const monthlyIncome = 0;
+        
+            // Expect the contract to revert
+            await expect(
+                hardhatToken.initializeSale(
+                    tokenSupply, 
+                    tokenPrice, 
+                    propertyOwner, 
+                    isRentalProperty, 
+                    monthlyIncome
+                )
+            ).to.be.revertedWith("Invalid property owner address");
+        });
+    });    
+
+    describe("Rental Income Initialization", function () {
+
+        let hardhatToken;
+        let owner;
+    
+        beforeEach(async function () {
+            [owner] = await ethers.getSigners();
+    
+            // Deploy the contract before each test
+            hardhatToken = await ethers.deployContract("PropertyERC20", [
+                "MockProp", "MPT"
+            ]);
+            await hardhatToken.waitForDeployment(); // Ensure deployment completes
+        });
+    
+        it("Should revert if trying to initialize rental income more than once", async function () {
+            const tokenPrice = ethers.parseEther("0.1"); // Token price of 0.1 ETH
+            const tokenSupply = 1000; // Property token supply
+            const propertyOwner = owner.address;
+            const isRentalProperty = true; // Setting it as a rental property
+            const monthlyIncome = ethers.parseEther("1"); // Rental income of 1 ETH per month
+            
+            hardhatToken.initializeSale(tokenSupply, tokenPrice, propertyOwner, isRentalProperty, monthlyIncome)
+
+            // Call initializeRentalIncome again, which should fail because rental income is already initialized
+            await expect(
+                hardhatToken.initializeSale(tokenSupply, tokenPrice, propertyOwner, isRentalProperty, monthlyIncome)
+            ).to.be.revertedWith("Sale already initialized");
+        });
+    });    
 
 });

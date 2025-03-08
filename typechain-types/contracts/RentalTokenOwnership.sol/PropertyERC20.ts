@@ -41,7 +41,6 @@ export interface PropertyERC20Interface extends Interface {
       | "getTokenSupply"
       | "getTokensBought"
       | "getWhatRentalIncome"
-      | "initializeRentalIncome"
       | "initializeSale"
       | "isRentalProperty"
       | "lastIncomeDistribution"
@@ -113,10 +112,6 @@ export interface PropertyERC20Interface extends Interface {
   encodeFunctionData(
     functionFragment: "getWhatRentalIncome",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initializeRentalIncome",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "initializeSale",
@@ -203,10 +198,6 @@ export interface PropertyERC20Interface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getWhatRentalIncome",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "initializeRentalIncome",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -373,12 +364,6 @@ export interface PropertyERC20 extends BaseContract {
 
   getWhatRentalIncome: TypedContractMethod<[], [bigint], "view">;
 
-  initializeRentalIncome: TypedContractMethod<
-    [_monthlyIncome: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-
   initializeSale: TypedContractMethod<
     [
       _totalSupply: BigNumberish,
@@ -486,9 +471,6 @@ export interface PropertyERC20 extends BaseContract {
   getFunction(
     nameOrSignature: "getWhatRentalIncome"
   ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "initializeRentalIncome"
-  ): TypedContractMethod<[_monthlyIncome: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "initializeSale"
   ): TypedContractMethod<
