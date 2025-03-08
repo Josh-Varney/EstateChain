@@ -121,8 +121,8 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
             address buyer = buyers[i];
             uint256 tokenOwned = buyerTokens[buyer]; // Get the number of tokens the buyer owns
 
-            console.log("Buyer address: ", buyer);
-            console.log("Tokens owned by buyer: ", tokenOwned);
+            // console.log("Buyer address: ", buyer);
+            // console.log("Tokens owned by buyer: ", tokenOwned);
 
             // Calculate the buyer's share of the total income based on their token holdings
             if (tokenOwned > 0) {
