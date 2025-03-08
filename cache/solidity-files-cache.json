@@ -301,8 +301,8 @@
       ]
     },
     "/Users/josh-v/Desktop/BlockChain/FinalYear/EstateChain/contracts/RentalTokenOwnership.sol": {
-      "lastModificationDate": 1741444254542,
-      "contentHash": "ed4c707b6b86a8e9b0f7d102c5deec7d",
+      "lastModificationDate": 1741464924507,
+      "contentHash": "bf4266465ddf33681123469dc75fa24a",
       "sourceName": "contracts/RentalTokenOwnership.sol",
       "solcConfig": {
         "version": "0.8.28",

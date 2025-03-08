@@ -49,6 +49,7 @@ export interface PropertyERC20Interface extends Interface {
       | "ownerOf"
       | "propertyOwner"
       | "propertyTotalSupply"
+      | "setLastIncomeDistribution"
       | "setMonthlyIncome"
       | "symbol"
       | "tokenPrice"
@@ -140,6 +141,10 @@ export interface PropertyERC20Interface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "setLastIncomeDistribution",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setMonthlyIncome",
     values: [BigNumberish]
   ): string;
@@ -224,6 +229,10 @@ export interface PropertyERC20Interface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "propertyTotalSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setLastIncomeDistribution",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -348,7 +357,7 @@ export interface PropertyERC20 extends BaseContract {
 
   decimals: TypedContractMethod<[], [bigint], "view">;
 
-  distributeIncome: TypedContractMethod<[], [void], "nonpayable">;
+  distributeIncome: TypedContractMethod<[], [void], "payable">;
 
   getBuyers: TypedContractMethod<[], [string[]], "view">;
 
@@ -389,6 +398,12 @@ export interface PropertyERC20 extends BaseContract {
   propertyOwner: TypedContractMethod<[], [string], "view">;
 
   propertyTotalSupply: TypedContractMethod<[], [bigint], "view">;
+
+  setLastIncomeDistribution: TypedContractMethod<
+    [_timestamp: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
 
   setMonthlyIncome: TypedContractMethod<
     [_newMonthlyIncome: BigNumberish],
@@ -449,7 +464,7 @@ export interface PropertyERC20 extends BaseContract {
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "distributeIncome"
-  ): TypedContractMethod<[], [void], "nonpayable">;
+  ): TypedContractMethod<[], [void], "payable">;
   getFunction(
     nameOrSignature: "getBuyers"
   ): TypedContractMethod<[], [string[]], "view">;
@@ -505,6 +520,9 @@ export interface PropertyERC20 extends BaseContract {
   getFunction(
     nameOrSignature: "propertyTotalSupply"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "setLastIncomeDistribution"
+  ): TypedContractMethod<[_timestamp: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "setMonthlyIncome"
   ): TypedContractMethod<

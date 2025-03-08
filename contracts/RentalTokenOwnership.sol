@@ -77,20 +77,15 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
     // Buy tokens function
     function buyTokens(uint256 _tokenAmount) external payable nonReentrant {
         uint256 totalCost = _tokenAmount * tokenPrice;
+
         require(propertyTotalSupply > 0, "Insufficient Tokens Left");
         require(msg.value >= totalCost, "Insufficient ETH sent");
-
-        // Refund excess ETH if buyer sent too much
-        if (msg.value > totalCost) {
-            uint256 excess = msg.value - totalCost;
-            payable(msg.sender).transfer(excess); // Refund excess ETH
-        }
-
-
         require(propertyTotalSupply >= _tokenAmount, "Not enough tokens available");
 
+        // Calculate the excess ETH if buyer sent more than require
         // Transfer tokens to the buyer (from contract)
         _transfer(address(this), msg.sender, _tokenAmount);
+        
 
         // Update the buyer's token contribution
         buyerTokens[msg.sender] += _tokenAmount;
@@ -111,22 +106,24 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
     // --- Rental Income Distribution Module ---
 
     // Function to distribute fixed monthly income to buyers based on their token holdings
-    function distributeIncome() external nonReentrant {
-        require(isRentalProperty, "This is not a rental property");  // Ensure that this is a rental property
+    function distributeIncome() external payable nonReentrant {
+        require(isRentalProperty, "This is not a rental property");  
         require(msg.sender == propertyOwner, "Only the property owner can distribute income");
         require(block.timestamp >= lastIncomeDistribution + 30 days, "Monthly income distribution is not due yet");
+        require(msg.value >= monthlyIncome, "Not enough ETH sent for distribution");
 
-        // Ensure there is enough ETH in the contract to distribute
-        require(address(this).balance >= monthlyIncome, "Not enough ETH in the contract to distribute");
 
-        uint256 totalTokenSupply = propertyTotalSupply; // Total token supply
-        uint256 totalIncomeForBuyers = monthlyIncome;    // Total income to distribute to buyers
+        uint256 totalTokenSupply = propertyTotalSupply;
 
-        // Distribute the income portion to buyers
+        require(totalTokenSupply > 0, "Total token supply cannot be zero");
+
+        uint256 totalIncomeForBuyers = msg.value; // Use the ETH sent by the owner
+
+        // Distribute income to buyers based on their token holdings
         for (uint256 i = 0; i < buyers.length; i++) {
             address buyer = buyers[i];
-            uint256 buyerShare = (buyerTokens[buyer] * totalIncomeForBuyers) / totalTokenSupply; // Calculate buyer's share based on their token holdings
-            payable(buyer).transfer(buyerShare); // Send buyer their portion of the income
+            uint256 buyerShare = (buyerTokens[buyer] * totalIncomeForBuyers) / totalTokenSupply;
+            payable(buyer).transfer(buyerShare);
         }
 
         // Update the last income distribution timestamp
@@ -166,6 +163,12 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
     function getWhatRentalIncome() external view returns (uint256) {
         require(isRentalProperty, "This is not a rental property");
         return monthlyIncome;
+    }
+
+    // Temporary
+    function setLastIncomeDistribution(uint256 _timestamp) external {
+        require(msg.sender == propertyOwner, "Only the owner can set this");
+        lastIncomeDistribution = _timestamp;
     }
 
     // --- Admin Functions (Rental Income) ---

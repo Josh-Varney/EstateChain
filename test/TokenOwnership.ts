@@ -318,8 +318,6 @@ describe("PropertyERC20 Contract", function () {
                 const tokenAmount = 2;
                 const buyerAddr = addr1.address;
 
-                console.log(buyerAddr)
-
                 // Buyer sends ETH to purchase tokens
                 await hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("0.2")});
 
@@ -340,11 +338,134 @@ describe("PropertyERC20 Contract", function () {
 
             it("Not Enough Currency Issue", async function () {
                 const tokenAmount = 2;
-
                 // Buyer sends ETH to purchase tokens
                 await expect(hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("0.1")})).to.be.revertedWith("Insufficient ETH sent");
 
             });
+
+            it("Not Enough PropertyTokens Available", async function (){
+                const tokenAmount = 11;
+                await expect(hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("1.1")})).to.be.revertedWith("Not enough tokens available");
+            });
+
+            it ("Tokens have run empty", async function (){
+                const tokenAmount = 10;
+                await hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("1.0")});
+                await expect(hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("1.1")})).to.be.revertedWith("Insufficient Tokens Left");
+            });
+
+            it("Owner balance", async function () {
+                const tokenAmount = 10;
+                const ownerAddr = owner.address;
+            
+                // Get initial ETH balance of the owner
+                const initialOwnerBalance = await ethers.provider.getBalance(ownerAddr);
+            
+                // // Buyer purchases tokens, sending 1.1 ETH
+                await hardhatToken.connect(addr1).buyTokens(tokenAmount, { value: ethers.parseEther("1.0") });
+            
+                // // Get new ETH balance of the owner
+                const finalOwnerBalance = await ethers.provider.getBalance(ownerAddr);
+
+                expect(parseFloat(ethers.formatEther(finalOwnerBalance))).to.be.greaterThan(parseFloat(ethers.formatEther(initialOwnerBalance)));
+            });           
         });
     });    
+
+    describe("Test Distibution of Rental Income", function () {
+        let hardhatToken, hardhatTokenTest, owner, buyer1, buyer2;
+        
+        beforeEach(async function () {
+            [owner, buyer1, buyer2] = await ethers.getSigners();
+
+            hardhatToken = await ethers.deployContract("PropertyERC20", [
+                "MockProp", "MPT"
+            ]);
+            await hardhatToken.waitForDeployment();
+            
+            hardhatToken.initializeSale(
+                10, 
+                1, 
+                owner.address, 
+                true, 
+                ethers.parseEther("10"),
+            );
+
+           // // Buyer purchases tokens, sending 0.1 ETH
+           await hardhatToken.connect(buyer1).buyTokens(1, { value: ethers.parseEther("0.1") });
+
+            // // Buyer purchases tokens, sending 0.9 ETH
+           await hardhatToken.connect(buyer1).buyTokens(9, { value: ethers.parseEther("0.9") });
+
+        });
+    
+        it("Should distribute rental income correctly", async function () {
+            // Get initial balances
+            const balance_owner_1 = await hre.ethers.provider.getBalance(owner);
+            const balance_buyer_1 = await hre.ethers.provider.getBalance(buyer1);
+            const balance_buyer_2 = await hre.ethers.provider.getBalance(buyer2);
+
+            console.log("Owner: ", balance_owner_1);
+            console.log("Buyer 1: ", balance_buyer_1);
+            console.log("Buyer 2: ", balance_buyer_2);
+
+            await hardhatToken.setLastIncomeDistribution(0);
+
+            const timestampBigInt = await hardhatToken.getLastIncomeDistribution();
+            const timestamp = Number(timestampBigInt); // Convert to a regular number
+            const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
+            console.log("Last income distribution was on:", date.toLocaleString());
+
+            // // Call the distributeIncome function
+            // await hardhatToken.connect(owner).distributeIncome();
+    
+            // Calculate expected shares (40% of 10 ETH = 4 ETH, 60% of 10 ETH = 6 ETH)
+            // const expectedShare1 = ethers.parseEther("4");
+            // const expectedShare2 = ethers.parseEther("6");
+    
+            // // Get new balances
+            // const finalBalance1 = await ethers.provider.getBalance(buyer1.address);
+            // const finalBalance2 = await ethers.provider.getBalance(buyer2.address); 
+
+            // // Check if the correct amount was received
+            // expect(finalBalance1.sub(initialBalance1)).to.equal(expectedShare1);
+            // expect(finalBalance2.sub(initialBalance2)).to.equal(expectedShare2);
+        });
+    
+        it("Should not allow non-owners to distribute income", async function () {
+            await expect(hardhatToken.connect(buyer1).distributeIncome()).to.be.revertedWith("Only the property owner can distribute income");
+        });
+
+        it("Should not be distributed at this time", async function () {
+            await expect(hardhatToken.connect(owner).distributeIncome()).to.be.rejectedWith("Monthly income distribution is not due yet");
+        });
+
+        it("Should have the correct amount of ETH for distribution", async function () {
+            // Set Timestamp overide
+            await hardhatToken.setLastIncomeDistribution(0);
+            await expect(hardhatToken.distributeIncome({ value: ethers.parseEther("0.1") }))
+                .to.be.revertedWith("Not enough ETH sent for distribution");
+        });
+
+        it("Should be a rental property to distribute income", async function () {
+            [owner, buyer1, buyer2] = await ethers.getSigners();
+
+            hardhatTokenTest = await ethers.deployContract("PropertyERC20", [
+                "MockProp", "MPT"
+            ]);
+            await hardhatTokenTest.waitForDeployment();
+            
+            hardhatTokenTest.initializeSale(
+                10, 
+                1, 
+                owner.address, 
+                false, 
+                0,
+            );
+
+            await expect(hardhatTokenTest.connect(owner).distributeIncome()).to.be.rejectedWith("This is not a rental property");
+        });
+    });
+    
+
 });
