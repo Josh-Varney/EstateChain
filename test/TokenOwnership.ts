@@ -385,51 +385,43 @@ describe("PropertyERC20 Contract", function () {
             
             hardhatToken.initializeSale(
                 10, 
-                1, 
+                ethers.parseEther("1"), 
                 owner.address, 
                 true, 
                 ethers.parseEther("10"),
             );
-
-           // // Buyer purchases tokens, sending 0.1 ETH
-           await hardhatToken.connect(buyer1).buyTokens(1, { value: ethers.parseEther("0.1") });
-
-            // // Buyer purchases tokens, sending 0.9 ETH
-           await hardhatToken.connect(buyer1).buyTokens(9, { value: ethers.parseEther("0.9") });
-
         });
     
         it("Should distribute rental income correctly", async function () {
             // Get initial balances
             const balance_owner_1 = await hre.ethers.provider.getBalance(owner);
-            const balance_buyer_1 = await hre.ethers.provider.getBalance(buyer1);
-            const balance_buyer_2 = await hre.ethers.provider.getBalance(buyer2);
-
-            console.log("Owner: ", balance_owner_1);
-            console.log("Buyer 1: ", balance_buyer_1);
-            console.log("Buyer 2: ", balance_buyer_2);
-
+            // Set and Check Timestamp to one to distribute rental income
             await hardhatToken.setLastIncomeDistribution(0);
-
             const timestampBigInt = await hardhatToken.getLastIncomeDistribution();
             const timestamp = Number(timestampBigInt); // Convert to a regular number
             const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
-            console.log("Last income distribution was on:", date.toLocaleString());
 
-            // // Call the distributeIncome function
-            // await hardhatToken.connect(owner).distributeIncome();
+            // Buyers need to purchase tokens 
+            await hardhatToken.connect(buyer1).buyTokens(2, { value: ethers.parseEther("2") });
+            await hardhatToken.connect(buyer2).buyTokens(8, { value: ethers.parseEther("8") });
+
+            // Buyers after token transaction
+            const balance_buyer_1_a = await hre.ethers.provider.getBalance(buyer1);
+            const balance_buyer_2_a = await hre.ethers.provider.getBalance(buyer2);
+            console.log("Buyer 1 before Transaction: ", balance_buyer_1_a);
+            console.log("Buyer 2 before Transaction: ", balance_buyer_2_a);
+
+
+            // Call the distributeIncome function
+            await hardhatToken.connect(owner).distributeIncome( { value: ethers.parseEther("10") });
     
-            // Calculate expected shares (40% of 10 ETH = 4 ETH, 60% of 10 ETH = 6 ETH)
-            // const expectedShare1 = ethers.parseEther("4");
-            // const expectedShare2 = ethers.parseEther("6");
-    
-            // // Get new balances
-            // const finalBalance1 = await ethers.provider.getBalance(buyer1.address);
-            // const finalBalance2 = await ethers.provider.getBalance(buyer2.address); 
+            // Get new balances
+            const finalBalance1 = await ethers.provider.getBalance(buyer1.address);
+            const finalBalance2 = await ethers.provider.getBalance(buyer2.address); 
 
             // // Check if the correct amount was received
-            // expect(finalBalance1.sub(initialBalance1)).to.equal(expectedShare1);
-            // expect(finalBalance2.sub(initialBalance2)).to.equal(expectedShare2);
+            console.log("Buyer 1 after Transaction: ", finalBalance1);
+            console.log("Buyer 2 after Transaction: ", finalBalance2);
         });
     
         it("Should not allow non-owners to distribute income", async function () {

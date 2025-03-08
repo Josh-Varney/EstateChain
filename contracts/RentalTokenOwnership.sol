@@ -7,7 +7,8 @@ import "hardhat/console.sol";
 
 contract PropertyERC20 is ERC20, ReentrancyGuard {
     // --- Property Token Sale Details ---
-    uint256 public propertyTotalSupply; 
+    uint256 public propertyTokenSupply;
+    uint256 public propertyTotalSupplyLeft; 
     uint256 public tokenPrice;
     address public propertyOwner;
 
@@ -37,12 +38,13 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
         bool _isRentalProperty,  // Flag to specify if this is a rental property or a regular sale
         uint256 _monthlyIncome   // Monthly rental income (if it's a rental property)
     ) external {
-        require(propertyTotalSupply == 0, "Sale already initialized"); // Ensure sale is only initialized once
+        require(propertyTotalSupplyLeft == 0, "Sale already initialized"); // Ensure sale is only initialized once
         
-        propertyTotalSupply = _totalSupply;  // Keep it as whole numbers
+        propertyTokenSupply = _totalSupply;
+        propertyTotalSupplyLeft = _totalSupply;  // Keep it as whole numbers
 
-        require(propertyTotalSupply > 0, "Property Token Supply must be greater than 0");
-        require(propertyTotalSupply <= 10**24, "Total supply is too large");
+        require(propertyTotalSupplyLeft > 0, "Property Token Supply must be greater than 0");
+        require(propertyTotalSupplyLeft <= 10**24, "Total supply is too large");
 
 
         tokenPrice = _tokenPrice;            
@@ -55,7 +57,7 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
                           
         isRentalProperty = _isRentalProperty;  // Set the flag to indicate if this is a rental property
         
-        _mint(address(this), propertyTotalSupply);
+        _mint(address(this), propertyTotalSupplyLeft);
 
         // If the property is a rental, initialize the rental income
         if (isRentalProperty) {
@@ -78,20 +80,19 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
     function buyTokens(uint256 _tokenAmount) external payable nonReentrant {
         uint256 totalCost = _tokenAmount * tokenPrice;
 
-        require(propertyTotalSupply > 0, "Insufficient Tokens Left");
+        require(propertyTotalSupplyLeft > 0, "Insufficient Tokens Left");
         require(msg.value >= totalCost, "Insufficient ETH sent");
-        require(propertyTotalSupply >= _tokenAmount, "Not enough tokens available");
+        require(propertyTotalSupplyLeft >= _tokenAmount, "Not enough tokens available");
 
         // Calculate the excess ETH if buyer sent more than require
         // Transfer tokens to the buyer (from contract)
         _transfer(address(this), msg.sender, _tokenAmount);
         
-
         // Update the buyer's token contribution
         buyerTokens[msg.sender] += _tokenAmount;
 
         // Now simply subtract whole numbers
-        propertyTotalSupply -= _tokenAmount;
+        propertyTotalSupplyLeft -= _tokenAmount;
 
 
         // Transfer ETH to the property owner
@@ -111,23 +112,27 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
         require(msg.sender == propertyOwner, "Only the property owner can distribute income");
         require(block.timestamp >= lastIncomeDistribution + 30 days, "Monthly income distribution is not due yet");
         require(msg.value >= monthlyIncome, "Not enough ETH sent for distribution");
+        require(propertyTokenSupply > 0, "Total token supply cannot be zero");
 
-
-        uint256 totalTokenSupply = propertyTotalSupply;
-
-        require(totalTokenSupply > 0, "Total token supply cannot be zero");
-
+        uint256 totalTokenSupply = propertyTokenSupply;
         uint256 totalIncomeForBuyers = msg.value; // Use the ETH sent by the owner
 
-        // Distribute income to buyers based on their token holdings
-        for (uint256 i = 0; i < buyers.length; i++) {
+        for (uint256 i = 0; i < buyers.length; i++){
             address buyer = buyers[i];
-            uint256 buyerShare = (buyerTokens[buyer] * totalIncomeForBuyers) / totalTokenSupply;
-            payable(buyer).transfer(buyerShare);
-        }
+            uint256 tokenOwned = buyerTokens[buyer]; // Get the number of tokens the buyer owns
 
-        // Update the last income distribution timestamp
-        lastIncomeDistribution = block.timestamp;
+            console.log("Buyer address: ", buyer);
+            console.log("Tokens owned by buyer: ", tokenOwned);
+
+            // Calculate the buyer's share of the total income based on their token holdings
+            if (tokenOwned > 0) {
+                uint256 buyerShare = (tokenOwned * totalIncomeForBuyers) / totalTokenSupply;
+                // Transfer the buyer's share of ETH to the buyer
+                payable(buyer).transfer(buyerShare);
+
+                console.log("Transferred ", buyerShare, " ETH to buyer: ", buyer);
+            }
+        }
     }
 
     // --- View Functions (Property Token Sale) ---
@@ -157,7 +162,7 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
     }
 
     function getTokenSupply() external view returns (uint256) {
-        return propertyTotalSupply;
+        return propertyTotalSupplyLeft;
     }
 
     function getWhatRentalIncome() external view returns (uint256) {

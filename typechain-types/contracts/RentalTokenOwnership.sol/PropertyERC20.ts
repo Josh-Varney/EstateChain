@@ -48,7 +48,8 @@ export interface PropertyERC20Interface extends Interface {
       | "name"
       | "ownerOf"
       | "propertyOwner"
-      | "propertyTotalSupply"
+      | "propertyTokenSupply"
+      | "propertyTotalSupplyLeft"
       | "setLastIncomeDistribution"
       | "setMonthlyIncome"
       | "symbol"
@@ -137,7 +138,11 @@ export interface PropertyERC20Interface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "propertyTotalSupply",
+    functionFragment: "propertyTokenSupply",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "propertyTotalSupplyLeft",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -228,7 +233,11 @@ export interface PropertyERC20Interface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "propertyTotalSupply",
+    functionFragment: "propertyTokenSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "propertyTotalSupplyLeft",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -397,7 +406,9 @@ export interface PropertyERC20 extends BaseContract {
 
   propertyOwner: TypedContractMethod<[], [string], "view">;
 
-  propertyTotalSupply: TypedContractMethod<[], [bigint], "view">;
+  propertyTokenSupply: TypedContractMethod<[], [bigint], "view">;
+
+  propertyTotalSupplyLeft: TypedContractMethod<[], [bigint], "view">;
 
   setLastIncomeDistribution: TypedContractMethod<
     [_timestamp: BigNumberish],
@@ -518,7 +529,10 @@ export interface PropertyERC20 extends BaseContract {
     nameOrSignature: "propertyOwner"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "propertyTotalSupply"
+    nameOrSignature: "propertyTokenSupply"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "propertyTotalSupplyLeft"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "setLastIncomeDistribution"
