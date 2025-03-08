@@ -3,5 +3,3 @@
 /* eslint-disable */
 import type * as rentalTokenOwnershipSol from "./RentalTokenOwnership.sol";
 export type { rentalTokenOwnershipSol };
-import type * as tokenOwnershipSol from "./TokenOwnership.sol";
-export type { tokenOwnershipSol };

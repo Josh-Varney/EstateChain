@@ -3,41 +3,67 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "hardhat/console.sol";
 
-contract RentalPropertyERC20 is ERC20, ReentrancyGuard {
-    // Property & Sale Details 
+contract PropertyERC20 is ERC20, ReentrancyGuard {
+    // --- Property Token Sale Details ---
     uint256 public propertyTotalSupply; 
     uint256 public tokenPrice;
     address public propertyOwner;
+
+    mapping(address => uint256) public buyerTokens;
+    address[] public buyers;
+
+    // --- Rental Income Distribution Details ---
     uint256 public monthlyIncome;
     uint256 public lastIncomeDistribution;
 
-    mapping(address => uint256) public buyerTokens;
+    // --- Property Type Flag ---
+    bool public isRentalProperty;  // Flag to determine if this is a rental property or a one-time sale
 
-    address[] public buyers;
-
-    // Sets the initial parameters and mints the tokens
+    // --- Constructor ---
     constructor(
         string memory _name, 
-        string memory _symbol, 
+        string memory _symbol
+    ) 
+        ERC20(_name, _symbol)
+    {}
+
+    // --- Property Token Sale Initialization ---
+    function initializeSale(
         uint256 _totalSupply, 
         uint256 _tokenPrice, 
         address _propertyOwner,
-        uint256 _monthlyIncome  // Fixed amount of income to distribute
-    ) 
-        ERC20(_name, _symbol)
-    {
+        bool _isRentalProperty,  // Flag to specify if this is a rental property or a regular sale
+        uint256 _monthlyIncome   // Monthly rental income (if it's a rental property)
+    ) external {
+        require(propertyTotalSupply == 0, "Sale already initialized"); // Ensure sale is only initialized once
+        
         propertyTotalSupply = _totalSupply * (10 ** uint256(decimals()));  
         tokenPrice = _tokenPrice;                                       
         propertyOwner = _propertyOwner;                                    
-        monthlyIncome = _monthlyIncome;                        
-        lastIncomeDistribution = block.timestamp;                         
-
-        // Mint the total supply of tokens to the contract itself
+        isRentalProperty = _isRentalProperty;  // Set the flag to indicate if this is a rental property
+        
         _mint(address(this), propertyTotalSupply);
+
+        // If the property is a rental, initialize the rental income
+        if (isRentalProperty) {
+            require(_monthlyIncome > 0, "Rental income must be greater than zero");
+            initializeRentalIncome(_monthlyIncome);
+        }
     }
 
-     // Buy tokens function
+    // --- Rental Income Distribution Initialization ---
+    function initializeRentalIncome(uint256 _monthlyIncome) public {
+        require(isRentalProperty, "This is not a rental property"); // Ensure the property is a rental property
+        require(monthlyIncome == 0, "Rental income already initialized"); // Ensure rental income is only initialized once
+        monthlyIncome = _monthlyIncome;
+        lastIncomeDistribution = block.timestamp;
+    }
+
+    // --- Property Token Sale Module ---
+
+    // Buy tokens function
     function buyTokens(uint256 _tokenAmount) external payable nonReentrant {
         uint256 totalCost = _tokenAmount * tokenPrice;
         require(msg.value >= totalCost, "Insufficient ETH sent");
@@ -63,8 +89,11 @@ contract RentalPropertyERC20 is ERC20, ReentrancyGuard {
         }
     }
 
+    // --- Rental Income Distribution Module ---
+
     // Function to distribute fixed monthly income to buyers based on their token holdings
     function distributeIncome() external nonReentrant {
+        require(isRentalProperty, "This is not a rental property");  // Ensure that this is a rental property
         require(msg.sender == propertyOwner, "Only the property owner can distribute income");
         require(block.timestamp >= lastIncomeDistribution + 30 days, "Monthly income distribution is not due yet");
 
@@ -84,25 +113,46 @@ contract RentalPropertyERC20 is ERC20, ReentrancyGuard {
         // Update the last income distribution timestamp
         lastIncomeDistribution = block.timestamp;
     }
-    
-    // Function to get the list of all buyers
+
+    // --- View Functions (Property Token Sale) ---
     function getBuyers() external view returns (address[] memory) {
         return buyers;
     }
 
-    // Function to get the number of tokens bought by a specific address
     function getTokensBought(address buyer) external view returns (uint256) {
         return buyerTokens[buyer];
     }
 
-    // Function to get the propertyOwner address
     function ownerOf() external view returns (address) {
         return propertyOwner;
     }
 
-    // Function to set a new monthly income amount (only the owner can set)
+    // --- View Functions (Rental Income Distribution) ---
+    function getMonthlyIncome() external view returns (uint256) {
+        return monthlyIncome;
+    }
+
+    function getLastIncomeDistribution() external view returns (uint256) {
+        return lastIncomeDistribution;
+    }
+
+    function getIsRentalProperty() external view returns (bool) {
+        return isRentalProperty;
+    }
+
+    function getTokenSupply() external view returns (uint256) {
+        return propertyTotalSupply;
+    }
+
+    function getWhatRentalIncome() external view returns (uint256) {
+        require(isRentalProperty, "This is not a rental property");
+        return monthlyIncome;
+    }
+
+    // --- Admin Functions (Rental Income) ---
     function setMonthlyIncome(uint256 _newMonthlyIncome) external {
         require(msg.sender == propertyOwner, "Only the property owner can set the income");
+        require(isRentalProperty, "This is not a rental property");
         monthlyIncome = _newMonthlyIncome;
     }
 }

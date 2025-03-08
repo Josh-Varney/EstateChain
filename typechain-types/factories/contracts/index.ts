@@ -2,4 +2,3 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as rentalTokenOwnershipSol from "./RentalTokenOwnership.sol";
-export * as tokenOwnershipSol from "./TokenOwnership.sol";
