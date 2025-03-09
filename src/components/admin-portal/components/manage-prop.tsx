@@ -5,6 +5,7 @@ import { Card } from "../../../shadcn-components/ui/card";
 import { Send, Trash, CheckCircle, XCircle } from "lucide-react"; // Icons
 import React from "react";
 import { approvePropertyAndSendNotification, fetchProperties, rejectAndSubmitFeedback } from "../admin-manager/get-prop";
+import { deploymentScript } from "../admin-manager/test";
 
 // Property interface based on your data
 interface Property {
@@ -57,6 +58,13 @@ export default function ManageProperties() {
   const [showApprovalModal, setShowApprovalModal] = useState<boolean>(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [refetch, setRefetch] = useState(false);
+
+  const [contractAddress, setContractAddress] = useState<string>('');
+
+  // Handle input change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContractAddress(e.target.value);
+  };
 
   // Fetch properties from API on component mount
   useEffect(() => {
@@ -258,6 +266,66 @@ export default function ManageProperties() {
               )}
               </pre>
             </div>
+
+            <div className="p-6 font-sans">
+              <h2 className="text-2xl text-gray-800 mb-4">Deploy The Property</h2>
+              <p className="text-lg text-gray-600 mb-6">
+                  To deploy the application, simply copy and paste the following command into your terminal:
+                  Ensure there is enough ETH in the owners account.
+              </p>
+
+              <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono whitespace-pre-wrap">
+                  <code>
+                  (base) josh-v@joshuas-mbp EstateChain % MODULE_NAME="PropertyName" \
+                          PROPERTY_TOKEN_SUPPLY=1000 \
+                          PROPERTY_TOKEN_PRICE=10 \
+                          PROPERTY_OWNER="0x12345" \
+                          PROPERTY_IS_RENTAL=true \
+                          PROPERTY_MONTHLY_INCOME=500 \
+                          PROPERTY_NAME="Property Name" \
+                          PROPERTY_ABR="PNM" \
+                          npx hardhat ignition deploy ./ignition/modules/TokenOwnership.js --network holesky
+                  </code>
+              </div>
+
+              <p className="text-lg text-gray-600 mt-6">
+                  Ensure you have Node.js and npm installed before proceeding with the deployment.
+                  Please ensure that the property has been correctly added to the blockchain ensuring that the correct fields have been entered. 
+              </p>
+
+              <p className="text-lg text-black mt-6">
+                Please then enter the smart contract address if successfully deployed.
+
+                <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono whitespace-pre-wrap">
+                  <code>
+                         
+
+                        Deployed Addresses:
+
+                        MODULE_NAME#PropertyERC20 - 0x566bB67F7304C45A497a45a9b0f0F477a79060DE
+                  </code>
+              </div>
+              </p>
+
+              <div className="mt-4">
+                <label
+                  htmlFor="contractAddress"
+                  className="block text-gray-700 text-sm font-medium mb-2"
+                >
+                  Smart Contract Address
+                </label>
+                <input
+                  type="text"
+                  id="contractAddress"
+                  value={contractAddress}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter smart contract address"
+                />
+              </div>
+
+          </div>
+
             <div className="mt-4 flex justify-end gap-2">
               {/* Close Button */}
               <Button variant="outline" onClick={closeApprovalModal}>
@@ -268,7 +336,12 @@ export default function ManageProperties() {
               <Button
                 variant="default"
                 onClick={() => {
-                  approvePropertyHandler(selectedProperty.propertyID, selectedProperty.propertyAddedBy);
+                  deploymentScript();
+                  // approvePropertyHandler(selectedProperty.propertyID, selectedProperty.propertyAddedBy);
+                  console.log(contractAddress);
+
+                  setContractAddress("");
+                  // Entry to the database through go endpoint to save the smart contract address.
                   closeApprovalModal();
                 }}
               >

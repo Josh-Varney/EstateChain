@@ -72,3 +72,14 @@
     - Consumer Protection Laws
     - Custody of Assets, Stablecoin and Fiat Conversions
     - Intellectual Property Rights and Licensing for Software# EstateChain
+
+
+(base) josh-v@joshuas-mbp EstateChain % MODULE_NAME="PropertyName" \
+PROPERTY_TOKEN_SUPPLY=1000 \
+PROPERTY_TOKEN_PRICE=10 \
+PROPERTY_OWNER="0x12345" \
+PROPERTY_IS_RENTAL=true \
+PROPERTY_MONTHLY_INCOME=500 \
+PROPERTY_NAME="Property Name" \
+PROPERTY_ABR="PNM" \
+npx hardhat ignition deploy ./ignition/modules/TokenOwnership.js --network holesky
