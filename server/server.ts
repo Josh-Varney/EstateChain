@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import axios from "axios";
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { formatUnits } from 'ethers';
+
 
 dotenv.config();
 

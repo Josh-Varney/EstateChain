@@ -1,4 +1,4 @@
-import hre, { ethers } from "hardhat";
+import { ethers } from "hardhat";
 import { expect } from "chai";
 
 describe("PropertyERC20 Contract", function () {
@@ -394,7 +394,7 @@ describe("PropertyERC20 Contract", function () {
     
         it("Should distribute rental income correctly", async function () {
             // Get initial balances
-            const balance_owner_1 = await hre.ethers.provider.getBalance(owner);
+            const balance_owner_1 = await ethers.provider.getBalance(owner);
             // Set and Check Timestamp to one to distribute rental income
             await hardhatToken.setLastIncomeDistribution(0);
             const timestampBigInt = await hardhatToken.getLastIncomeDistribution();
@@ -406,8 +406,8 @@ describe("PropertyERC20 Contract", function () {
             await hardhatToken.connect(buyer2).buyTokens(8, { value: ethers.parseEther("8") });
 
             // Buyers after token transaction
-            const balance_buyer_1_a = await hre.ethers.provider.getBalance(buyer1);
-            const balance_buyer_2_a = await hre.ethers.provider.getBalance(buyer2);
+            const balance_buyer_1_a = await ethers.provider.getBalance(buyer1);
+            const balance_buyer_2_a = await ethers.provider.getBalance(buyer2);
             console.log("Buyer 1 before Transaction: ", balance_buyer_1_a);
             console.log("Buyer 2 before Transaction: ", balance_buyer_2_a);
 
