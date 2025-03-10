@@ -132,6 +132,12 @@ func main() {
 		notification.PropertyNotified(db, c)
 	})
 
+	// Define the route and pass the database connection
+    router.PUT("/property/:propertyID/:pSmartAddress/:bType/:bCurrency", func(c *gin.Context) {
+        admin.AddTokenisedPropertyDetails(db, c)
+    })
+
+
 	// Start server
 	router.Run(":8080")
 }

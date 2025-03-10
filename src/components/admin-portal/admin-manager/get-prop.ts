@@ -65,12 +65,14 @@ export const approvePropertyAndSendNotification = async (propertyID: number, pro
             // Now send a notification regarding the approval
             const notificationResponse = await axios.post("http://localhost:8080/send-notification", {
                 uuid: propertyAddedBy,  // Assuming propertyAddedBy is a valid UUID here
-                message: `Property with ID ${propertyID} has been approved.`,
+                message: `Property with ID ${propertyID} has been approved and deployed.`,
                 type: "info",
                 related_table: "Property",
                 relatedID: propertyID,
                 wasRead: false
             });
+
+            console.log(notificationResponse);
 
             if (notificationResponse.status >= 200 && notificationResponse.status < 300) {
                 console.log("Approval notification sent successfully");

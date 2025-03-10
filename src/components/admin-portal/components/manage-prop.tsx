@@ -5,7 +5,7 @@ import { Card } from "../../../shadcn-components/ui/card";
 import { Send, Trash, CheckCircle, XCircle } from "lucide-react"; // Icons
 import React from "react";
 import { approvePropertyAndSendNotification, fetchProperties, rejectAndSubmitFeedback } from "../admin-manager/get-prop";
-import { deploymentScript } from "../admin-manager/test";
+import { updateProperty } from "../admin-manager/deploy";
 
 // Property interface based on your data
 interface Property {
@@ -58,6 +58,7 @@ export default function ManageProperties() {
   const [showApprovalModal, setShowApprovalModal] = useState<boolean>(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [refetch, setRefetch] = useState(false);
+  const [error, setError] = useState<boolean>(false);
 
   const [contractAddress, setContractAddress] = useState<string>('');
 
@@ -207,46 +208,44 @@ export default function ManageProperties() {
         </div>
       )}
 
-      {/* Modal for Submit Approval */}
-      {showApprovalModal && selectedProperty && (
-        <div className="fixed inset-0 text-black bg-gray-500 bg-opacity-50 flex items-center justify-center z-10">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full h-auto">
-            <h2 className="text-2xl font-semibold mb-4">Contract Details</h2>
-            <div className="mt-6 mb-6 space-y-6">
-              {selectedProperty.propertyRental ? (
-                <div className="p-6">
-                  <p className="text-lg text-gray-700 mt-2">
-                    The client wishes to tokenize the property into{" "}
-                    <span className="font-bold text-indigo-700">{selectedProperty.propertyTokensLeft}</span> tokens, 
-                    for a price of{" "}
-                    <span className="font-bold text-green-700">{atob(selectedProperty.propertyTokenPrice)}</span> per token, 
-                    with a total property valuation of{" "}
-                    <span className="font-bold text-blue-700">{atob(selectedProperty.propertyPrice)}</span>.
-                  </p>
-                  <p className="text-lg text-gray-700 mt-4">
-                    As this is a rental property, the client is required to pay{" "}
-                    <span className="font-bold text-red-600">{selectedProperty.rentalDistributionExpectancy }</span> 
-                    {" "} to the owners of the property as part of the rental agreement.
-                  </p>
-                </div>
-              ) : (
-                <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                  <h1 className="text-2xl font-semibold text-gray-900">
-                    Tokenization Details
-                  </h1>
-                  <p className="text-lg text-gray-700 mt-2">
-                    The client wishes to split the property into{" "}
-                    <span className="font-bold text-indigo-700">{selectedProperty.propertyTokensLeft}</span> tokens, 
-                    each priced at{" "}
-                    <span className="font-bold text-green-700">{atob(selectedProperty.propertyTokenPrice)}</span>, 
-                    with a total property valuation of{" "}
-                    <span className="font-bold text-blue-700">{atob(selectedProperty.propertyPrice)}</span>.
-                  </p>
-                </div>
-              )}
-            </div>
-            <div className="overflow-y-auto max-h-96">
-              <pre className="bg-gray-100 p-4 rounded">
+          {/* Modal for Submit Approval */}
+    {showApprovalModal && selectedProperty && (
+      <div className="fixed inset-0 text-black bg-gray-500 bg-opacity-50 flex items-center justify-center z-10 p-4">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full h-auto max-h-[90vh] overflow-y-auto">
+          <h2 className="text-2xl font-semibold mb-4">Contract Details</h2>
+          <div className="mt-6 mb-6 space-y-6">
+            {selectedProperty.propertyRental ? (
+              <div className="p-6">
+                <p className="text-lg text-gray-700 mt-2">
+                  The client wishes to tokenize the property into
+                  <span className="font-bold text-indigo-700"> {selectedProperty.propertyTokensLeft} </span>
+                  tokens, for a price of
+                  <span className="font-bold text-green-700"> {atob(selectedProperty.propertyTokenPrice)} </span>
+                  per token, with a total property valuation of
+                  <span className="font-bold text-blue-700"> {atob(selectedProperty.propertyPrice)} </span>.
+                </p>
+                <p className="text-lg text-gray-700 mt-4">
+                  As this is a rental property, the client is required to pay
+                  <span className="font-bold text-red-600"> {selectedProperty.rentalDistributionExpectancy} </span>
+                  to the owners of the property as part of the rental agreement.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                <h1 className="text-2xl font-semibold text-gray-900">Tokenization Details</h1>
+                <p className="text-lg text-gray-700 mt-2">
+                  The client wishes to split the property into
+                  <span className="font-bold text-indigo-700"> {selectedProperty.propertyTokensLeft} </span>
+                  tokens, each priced at
+                  <span className="font-bold text-green-700"> {atob(selectedProperty.propertyTokenPrice)} </span>,
+                  with a total property valuation of
+                  <span className="font-bold text-blue-700"> {atob(selectedProperty.propertyPrice)} </span>.
+                </p>
+              </div>
+            )}
+          </div>
+          <div className="overflow-y-auto max-h-64 border border-gray-300 p-4 rounded-lg">
+            <pre className="bg-gray-100 p-4 rounded text-sm">
               {JSON.stringify(
                 {
                   address: selectedProperty.propertyAddress,
@@ -255,7 +254,7 @@ export default function ManageProperties() {
                   postcode: selectedProperty.propertyPostcode,
                   isRental: selectedProperty.propertyRental,
                   clientPaysToOwners: selectedProperty.rentalDistributionExpectancy,
-                  price: atob(selectedProperty.propertyPrice), // Decoded price
+                  price: atob(selectedProperty.propertyPrice),
                   tokenPrice: atob(selectedProperty.propertyTokenPrice),
                   tokenNumber: selectedProperty.propertyTokensLeft,
                   agentID: selectedProperty.agentID,
@@ -264,93 +263,101 @@ export default function ManageProperties() {
                 null,
                 2
               )}
-              </pre>
-            </div>
-
-            <div className="p-6 font-sans">
-              <h2 className="text-2xl text-gray-800 mb-4">Deploy The Property</h2>
-              <p className="text-lg text-gray-600 mb-6">
-                  To deploy the application, simply copy and paste the following command into your terminal:
-                  Ensure there is enough ETH in the owners account.
-              </p>
-
-              <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono whitespace-pre-wrap">
-                  <code>
-                  (base) josh-v@joshuas-mbp EstateChain % MODULE_NAME="PropertyName" \
-                          PROPERTY_TOKEN_SUPPLY=1000 \
-                          PROPERTY_TOKEN_PRICE=10 \
-                          PROPERTY_OWNER="0x12345" \
-                          PROPERTY_IS_RENTAL=true \
-                          PROPERTY_MONTHLY_INCOME=500 \
-                          PROPERTY_NAME="Property Name" \
-                          PROPERTY_ABR="PNM" \
-                          npx hardhat ignition deploy ./ignition/modules/TokenOwnership.js --network holesky
-                  </code>
-              </div>
-
-              <p className="text-lg text-gray-600 mt-6">
-                  Ensure you have Node.js and npm installed before proceeding with the deployment.
-                  Please ensure that the property has been correctly added to the blockchain ensuring that the correct fields have been entered. 
-              </p>
-
-              <p className="text-lg text-black mt-6">
-                Please then enter the smart contract address if successfully deployed.
-
-                <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono whitespace-pre-wrap">
-                  <code>
-                         
-
-                        Deployed Addresses:
-
-                        MODULE_NAME#PropertyERC20 - 0x566bB67F7304C45A497a45a9b0f0F477a79060DE
-                  </code>
-              </div>
-              </p>
-
-              <div className="mt-4">
-                <label
-                  htmlFor="contractAddress"
-                  className="block text-gray-700 text-sm font-medium mb-2"
-                >
-                  Smart Contract Address
-                </label>
-                <input
-                  type="text"
-                  id="contractAddress"
-                  value={contractAddress}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter smart contract address"
-                />
-              </div>
-
+            </pre>
           </div>
 
-            <div className="mt-4 flex justify-end gap-2">
-              {/* Close Button */}
-              <Button variant="outline" onClick={closeApprovalModal}>
-                Close
-              </Button>
-              
-              {/* Accept Button */}
-              <Button
-                variant="default"
-                onClick={() => {
-                  deploymentScript();
-                  // approvePropertyHandler(selectedProperty.propertyID, selectedProperty.propertyAddedBy);
-                  console.log(contractAddress);
-
-                  setContractAddress("");
-                  // Entry to the database through go endpoint to save the smart contract address.
-                  closeApprovalModal();
-                }}
-              >
-                Accept
-              </Button>
+          <div className="p-6 font-sans">
+            <h2 className="text-2xl text-gray-800 mb-4">Deploy The Property</h2>
+            <p className="text-lg text-gray-600 mb-6">
+              To deploy the application, simply copy and paste the following command into your terminal:
+              Ensure there is enough ETH in the owner's account.
+            </p>
+            <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono whitespace-pre-wrap overflow-x-auto">
+              <code>
+                (base) josh-v@joshuas-mbp EstateChain % MODULE_NAME="PropertyName" \
+                PROPERTY_TOKEN_SUPPLY=1000 \
+                PROPERTY_TOKEN_PRICE=10 \
+                PROPERTY_OWNER="0x12345" \
+                PROPERTY_IS_RENTAL=true \
+                PROPERTY_MONTHLY_INCOME=500 \
+                PROPERTY_NAME="Property Name" \
+                PROPERTY_ABR="PNM" \
+                npx hardhat ignition deploy ./ignition/modules/TokenOwnership.js --network holesky
+              </code>
             </div>
+
+            <p className="text-lg text-gray-600 mt-6">
+              Ensure you have Node.js and npm installed before proceeding with the deployment.
+              Please ensure that the property has been correctly added to the blockchain ensuring that the correct fields have been entered.
+            </p>
+
+            <p className="text-lg text-black mt-6">
+              Please enter the smart contract address if successfully deployed.
+            </p>
+
+            <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono whitespace-pre-wrap overflow-x-auto">
+              <code>
+                Deployed Addresses:
+                MODULE_NAME#PropertyERC20 - 0x566bB67F7304C45A497a45a9b0f0F477a79060DE
+              </code>
+            </div>
+          </div>
+
+          {error && (
+            <p className="text-lg font-semibold text-red-500 text-center mt-2">Please deploy the contract and note the deployed address before submission</p>
+          )}
+
+          <div className="mt-4">
+            <label htmlFor="contractAddress" className="block text-gray-700 text-sm font-medium mb-2">
+              Smart Contract Address
+            </label>
+            <input
+              type="text"
+              id="contractAddress"
+              value={contractAddress}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter smart contract address"
+            />
+          </div>
+
+          <div className="mt-4 flex justify-end gap-2">
+            <Button variant="outline" onClick={closeApprovalModal}>Close</Button>
+            <Button
+              variant="default"
+              onClick={async () => {
+                console.log(contractAddress);
+                // Step 1: Check if contractAddress exists
+                if (!contractAddress) {
+                  setError(true);  // Display error message if contractAddress is missing
+                  return;
+                }
+              
+                try {
+                  // Step 2: Attempt to update the property
+                  await updateProperty(selectedProperty.propertyID, contractAddress, "holesky", "ETH");
+              
+                  // Step 3: If updateProperty was successful, proceed with the next function
+                  await approvePropertyAndSendNotification(selectedProperty.propertyID, selectedProperty.propertyAddedBy);
+              
+                  // Step 4: Reset state and close modal
+                  setRefetch(true);
+                  setContractAddress("");
+                  closeApprovalModal();
+              
+                } catch (error) {
+                  // Step 5: Catch and handle errors from any of the operations
+                  console.error("Error during property update or approval:", error);
+                  setError(true);  // Optionally show an error to the user
+                }
+              }}
+            >
+              Accept
+            </Button>
           </div>
         </div>
-      )}
+      </div>
+    )}
     </div>
   );
 }

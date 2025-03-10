@@ -53,3 +53,4 @@ func TokenizeRecord(db *sql.DB, c *gin.Context) {
 	// If successful, return a success message
 	c.JSON(http.StatusOK, gin.H{"message": "Record tokenized successfully"})
 }
+

@@ -111,3 +111,30 @@ func ApproveProperty(db *sql.DB, c *gin.Context) {
     // Return a success message
     c.JSON(http.StatusOK, gin.H{"message": "Property approved successfully"})
 }
+
+func AddTokenisedPropertyDetails(db *sql.DB, c *gin.Context) {
+    propertyID := c.Param("propertyID")
+    pSmartAddress := c.Param("pSmartAddress")
+    bType := c.Param("bType")
+    bCurrency := c.Param("bCurrency")
+
+    query := `UPDATE PropertyTokenised 
+              SET pSmartAddress = @pSmartAddress, 
+                  bType = @bType, 
+                  bCurrency = @bCurrency 
+              WHERE pId = @propertyID`
+
+    _, err := db.Exec(query,
+        sql.Named("pSmartAddress", pSmartAddress),
+        sql.Named("bType", bType),
+        sql.Named("bCurrency", bCurrency),
+        sql.Named("propertyID", propertyID),
+    )
+    
+    if err != nil {
+        c.JSON(500, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(200, gin.H{"message": "Property updated successfully"})
+}
