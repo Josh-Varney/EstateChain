@@ -19,7 +19,6 @@ interface PropertyInvestPopupProps {
   isProject: boolean;
   isRental: boolean;
   rentalExpectancy: string;
-  rentalYield?: number; // Annual percentage return from rental income
 }
 
 const PropertyInvestPopup: React.FC<PropertyInvestPopupProps> = ({
@@ -38,9 +37,7 @@ const PropertyInvestPopup: React.FC<PropertyInvestPopupProps> = ({
   rentalExpectancy,
   isProject,
   isRental,
-  rentalYield,
 }) => {
-  isRental = true;
   const [tokenAmount, setTokenAmount] = useState(0);
   const [showInfo, setShowInfo] = useState(false);
   const totalCost = tokenAmount * tokenPrice;
@@ -89,6 +86,10 @@ const PropertyInvestPopup: React.FC<PropertyInvestPopupProps> = ({
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Test Network Deployed</span>
             <span className="font-semibold text-gray-800">{blockchain}</span>
+          </div>
+          <div className="flex justify-between mb-2">
+            <span className="text-gray-600">Property Listed By</span>
+            <span className="font-semibold text-gray-800">{addedBy}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Tokens Left:</span>
