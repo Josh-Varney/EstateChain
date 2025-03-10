@@ -113,7 +113,13 @@ const HouseDisplay = ({ darkMode }) => {
                   propertyGarden: property.propertyGarden || false, // Ensure a default value
                   propertyAcessibility: property.propertyAcessibility || false, // Ensure a default value
                   propertyKeyFeatures: property.propertyKeyFeatures ? property.propertyKeyFeatures.split(",") : [], // Ensure a default empty array if undefined
-                  propertyTenure: property.propertyTenure || "Unknown" // Default to "Unknown" if missing
+                  propertyTenure: property.propertyTenure || "Unknown", // Default to "Unknown" if missing
+                  propertyValue: property.pValuation,
+                  propertyTotalTokens: property.pTotalTokens,
+                  propertySmartAddress: property.pSmartAddress,
+                  propertyRentalDistributionExpectancy: property.rentalDistributionExpectancy,
+                  propertyChainType: property.bType,
+                  propertyChainCurrency: property.bCurrency
                 }));
         };
         

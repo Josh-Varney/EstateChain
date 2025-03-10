@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { FaTimes, FaInfoCircle } from "react-icons/fa";
+import { Tooltip } from "react-tooltip";
+import { Info } from 'lucide-react';
 
 interface PropertyInvestPopupProps {
   isOpen: boolean;
@@ -8,8 +10,15 @@ interface PropertyInvestPopupProps {
   propertyName: string;
   totalTokens: number;
   tokensSold: number;
+  propertyDescription: string;
+  addedBy: string;
+  smartAddress: string;
+  blockchain: string;
+  blockchainCurrency: string;
+  propertyValuation: number;
   isProject: boolean;
   isRental: boolean;
+  rentalExpectancy: string;
   rentalYield?: number; // Annual percentage return from rental income
 }
 
@@ -20,16 +29,23 @@ const PropertyInvestPopup: React.FC<PropertyInvestPopupProps> = ({
   propertyName,
   totalTokens,
   tokensSold,
+  addedBy,
+  smartAddress,
+  propertyDescription,
+  blockchain,
+  blockchainCurrency,
+  propertyValuation, 
+  rentalExpectancy,
   isProject,
   isRental,
-  rentalYield = 0,
+  rentalYield,
 }) => {
+  isRental = true;
   const [tokenAmount, setTokenAmount] = useState(0);
   const [showInfo, setShowInfo] = useState(false);
   const totalCost = tokenAmount * tokenPrice;
   const tokensLeft = totalTokens - tokensSold;
   const percentageSold = ((tokensSold / totalTokens) * 100).toFixed(2);
-  const estimatedAnnualIncome = ((tokenAmount * tokenPrice * rentalYield) / 100).toFixed(2);
   const ownershipPercentage = ((tokenAmount / totalTokens) * 100).toFixed(2);
 
   if (!isOpen) return null;
@@ -49,10 +65,10 @@ const PropertyInvestPopup: React.FC<PropertyInvestPopupProps> = ({
         </button>
 
         <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-          Property Name
+          {propertyName}
         </h2>
 
-        <h2 className="text-gray-400">property description</h2>
+        <h2 className="text-gray-400 mb-2">{propertyDescription}</h2>
 
         <div className="text-center mb-6">
           <button onClick={() => setShowInfo(!showInfo)} className="text-blue-600 flex items-center justify-center">
@@ -66,9 +82,21 @@ const PropertyInvestPopup: React.FC<PropertyInvestPopupProps> = ({
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg mb-6">
+        <div className="flex justify-between mb-2">
+            <span className="text-gray-600">{blockchain} Faucet</span>
+            <span className="font-semibold text-gray-800">Faucet Information</span>
+          </div>
+          <div className="flex justify-between mb-2">
+            <span className="text-gray-600">Test Network Deployed</span>
+            <span className="font-semibold text-gray-800">{blockchain}</span>
+          </div>
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Tokens Left:</span>
             <span className="font-semibold text-gray-800">{tokensLeft}</span>
+          </div>
+          <div className="flex justify-between mb-2">
+            <span className="text-gray-600">Property Valuation:</span>
+            <span className="font-semibold text-gray-800">{blockchainCurrency} {propertyValuation}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Percentage Sold:</span>
@@ -90,30 +118,98 @@ const PropertyInvestPopup: React.FC<PropertyInvestPopupProps> = ({
             max={tokensLeft}
             value={tokenAmount}
             onChange={(e) => setTokenAmount(Math.max(0, Number(e.target.value)))}
-            className="w-full px-4 py-2 border border-gray-300 text-red-700 rounded-lg focus:ring focus:ring-green-300"
+            className="w-full px-4 py-2 border border-gray-300 text-blue-500 rounded-lg focus:ring focus:ring-green-300"
           />
         </div>
 
         <div className="mb-6">
-          <p className="text-gray-700 text-lg">
-            Total Investment: <span className="font-bold text-gray-800">${totalCost.toFixed(2)}</span>
+          <p className="text-gray-700 text-md">
+            <div className="flex flex-row items-center">
+              <div>
+                Smart Address 
+              </div>
+              <div>
+                <Info
+                size={16}
+                className="ml-2 text-blue-500 cursor-pointer"
+                data-tooltip-id="smartAddressTooltip"
+                />
+              </div>
+            </div>
+            <span className="font-bold text-gray-800">{smartAddress}</span>
           </p>
         </div>
+
+        <Tooltip id="smartAddressTooltip" place="right">
+            This is the smart contract address where the mock property has been deployed.
+        </Tooltip>
 
         <div className="mb-6">
           <p className="text-gray-700 text-lg">
-            Ownership Percentage: <span className="font-bold text-gray-800">{ownershipPercentage}%</span>
+            <div className="flex flex-row items-center">
+              <div>
+                Total Investment
+              </div>
+              <div>
+                <Info
+                  size={16}
+                  className="ml-2 text-blue-500 cursor-pointer"
+                  data-tooltip-id="smartInvestTooltip"
+                  />
+              </div>
+            </div>
+            <div>
+              <span className="font-bold text-gray-800">{blockchainCurrency} {totalCost.toFixed(18)}</span>
+            </div>
           </p>
         </div>
 
+        <Tooltip id="smartInvestTooltip" place="right">
+            This is fake {blockchainCurrency} from the chain {blockchain} that will be required for transfer to own the mock property
+        </Tooltip>
+
+        <div className="mb-6 text-gray-700 text-lg">
+          <div className="flex flex-row items-center">
+            <div>
+              Ownership Percentage:
+            </div>
+            <div>
+              <Info
+              size={16}
+              className="ml-2 text-blue-500 cursor-pointer"
+              data-tooltip-id="ownershipTooltip"
+              />
+            </div>
+          </div>
+          <div>
+            <span className="font-bold text-gray-800">{ownershipPercentage}%</span>
+          </div>
+        </div>
+
+        <Tooltip id="ownershipTooltip" place="right">
+            This states the ownership that you have over this property, this will be recorded in our system and shown over the blockchain.
+        </Tooltip>
+
+
         {isRental && (
-          <div className="bg-green-100 p-4 rounded-lg text-center mb-6">
+          <div className="p-4 bg-green-100 rounded-lg text-center mb-6">
             <p className="text-green-800 font-medium">
-              Rental Income: Estimated annual return of <strong>${estimatedAnnualIncome}</strong>
-              <span className="text-sm text-gray-600 ml-2">({rentalYield}% per year)</span>
+              <div>
+                <div className="">
+                Rental Estimated Monthly Return 
+                </div>
+              </div>
+              <div>
+                <strong>{blockchainCurrency} {parseFloat(rentalExpectancy) * tokenAmount}</strong>
+              </div>
             </p>
           </div>
         )}
+
+        <Tooltip id="rentalTooltip" place="right">
+            This states the ownership that you have over this property, this will be recorded in our system and shown over the blockchain.
+        </Tooltip>
+        
 
         {!isRental && (
           <div className="text-center text-gray-600 text-sm mb-6 flex items-center justify-center">

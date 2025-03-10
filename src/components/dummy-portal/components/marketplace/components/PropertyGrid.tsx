@@ -14,7 +14,6 @@ import FunctionActivatedDropdown from "./ButtonActivatedDropdown";
 import PropertyMapDisplayContainer from "./PropertyMapDisplayContainer";
 import PropertyAgentDisplayCard from "./PropertyAgentDisplayCard";
 import PropertyNotesWritten from "./PropertyNotes";
-// import PropertyStampDutyCalculator from "./PropertyStampDutyCalculator";
 import PropertyInvestPopup from "./PropertyInvestPopUp";
 import CryptoTaxCalculator from "./PropertyCryptoTaxCalculator";
 
@@ -37,7 +36,11 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const openPopup = () => setIsPopupOpen(true);
+  const propertyDetails = houseDisplayed || {}
+
+  const openPopup = () => {
+    console.log("Invest Popup")
+    setIsPopupOpen(true)};
   const closePopup = () => setIsPopupOpen(false);
 
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
@@ -103,14 +106,21 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
 
                 {/* PropertyInvestPopup component */}
                 <PropertyInvestPopup 
-                  isOpen={isPopupOpen} 
-                  onClose={closePopup} 
-                  tokenPrice={50}
-                  propertyName="Oceanview Apartments"
-                  totalTokens={1000}
-                  tokensSold={600}
-                  isProject={true}
-                />
+                  isOpen={isPopupOpen}
+                  onClose={closePopup}
+                  tokenPrice={propertyDetails.propertyTokenPrice || 0}
+                  propertyName={propertyDetails.propertyAddress || "N/A"}
+                  totalTokens={propertyDetails.propertyTotalTokens || 0}
+                  tokensSold={(propertyDetails.propertyTotalTokens || 0) - (propertyDetails.propertyTokensLeft || 0)}
+                  isProject={false}
+                  isRental={propertyDetails.propertyRental || false}
+                  smartAddress={propertyDetails.propertySmartAddress || "N/A"}
+                  blockchain={propertyDetails.propertyChainType || "N/A"}
+                  blockchainCurrency={propertyDetails.propertyChainCurrency || "N/A"}
+                  propertyValuation={propertyDetails.propertyValue || 0}
+                  addedBy={propertyDetails.propertyAddedBy || "N/A"}
+                  rentalExpectancy={propertyDetails.rentalExpectancy || "N/A"} 
+                  propertyDescription={propertyDetails.propertyDescription || "N/A"}                />
               </div>
             </div>
 

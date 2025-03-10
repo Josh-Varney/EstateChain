@@ -93,8 +93,7 @@ const DisplayProperty: React.FC<DisplayPropertyProps> = () => {
           onProfileClick={toggleProfilePrompt}
           onNotiicationClick={toggleNotificationPrompt}
           onToggleBuyerSeller={toggleBuyerSeller}
-          isBuyer={isBuyer}
-        />
+          isBuyer={isBuyer} titleName={"Property View"}        />
 
         {/* Scrollable Content */}
         <div className="flex-grow h-full overflow-y-auto">

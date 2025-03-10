@@ -51,6 +51,12 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
 		AgentAddress              string  `json:"agentAddress"`
 		AgentWhyDescription       string  `json:"agentWhyDescription"`
 		AgentSoldRecentlyDescription string `json:"agentSoldRecentlyDescription"`
+		PValuation 					int 	`json:"pValuation"`
+		PTotalTokens				int 	`json:"pTotalTokens"`
+		PSmartAddress				string	`json:"pSmartAddress"`
+		RentalDistributionExpectancy 	string `json:"rentalDistributionExpectancy"`
+		BType						string `json:"bType"`
+		BCurrency					string `json:"bCurrency"`		
 	}
 
 	var properties []Property
@@ -67,7 +73,8 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
             p.propertyPostalCode, p.propertyStreet, p.propertyStreetNum, p.propertyAgentID,
             p.propertyTenure, p.propertyGarden, p.propertyAccessibility, p.propertyKeyFeatures,
             a.agentName, a.agentContactNumber, a.agentEmail, a.agentIcon, a.agentAddress, a.agentWhyDescription,
-			a.agentSoldRecentlyDescription 
+			a.agentSoldRecentlyDescription, pt.pValuation, pt.pTotalTokens, pt.pSmartAddress, pt.rentalDistributionExpectancy,
+			pt.bType, pt.bCurrency
         FROM 
             Property p
         LEFT JOIN 
@@ -123,6 +130,12 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
 		property.AgentSoldRecentlyDescription = "N/A"
 		property.AgentWhyDescription = "N/A"
 		property.AgentAddress = "N/A"
+		property.PValuation = 0
+		property.PTotalTokens = 0
+		property.PSmartAddress = "0x0"
+		property.RentalDistributionExpectancy = "N/A"
+		property.BType = "N/A"
+		property.BCurrency = "N/A"
 
 		// Scan values into the property struct
 		if err := rows.Scan(
@@ -165,6 +178,12 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
 			&property.AgentAddress, 
 			&property.AgentWhyDescription,
 			&property.AgentSoldRecentlyDescription,
+			&property.PValuation,
+			&property.PTotalTokens,			
+			&property.PSmartAddress,			
+			&property.RentalDistributionExpectancy,
+			&property.BType,		
+			&property.BCurrency,
 		); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error scanning properties: %s", err.Error())})
 			return

@@ -173,7 +173,7 @@ app.get("/api/getProperties", async (req, res) => {
       if (!properties || properties.length === 0) {
           return res.status(404).json({ message: "No properties found" });
       }
-
+      
       console.log(properties);
       // Send the properties data back to the client
       res.json(properties);
@@ -340,7 +340,7 @@ app.post("/api/submitProperty", async (req: Request, res: Response) => {
       "propertyType": propertyData.propertyType,
       "propertyPostcode": propertyData.propertyPostcode,
       "propertyImage": "N/A",
-      "propertyFeatured": Boolean(propertyData.propertyFeatured), 
+      "propertyFeatured": propertyData.propertyFeatured, 
       "propertyRental": Boolean(propertyData.propertyRental),
       "propertySettlement": propertyData.propertySettlement,
       "propertyCountry": propertyData.propertyCountry,
@@ -351,7 +351,7 @@ app.post("/api/submitProperty", async (req: Request, res: Response) => {
       "propertyGarden": Boolean(propertyData.propertyGarden), 
       "propertyAccessibility": Boolean(propertyData.propertyAccessibility), 
       "propertyTenure": propertyData.propertyTenure,
-      "propertyAgentID": parseInt(propertyData.agentID) 
+      "propertyAgentID": propertyData.agentID
   };
 
 
