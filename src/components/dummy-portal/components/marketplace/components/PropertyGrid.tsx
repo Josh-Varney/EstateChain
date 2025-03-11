@@ -36,6 +36,10 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+  const formattedDate = houseDisplayed?.propertyAdded 
+    ? new Date(houseDisplayed.propertyAdded).toLocaleString()
+    : "N/A";
+
   const propertyDetails = houseDisplayed || {}
 
   const openPopup = () => {
@@ -67,7 +71,7 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
         </header>
 
         {/* Hero Image Section */}
-        <section className="w-full h-[250px] md:h-[300px] relative overflow-hidden mb-6">
+        <section className="w-full pl-6 pr-6 h-[250px] md:h-[300px] relative overflow-hidden mb-6">
           <img
             src="https://via.placeholder.com/1920x500"
             alt="Large Display"
@@ -85,7 +89,7 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
                 New Home
               </h1>
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
-                <h2 className="text-lg font-semibold">{houseDisplayed ? houseDisplayed?.propertyAddress : "N/A"}</h2>
+                <h2 className="text-grat-200 font-semibold">{houseDisplayed ? houseDisplayed?.propertyAddress : "N/A"}</h2>
                 <div className="flex space-x-4 text-lg">
                   <FaHeart className="cursor-pointer hover:text-red-700" />
                   <FaShare className="cursor-pointer hover:text-green-600" />
@@ -94,8 +98,28 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
               {/* Price and Info */}
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
                 <div className="flex items-center space-x-2 text-lg">
-                  <span className="font-medium">${houseDisplayed ? houseDisplayed?.propertyTokenPrice : "N/A"}</span>
-                  <FaInfoCircle />
+                <div className="flex flex-col space-y-1">
+                  <span className="text-teal-400 text-lg font-medium flex flex-row">
+                    <div className="flex flex-row space-x-1">
+                    <div>
+                      <p className="text-white space-x-2">ETH {houseDisplayed ? houseDisplayed?.propertyTokenPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 18 }) : "N/A"} </p> 
+                    </div>
+                    <div>
+                      <p className="text-white">per token</p>
+                    </div>
+                    </div>
+                  </span>
+                  <span className="text-gray-500 text-sm flex flex-row space-x-2 items-center">
+                    <div>
+                      {houseDisplayed?.propertyTokenPrice && houseDisplayed?.propertyPrice 
+                        ? `This represents ${((houseDisplayed?.propertyPrice / houseDisplayed?.propertyTokenPrice)).toFixed(2)}% of the property's total value.` 
+                        : "Ownership percentage not available."}
+                    </div>
+                    <div>
+                      <FaInfoCircle />
+                    </div>
+                  </span>
+                </div>
                 </div>
                 <button
                   className="rounded-full px-4 py-1 text-sm font-medium bg-blue-500"
@@ -129,10 +153,10 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                 <div className="flex items-center space-x-2 mb-4">
                   <FaCalculator />
-                  <h1 className="text-sm">Monthly Mortgage Payments</h1>
+                  <h1 className="text-sm">Gas Fees: GAS_FEES</h1>
                 </div>
                 <span className="text-sm text-gray-500">
-                  {houseDisplayed?.propertyAdded ? houseDisplayed.propertyAdded : "N/A"}
+                  {formattedDate ? formattedDate : "N/A"}
                 </span>
               </div>
               <hr className="border-t border-gray-500" />
@@ -233,7 +257,7 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
             </section>
 
             <section>
-              <CryptoTaxCalculator title={"Crypto TaxCalculator"}/>
+              {/* <CryptoTaxCalculator title={"Crypto TaxCalculator"}/> */}
             </section>
           </section>
 
