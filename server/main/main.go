@@ -133,7 +133,7 @@ func main() {
 	})
 
 	// Define the route and pass the database connection
-    router.PUT("/property/:propertyID/:pSmartAddress/:bType/:bCurrency", func(c *gin.Context) {
+    router.PUT("/property/:propertyID/:pSmartAddress/:bType/:bCurrency/:cName", func(c *gin.Context) {
         admin.AddTokenisedPropertyDetails(db, c)
     })
 

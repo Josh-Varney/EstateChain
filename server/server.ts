@@ -3,6 +3,7 @@ import path from 'path';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import axios from "axios";
+import fs from 'fs';
 import { JsonRpcProvider } from '@ethersproject/providers';
 
 
@@ -351,8 +352,10 @@ app.post("/api/submitProperty", async (req: Request, res: Response) => {
       "propertyGarden": Boolean(propertyData.propertyGarden), 
       "propertyAccessibility": Boolean(propertyData.propertyAccessibility), 
       "propertyTenure": propertyData.propertyTenure,
-      "propertyAgentID": propertyData.agentID
+      "propertyAgentID": propertyData.agentID ? parseInt(propertyData.agentID) : null
   };
+
+  console.log(filteredPropertyData);
 
 
     const response = await fetch('http://localhost:8080/add-property', {
@@ -419,6 +422,39 @@ app.post("/api/submitProperty", async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+app.get("/api/getAbi", async (req: Request, res: Response) => {
+
+  const { chainId, jsonFileName } = req.query;
+
+  if (typeof chainId !== 'string' || typeof jsonFileName !== 'string') {
+    return res.status(400).json({ message: "chainId and jsonFileName must be strings" });
+  }
+
+  try {
+
+    const decodedJsonFileName = decodeURIComponent(jsonFileName as string);
+
+    const abiFilePath = path.join(
+      __dirname,
+      '..',
+      'ignition',
+      'deployments',
+      chainId as string,
+      'artifacts',
+      decodedJsonFileName as string 
+    );
+
+    const data = await fs.promises.readFile(abiFilePath, "utf-8");
+
+    const json = JSON.parse(data);
+
+    res.json({ abi: json.abi });
+
+  } catch (error){
+    console.error("Error reading ABI file: ", error);
   }
 });
 

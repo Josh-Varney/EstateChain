@@ -44,88 +44,62 @@ func AddProperty(db *sql.DB, c *gin.Context) {
 		PropertyAgentID           int     `json:"propertyAgentID"`
 	}
 
-	// Bind incoming JSON request
+	// Bind incoming JSON request with error handling
 	if err := c.BindJSON(&request); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON input", "details": err.Error()})
 		return
 	}
 
-	// Check if required fields are missing or empty
+	// Check required fields
 	missingFields := []string{}
+	requiredFields := map[string]interface{}{
+		"propertyName":   request.PropertyName,
+		"propertyAddress": request.PropertyAddress,
+		"propertyGeoLat":  request.PropertyGeoLat,
+		"propertyGeoLong": request.PropertyGeoLong,
+		"propertyDescription": request.PropertyDescription,
+		"propertyAddedBy": request.PropertyAddedBy,
+		"propertyKeywords": request.PropertyKeywords,
+		"propertyType": request.PropertyType,
+		"propertyPostcode": request.PropertyPostcode,
+		"propertySettlement": request.PropertySettlement,
+		"propertyCountry": request.PropertyCountry,
+		"propertyCity": request.PropertyCity,
+		"propertyPostalCode": request.PropertyPostalCode,
+		"propertyStreet": request.PropertyStreet,
+		"propertyStreetNum": request.PropertyStreetNum,
+		"propertyTenure": request.PropertyTenure,
+	}
 
-	if request.PropertyName == "" {
-		missingFields = append(missingFields, "propertyName")
+	for field, value := range requiredFields {
+		if strVal, ok := value.(string); ok && strVal == "" {
+			missingFields = append(missingFields, field)
+		}
 	}
-	if request.PropertyAddress == "" {
-		missingFields = append(missingFields, "propertyAddress")
-	}
-	if request.PropertyGeoLat == "" {
-		missingFields = append(missingFields, "propertyGeoLat")
-	}
-	if request.PropertyGeoLong == "" {
-		missingFields = append(missingFields, "propertyGeoLong")
-	}
-	if request.PropertyDescription == "" {
-		missingFields = append(missingFields, "propertyDescription")
-	}
-	if request.PropertyAddedBy == "" {
-		missingFields = append(missingFields, "propertyAddedBy")
-	}
-	if request.PropertyKeywords == "" {
-		missingFields = append(missingFields, "propertyKeywords")
-	}
-	if request.PropertyPrice == 0 {
+
+	// Check numeric fields that should not be zero
+	if request.PropertyPrice <= 0 {
 		missingFields = append(missingFields, "propertyPrice")
 	}
-	if request.PropertySize == 0 {
+	if request.PropertySize <= 0 {
 		missingFields = append(missingFields, "propertySize")
 	}
-	if request.PropertyBedrooms == 0 {
+	if request.PropertyBedrooms <= 0 {
 		missingFields = append(missingFields, "propertyBedrooms")
 	}
-	if request.PropertyBathrooms == 0 {
+	if request.PropertyBathrooms <= 0 {
 		missingFields = append(missingFields, "propertyBathrooms")
 	}
-	if request.PropertyTokenPrice == 0 {
+	if request.PropertyTokenPrice <= 0 {
 		missingFields = append(missingFields, "propertyTokenPrice")
 	}
-	if request.PropertyTokensLeft == 0 {
+	if request.PropertyTokensLeft < 0 {
 		missingFields = append(missingFields, "propertyTokensLeft")
 	}
-	if request.PropertyType == "" {
-		missingFields = append(missingFields, "propertyType")
-	}
-	if request.PropertyPostcode == "" {
-		missingFields = append(missingFields, "propertyPostcode")
-	}
-	if request.PropertyImage == "" {
-		missingFields = append(missingFields, "propertyImage")
-	}
-	if request.PropertySettlement == "" {
-		missingFields = append(missingFields, "propertySettlement")
-	}
-	if request.PropertyCountry == "" {
-		missingFields = append(missingFields, "propertyCountry")
-	}
-	if request.PropertyCity == "" {
-		missingFields = append(missingFields, "propertyCity")
-	}
-	if request.PropertyPostalCode == "" {
-		missingFields = append(missingFields, "propertyPostalCode")
-	}
-	if request.PropertyStreet == "" {
-		missingFields = append(missingFields, "propertyStreet")
-	}
-	if request.PropertyStreetNum == "" {
-		missingFields = append(missingFields, "propertyStreetNum")
-	}
-	if request.PropertyTenure == "" {
-		missingFields = append(missingFields, "propertyTenure")
-	}
 
-	// If there are missing fields, return them
+	// Return if any required fields are missing
 	if len(missingFields) > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing fields", "fields": missingFields})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing required fields", "fields": missingFields})
 		return
 	}
 

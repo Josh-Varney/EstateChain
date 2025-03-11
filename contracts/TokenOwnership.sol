@@ -165,6 +165,10 @@ contract PropertyERC20 is ERC20, ReentrancyGuard {
         return propertyTotalSupplyLeft;
     }
 
+    function getTokenPrice() external view returns (uint256) {
+        return tokenPrice;
+    }
+
     function getWhatRentalIncome() external view returns (uint256) {
         require(isRentalProperty, "This is not a rental property");
         return monthlyIncome;

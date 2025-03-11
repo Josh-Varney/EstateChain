@@ -14,6 +14,7 @@ const TokenModule = buildModule(process.env.MODULE_NAME, (m) => {
   const PROPERTY_IS_RENTAL = process.env.PROPERTY_IS_RENTAL;
   const PROPERTY_MONTHLY_INCOME = process.env.PROPERTY_MONTHLY_INCOME;
 
+
   // Ensure required parameters are set
   if (!PROPERTY_NAME || !PROPERTY_ABR || !PROPERTY_TOKEN_SUPPLY || !PROPERTY_TOKEN_PRICE || !PROPERTY_OWNER || !PROPERTY_IS_RENTAL || !PROPERTY_MONTHLY_INCOME) {
     throw new Error("Missing environment variables.");

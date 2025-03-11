@@ -59,13 +59,25 @@ export default function ManageProperties() {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [refetch, setRefetch] = useState(false);
   const [error, setError] = useState<boolean>(false);
+  const [errorTwo, setErrorTwo] = useState<boolean>(false);
+  const [errorThree, setErrorThree] = useState<boolean>(false);
 
   const [contractAddress, setContractAddress] = useState<string>('');
+  const [contractName, setContractName] = useState<string>('');
+  const [networkName, setNetworkName] = useState<string>('')
 
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContractAddress(e.target.value);
   };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContractName(e.target.value);
+  }
+
+  const handleNetworkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNetworkName(e.target.value);
+  }
 
   // Fetch properties from API on component mount
   useEffect(() => {
@@ -321,6 +333,42 @@ export default function ManageProperties() {
             />
           </div>
 
+          {errorTwo && (
+            <p className="text-lg font-semibold text-red-500 text-center mt-2">Please enter the MODULE_NAME used to deploy the contract</p>
+          )}
+
+          <div className="mt-4">
+            <label htmlFor="contractAddress" className="block text-gray-700 text-sm font-medium mb-2">
+              Smart Contract Name
+            </label>
+            <input
+              type="text"
+              id="contractName"
+              value={contractName}
+              onChange={handleNameChange}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter smart contract name"
+            />
+          </div>
+
+          {errorThree && (
+            <p className="text-lg font-semibold text-red-500 text-center mt-2">Please enter the network name used to deploy the contract</p>
+          )}
+
+          <div className="mt-4">
+            <label htmlFor="contractAddress" className="block text-gray-700 text-sm font-medium mb-2">
+              Network Name
+            </label>
+            <input
+              type="text"
+              id="networkName"
+              value={networkName}
+              onChange={handleNetworkChange}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter smart contract name"
+            />
+          </div>
+
           <div className="mt-4 flex justify-end gap-2">
             <Button variant="outline" onClick={closeApprovalModal}>Close</Button>
             <Button
@@ -332,10 +380,20 @@ export default function ManageProperties() {
                   setError(true);  // Display error message if contractAddress is missing
                   return;
                 }
+
+                if (!contractName){
+                  setErrorTwo(true);
+                  return;
+                }
+
+                if(!networkName){
+                  setErrorThree(true);
+                  return;
+                }
               
                 try {
                   // Step 2: Attempt to update the property
-                  await updateProperty(selectedProperty.propertyID, contractAddress, "holesky", "ETH");
+                  await updateProperty(selectedProperty.propertyID, contractAddress, networkName, "ETH", contractName);
               
                   // Step 3: If updateProperty was successful, proceed with the next function
                   await approvePropertyAndSendNotification(selectedProperty.propertyID, selectedProperty.propertyAddedBy);

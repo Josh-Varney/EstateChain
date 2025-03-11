@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaExternalLinkAlt, FaCopy, FaSignOutAlt } from 'react-icons/fa';
 
 interface WalletDropdownProps {
-  close: () => void;
+  close: React.Dispatch<React.SetStateAction<boolean>>;
   address?: string;
   balance?: string;
   isOpen: boolean; // Tracks if the dropdown is open
@@ -25,17 +25,20 @@ const WalletDropdown: React.FC<WalletDropdownProps> = ({ close, address = 'Not C
   const [showBalance, setShowBalance] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  console.log(localStorage.getItem('connectedAccounts'));
+  function closeWallet(){
+    close(false);
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        close();
+        closeWallet(); // Ensure the function is called
       }
     };
+  
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [close]);
+  }, [closeWallet]); // Ensure closeWallet is stable
 
   useEffect(() => {
     // Fetch initial connected accounts from localStorage
@@ -70,8 +73,6 @@ const WalletDropdown: React.FC<WalletDropdownProps> = ({ close, address = 'Not C
     if (address.length <= 14) return address; // Return full address if it's too short
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
-
-
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(address);
@@ -163,7 +164,7 @@ const WalletDropdown: React.FC<WalletDropdownProps> = ({ close, address = 'Not C
         </button>
         <button
           className={`flex items-center space-x-2 p-4 text-left text-sm ${darkMode ? 'text-red-600 hover:bg-red-700' : 'text-red-600 hover:bg-red-50'} transition duration-150 ease-in-out rounded-md`}
-          onClick={close}
+          onClick={closeWallet}
         >
           <FaSignOutAlt />
           <span>Disconnect</span>

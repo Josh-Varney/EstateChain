@@ -3,6 +3,7 @@ import Sidebar from "../../main/Sidebar";
 import HeaderBar from "../../main/HeaderBar";
 import Prompts from "../../prompts/Prompts";
 import PropertyGrid from "./PropertyGrid";
+import { ethers } from "ethers";
 
 interface DisplayPropertyProps {}
 
@@ -16,14 +17,41 @@ const DisplayProperty: React.FC<DisplayPropertyProps> = () => {
   const [notificationPrompt, setNotificationPrompt] = useState(false);
   const [profilePrompt, setProfilePrompt] = useState(false);
 
+  const handleWalletCheck = async () => {
+      const isWalletConnected = async () => {
+        if (!window.ethereum) {
+          console.log("MetaMask is not installed");
+          return false;
+        }
+    
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send("eth_accounts", []);
+    
+        if (accounts.length > 0) {
+          console.log("Wallet is connected:", accounts[0]);
+          return true;
+        } else {
+          console.log("No wallet connected");
+          return false;
+        }
+      };
+    
+      const connected = await isWalletConnected();
+    
+      if (!connected) {
+        setWalletConnectPrompt(true); // Show "Connect Wallet" prompt
+        setWalletConnectedPrompt(false); // Ensure "Wallet Connected" prompt is hidden
+      } else {
+        setWalletConnectedPrompt(true); // Show "Wallet Connected" prompt
+        setWalletConnectPrompt(false); // Hide "Connect Wallet" prompt
+      }
+    };
+
   // Toggle wallet prompts
-  const toggleWalletPrompt = () => {
-    if (localStorage.getItem("connectedAccount")) {
-      setWalletConnectedPrompt((prev) => !prev);
-    } else {
-      setWalletConnectPrompt((prev) => !prev);
-    }
+  const toggleWalletPrompt = async () => {
+    await handleWalletCheck();
   };
+
 
   // Toggle Buyer/Seller mode
   const toggleBuyerSeller = () => {
@@ -107,8 +135,8 @@ const DisplayProperty: React.FC<DisplayPropertyProps> = () => {
         walletConnectedPrompt={walletConnectedPrompt}
         profilePrompt={profilePrompt}
         notificationPrompt={notificationPrompt}
-        closeWalletConnectPrompt={() => setWalletConnectPrompt(false)}
-        closeWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
+        setWalletConnectPrompt={setWalletConnectPrompt}
+        setWalletConnectedPrompt={setWalletConnectedPrompt}
         closeProfilePrompt={() => setProfilePrompt(false)}
         closeNotificationPrompt={() => setNotificationPrompt(false)}
       />

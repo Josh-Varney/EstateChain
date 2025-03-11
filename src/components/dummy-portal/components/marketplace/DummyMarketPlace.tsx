@@ -4,6 +4,7 @@ import HeaderBar from "../main/HeaderBar";
 import HouseDisplay from "./components/HouseSearchForm";
 import Prompts from "../prompts/Prompts";
 import AddPropertyButton from "./components/addPropertyButton";
+import { ethers } from "ethers";
 
 const DummyMarket: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -21,6 +22,36 @@ const DummyMarket: React.FC = () => {
       setWalletConnectPrompt((prev) => !prev);
     }
   };
+
+    const handleWalletCheck = async () => {
+      const isWalletConnected = async () => {
+        if (!window.ethereum) {
+          console.log("MetaMask is not installed");
+          return false;
+        }
+    
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send("eth_accounts", []);
+    
+        if (accounts.length > 0) {
+          console.log("Wallet is connected:", accounts[0]);
+          return true;
+        } else {
+          console.log("No wallet connected");
+          return false;
+        }
+      };
+    
+      const connected = await isWalletConnected();
+    
+      if (!connected) {
+        setWalletConnectPrompt(true); // Show "Connect Wallet" prompt
+        setWalletConnectedPrompt(false); // Ensure "Wallet Connected" prompt is hidden
+      } else {
+        setWalletConnectedPrompt(true); // Show "Wallet Connected" prompt
+        setWalletConnectPrompt(false); // Hide "Connect Wallet" prompt
+      }
+    };
 
   const toggleBuyerSeller = () => {
     setIsBuyer((prevState) => !prevState);
@@ -78,8 +109,8 @@ const DummyMarket: React.FC = () => {
           walletConnectedPrompt={walletConnectedPrompt}
           profilePrompt={profilePrompt}
           notificationPrompt={notificationPrompt}
-          closeWalletConnectPrompt={() => setWalletConnectPrompt(false)}
-          closeWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
+          setWalletConnectPrompt={setWalletConnectPrompt}
+          setWalletConnectedPrompt={setWalletConnectedPrompt}
           closeProfilePrompt={() => setProfilePrompt(false)}
           closeNotificationPrompt={() => setNotificationPrompt(false)}
         />

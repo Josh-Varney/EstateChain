@@ -1,0 +1,11 @@
+console.log(owner)
+const owner = property.owner();
+console.log(propertyContract);
+clear
+console.log(contractAddress);
+const contractAddress = "0x7BCf9c98eB0F9279d6AF940613C238F57b91Ee63";
+console.log("Owner:", owner);
+const owner = await propertyContract.owner();
+// Call functions from your contract, e.g.
+const propertyContract = await ethers.getContractAt("PropertyERC20", contractAddress);
+const contractAddress = "0x7BCf9c98eB0F9279d6AF940613C238F57b91Ee63";

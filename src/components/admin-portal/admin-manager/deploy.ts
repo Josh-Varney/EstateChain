@@ -2,7 +2,8 @@ export async function updateProperty(
     propertyID: number,
     pSmartAddress: string,
     bType: string,
-    bCurrency: string 
+    bCurrency: string,
+    contractName: string,
   ): Promise<void> {
     try {
       console.log("Updating Smart Address");
@@ -23,10 +24,14 @@ export async function updateProperty(
       if (!bCurrency || typeof bCurrency !== "string") {
         throw new Error("Invalid bCurrency: It must be a non-empty string.");
       }
+
+      if(!contractName || typeof contractName !== "string"){
+        throw new Error("Invalid contracyName: It must be a non-empty string.");
+      }
       
-      console.log(pSmartAddress);
+      console.log(pSmartAddress, bType, contractName);
       
-      const url = `http://localhost:8080/property/${propertyID}/${pSmartAddress}/${bType}/${bCurrency}`;
+      const url = `http://localhost:8080/property/${propertyID}/${pSmartAddress}/${bType}/${bCurrency}/${contractName}`;
   
       const response = await fetch(url, {
         method: "PUT",

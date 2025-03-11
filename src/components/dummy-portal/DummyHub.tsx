@@ -3,6 +3,8 @@ import Sidebar from "./components/main/Sidebar";
 import CardGrid from "./components/main/CardGrid";
 import HeaderBar from "./components/main/HeaderBar";
 import Prompts from "./components/prompts/Prompts";
+import { ethers } from "ethers";
+import { handleWalletCheck } from "../../managers/profile/check-wallet";
 
 const DummyDashboard: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -12,12 +14,9 @@ const DummyDashboard: React.FC = () => {
   const [notificationPrompt , setNotificationPrompt] = useState(false); 
   const [profilePrompt, setProfilePrompt] = useState(false);
 
-  const toggleWalletPrompt = () => {
-    if (localStorage.getItem("connectedAccount")) {
-      setWalletConnectedPrompt((prev) => !prev); // Toggle connected prompt
-    } else {
-      setWalletConnectPrompt((prev) => !prev); // Toggle wallet connect prompt
-    }
+
+  const toggleWalletPrompt = async () => {
+    await handleWalletCheck(setWalletConnectPrompt, setWalletConnectedPrompt)
   };
 
   const toggleBuyerSeller = () => {
@@ -70,8 +69,8 @@ const DummyDashboard: React.FC = () => {
           walletConnectedPrompt={walletConnectedPrompt}
           profilePrompt={profilePrompt}
           notificationPrompt={notificationPrompt}
-          closeWalletConnectPrompt={() => setWalletConnectPrompt(false)}
-          closeWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
+          setWalletConnectPrompt={setWalletConnectPrompt}
+          setWalletConnectedPrompt={setWalletConnectedPrompt}
           closeProfilePrompt={() => setProfilePrompt(false)}
           closeNotificationPrompt={() => setNotificationPrompt(false)}
         />

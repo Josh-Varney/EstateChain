@@ -117,11 +117,13 @@ func AddTokenisedPropertyDetails(db *sql.DB, c *gin.Context) {
     pSmartAddress := c.Param("pSmartAddress")
     bType := c.Param("bType")
     bCurrency := c.Param("bCurrency")
+	cName := c.Param("cName")
 
     query := `UPDATE PropertyTokenised 
               SET pSmartAddress = @pSmartAddress, 
                   bType = @bType, 
-                  bCurrency = @bCurrency 
+                  bCurrency = @bCurrency,
+				  contractName = @cName
               WHERE pId = @propertyID`
 
     _, err := db.Exec(query,
@@ -129,6 +131,7 @@ func AddTokenisedPropertyDetails(db *sql.DB, c *gin.Context) {
         sql.Named("bType", bType),
         sql.Named("bCurrency", bCurrency),
         sql.Named("propertyID", propertyID),
+		sql.Named("cName", cName),
     )
     
     if err != nil {

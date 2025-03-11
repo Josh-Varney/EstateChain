@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTimes, FaInfoCircle } from "react-icons/fa";
 import { Tooltip } from "react-tooltip";
 import { Info } from 'lucide-react';
+import { queryContract } from "../../../../../managers/property/property-contract";
 
 interface PropertyInvestPopupProps {
   isOpen: boolean;
@@ -89,7 +90,7 @@ const PropertyInvestPopup: React.FC<PropertyInvestPopupProps> = ({
           </div>
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Property Listed By</span>
-            <span className="font-semibold text-gray-800">{addedBy}</span>
+            <span className="font-semibold text-gray-800 text-sm">{addedBy}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Tokens Left:</span>
@@ -226,15 +227,15 @@ const PropertyInvestPopup: React.FC<PropertyInvestPopupProps> = ({
             Cancel
           </button>
           <button
-            onClick={() => {
-              if (tokenAmount > tokensLeft) {
-                alert("You cannot purchase more tokens than are available.");
-                return;
-              }
-              alert(
-                `You have invested $${totalCost.toFixed(2)} for ${tokenAmount} tokens in ${propertyName}.`
-              );
-              onClose();
+            onClick={async () => {
+              // if (tokenAmount > tokensLeft) {
+              //   alert("You cannot purchase more tokens than are available.");
+              //   return;
+              // }
+
+              await queryContract(smartAddress, blockchain);
+              
+              // onClose();
             }}
             disabled={tokenAmount <= 0 || tokenAmount > tokensLeft}
             className={`px-6 py-3 text-lg rounded-lg text-white transition-all ${

@@ -4,14 +4,15 @@ import WalletDropdown from "../prompts/WalletConnected";
 import ProfileDropdown from "../prompts/ProfileDropdown";
 import NotificationDropdown from "../prompts/NotificationDropdown";
 import { getNotifications } from "./notification manager/get";
+import { ethers } from "ethers";
 
 interface PromptsProps {
   walletConnectPrompt: boolean;
   walletConnectedPrompt: boolean;
   profilePrompt: boolean;
   notificationPrompt: boolean;
-  closeWalletConnectPrompt: () => void;
-  closeWalletConnectedPrompt: () => void;
+  setWalletConnectPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+  setWalletConnectedPrompt: React.Dispatch<React.SetStateAction<boolean>>;
   closeProfilePrompt: () => void;
   closeNotificationPrompt: () => void;
 }
@@ -31,8 +32,8 @@ const Prompts: React.FC<PromptsProps> = ({
   walletConnectedPrompt,
   profilePrompt,
   notificationPrompt,
-  closeWalletConnectPrompt,
-  closeWalletConnectedPrompt,
+  setWalletConnectPrompt,
+  setWalletConnectedPrompt,
   closeProfilePrompt,
   closeNotificationPrompt,
 }) => {
@@ -41,7 +42,6 @@ const Prompts: React.FC<PromptsProps> = ({
   const userUUID = localStorage.getItem("uuid");
 
   useEffect(() => {
-
     if (!userUUID) return; // Prevent request if no UUID
 
     const fetchNotifications = async () => {
@@ -57,22 +57,19 @@ const Prompts: React.FC<PromptsProps> = ({
     };
 
     fetchNotifications();
-  }, [userUUID]); // Re-fetch if userUUID changes
-
-  useEffect(() => {
-    // This will run every time `notifications` state is updated
-    console.log(notifications);
-  }, [notifications]); // Logs whenever notifications state changes
+  }, [userUUID])
+  
 
   return (
     <>
       {/* Wallet Prompts */}
       {walletConnectPrompt && (
-        <WalletPrompt close={closeWalletConnectPrompt} />
+        <WalletPrompt close={setWalletConnectPrompt} />
       )}
+
       {walletConnectedPrompt && (
         <WalletDropdown
-          close={closeWalletConnectedPrompt}
+          close={setWalletConnectedPrompt}
           isOpen={walletConnectedPrompt}
         />
       )}
