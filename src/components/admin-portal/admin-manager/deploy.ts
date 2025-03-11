@@ -6,9 +6,6 @@ export async function updateProperty(
     contractName: string,
   ): Promise<void> {
     try {
-      console.log("Updating Smart Address");
-
-      const bType = "Holesky";
       const bCurrency = "ETH"
 
       // **Validate Inputs Before Making the API Call**

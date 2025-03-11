@@ -223,19 +223,6 @@ const AddPropertyButton: React.FC = () => {
             const propertyTokenValue = propertyData.propertyPrice / propertyData.propertyTokensLeft;
             propertyData.propertyTokenPrice = propertyTokenValue;
 
-            const notify = await axios.post("http://localhost:8080/send-notification", {
-              uuid: localStorage.getItem("uuid"),  // Assuming propertyAddedBy is a valid UUID here
-              message: `Your application to become an agent will be reviewed`,
-              type: "info",
-              related_table: "Property",
-              wasRead: false
-            });
-
-            if (notify.status >= 200 && notify.status < 300) {
-                console.log("Approval notification sent successfully");
-            } else {
-                console.log("Error sending approval notification", notify.statusText);
-            }
 
             
             const preprocessedData = {
@@ -246,20 +233,19 @@ const AddPropertyButton: React.FC = () => {
 
             submitPropertyData('http://localhost:3001/api/submitProperty', preprocessedData);
 
-            const notificationResponse = await axios.post("http://localhost:8080/send-notification", {
+            const notify = await axios.post("http://localhost:8080/send-notification", {
               uuid: localStorage.getItem("uuid"),  // Assuming propertyAddedBy is a valid UUID here
-              message: `Your property listing was sent. Please wait for confirmation`,
+              message: `Your application to become an agent will be reviewed`,
               type: "info",
               related_table: "Property",
               wasRead: false
             });
 
-            if (notificationResponse.status >= 200 && notificationResponse.status < 300) {
-                console.log("Approval notification sent successfully");
+            if (notify.status >= 200 && notify.status < 300) {
+              console.log("Approval notification sent successfully");
             } else {
-                console.log("Error sending approval notification", notificationResponse.statusText);
+                console.log("Error sending approval notification", notify.statusText);
             }
-
           } else {
             console.log(propertyAgent);
             console.log(propertyData);

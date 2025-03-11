@@ -89,11 +89,6 @@ export default function ManageProperties() {
     fetchData();
   }, [refetch]);
 
-  const approvePropertyHandler = async (propertyID: number, propertyAddedBy: string) => {
-    await approvePropertyAndSendNotification(propertyID, propertyAddedBy);
-    setRefetch(true); 
-  };
-
 
   const handleCardClick = (property: Property) => {
     setSelectedProperty(property);
@@ -208,7 +203,25 @@ export default function ManageProperties() {
             <h2 className="text-2xl font-semibold mb-4">Property Details</h2>
             <div className="overflow-y-auto max-h-96">
               <pre className="bg-gray-100 text-black p-4 rounded text-sm">
-                {JSON.stringify(selectedProperty, null, 2)}
+                {JSON.stringify({
+                  name: selectedProperty.propertyName,
+                  address: selectedProperty.propertyAddress,
+                  latitude: selectedProperty.propertyGeoLat,
+                  longitude: selectedProperty.propertyGeoLong,
+                  bedrooms: selectedProperty.propertyBedrooms,
+                  bathrooms: selectedProperty.propertyBathrooms,
+                  description: selectedProperty.propertyDescription,
+                  keywords: selectedProperty.propertyKeywords,
+                  type: selectedProperty.propertySettlement,
+                  tenure: selectedProperty.propertyTenure,
+                  rental: selectedProperty.propertyRental,
+                  rentalDistributionExpectancy: selectedProperty.rentalDistributionExpectancy,
+                  addedBy: selectedProperty.propertyAddedBy,
+                  agentID: selectedProperty.agentID,
+                  agentName: selectedProperty.agentName,
+                  agentNumber: selectedProperty.agentContactNumber,
+                  agentEmail: selectedProperty.agentEmail
+                }, null, 2)}
               </pre>
             </div>
             <div className="mt-4 flex justify-end gap-2">
