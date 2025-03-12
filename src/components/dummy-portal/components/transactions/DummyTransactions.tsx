@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../main/Sidebar";
 import HeaderBar from "../main/HeaderBar";
 import Prompts from "../prompts/Prompts";
-import TransactionScreen from "./components/Transactions";
+import BlockchainTransactionScreen from "./components/Transactions";
 
 const DummyTransactions: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -68,7 +68,7 @@ const DummyTransactions: React.FC = () => {
           onNotiicationClick={toggleNotificationPrompt} isBuyer={false} 
           titleName={"My Transactions"}        />
 
-        <TransactionScreen />
+        <BlockchainTransactionScreen />
 
         <Prompts
           walletConnectPrompt={walletConnectPrompt}
