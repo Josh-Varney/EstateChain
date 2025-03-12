@@ -8,6 +8,7 @@ import (
 )
 
 type Transaction struct {
+	TID			   int 	  `json:"tid"`
     BlockHash      string `json:"block_hash"`
     Hash           string `json:"hash"`
     BlockNumber    int    `json:"block_number"`
@@ -62,7 +63,7 @@ func PostTransaction(db *sql.DB, c *gin.Context) {
 func GetAllTransactions(db *sql.DB, c *gin.Context) {
     // Query to select all transactions
     query := `
-        SELECT block_hash, hash, block_number, gas_price, sender_address, receiver_address, property_address, token_amount, uuid 
+        SELECT tid, block_hash, hash, block_number, gas_price, sender_address, receiver_address, property_address, token_amount, uuid 
         FROM Transactions
     `
 
@@ -81,7 +82,7 @@ func GetAllTransactions(db *sql.DB, c *gin.Context) {
     for rows.Next() {
         var transaction Transaction
         if err := rows.Scan(
-            &transaction.BlockHash, &transaction.Hash, &transaction.BlockNumber, &transaction.GasPrice,
+            &transaction.TID, &transaction.BlockHash, &transaction.Hash, &transaction.BlockNumber, &transaction.GasPrice,
             &transaction.From, &transaction.To, &transaction.PropertyAddress, &transaction.TokenAmount, &transaction.Uuid,
         ); err != nil {
             c.JSON(500, gin.H{"error": "Error scanning row", "details": err.Error()})

@@ -1,132 +1,80 @@
-// src/components/grid-cards/GlobalTransactionsCard.tsx
-
-import React, { FC, useState, ChangeEvent } from "react";
+import React, { FC, useState, ChangeEvent, useEffect } from "react";
 
 // Define the structure of a Transaction
 interface Transaction {
-  id: number;
-  date: string; // ISO format date string
-  description: string;
-  amount: number; // Positive for credit, negative for debit
-  type: "credit" | "debit";
-  category: string;
-  user: string; // User who made the transaction
+  tid: number;
+  id: string; // UUID as ID
+  date: string; // Date of the transaction
+  description: string; // Description of the transaction
+  amount: number; // Token amount involved in the transaction
+  property_address: string; // Address of the property
+  block_hash: string; // Block hash from the blockchain
+  block_number: number; // Block number from the blockchain
+  gas_price: string; // Gas price for the transaction
+  sender_address: string; // Sender's address
+  receiver_address: string; // Receiver's address
 }
-
-// Sample transactions data within the last 72 hours
-const globalTransactions: Transaction[] = [
-  {
-    id: 1,
-    date: "2024-04-24T10:30:00Z",
-    description: "Payment from John Doe",
-    amount: 250.0,
-    type: "credit",
-    category: "Salary",
-    user: "John Doe",
-  },
-  {
-    id: 2,
-    date: "2024-04-23T14:45:00Z",
-    description: "Grocery Shopping",
-    amount: -75.5,
-    type: "debit",
-    category: "Food",
-    user: "Jane Smith",
-  },
-  {
-    id: 3,
-    date: "2024-04-22T09:15:00Z",
-    description: "Electricity Bill",
-    amount: -120.0,
-    type: "debit",
-    category: "Utilities",
-    user: "Alice Johnson",
-  },
-  {
-    id: 4,
-    date: "2024-04-21T16:20:00Z",
-    description: "Freelance Project",
-    amount: 500.0,
-    type: "credit",
-    category: "Freelance",
-    user: "Bob Brown",
-  },
-  {
-    id: 5,
-    date: "2024-04-20T11:00:00Z",
-    description: "Restaurant Dinner",
-    amount: -60.0,
-    type: "debit",
-    category: "Food",
-    user: "Charlie Davis",
-  },
-  {
-    id: 6,
-    date: "2024-04-19T08:30:00Z",
-    description: "Gym Membership",
-    amount: -45.0,
-    type: "debit",
-    category: "Health",
-    user: "Diana Evans",
-  },
-  {
-    id: 7,
-    date: "2024-04-24T12:00:00Z",
-    description: "Book Purchase",
-    amount: -30.0,
-    type: "debit",
-    category: "Education",
-    user: "Ethan Foster",
-  },
-  {
-    id: 8,
-    date: "2024-04-23T18:25:00Z",
-    description: "Stock Dividend",
-    amount: 150.0,
-    type: "credit",
-    category: "Investment",
-    user: "Fiona Green",
-  },
-  {
-    id: 9,
-    date: "2024-04-22T20:10:00Z",
-    description: "Online Course",
-    amount: -200.0,
-    type: "debit",
-    category: "Education",
-    user: "George Harris",
-  },
-  {
-    id: 10,
-    date: "2024-04-21T07:50:00Z",
-    description: "Car Repair",
-    amount: -350.0,
-    type: "debit",
-    category: "Auto",
-    user: "Hannah Irving",
-  },
-  // Add more transactions as needed
-];
 
 interface GlobalTransactionsCardProps {
   darkMode: boolean;
 }
 
 const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) => {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState<"all" | "credit" | "debit">("all");
+  const [filterType, setFilterType] = useState<"all" | "incoming" | "outgoing">("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
-  // Extract unique categories for filter dropdown
-  const categories = Array.from(new Set(globalTransactions.map(tx => tx.category)));
+  // Extract unique categories for filter dropdown (you can decide based on transaction data)
+  const categories = Array.from(new Set(transactions.map(tx => tx.property_address)));
 
-  // Handle search input change
+  const getAllTransactions = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/get-transparent-transactions");
+      if (!response.ok) {
+        throw new Error("Failed to fetch transactions");
+      }
+
+      const data = await response.json();
+
+      // Map the DB data to match the Transaction format
+      const transformedData = data.map((dbTx: any) => ({
+        tid:  dbTx.tid,
+        id: dbTx.id,
+        date: new Date().toISOString(), // Adjust the date based on your DB (for example, from a timestamp)
+        description: `Blockchain Transaction ${dbTx.hash}`, // You can customize this if needed
+        amount: dbTx.token_amount,
+        property_address: dbTx.property_address,
+        block_hash: dbTx.block_hash,
+        block_number: dbTx.block_number,
+        gas_price: dbTx.gas_price,
+        sender_address: dbTx.sender_address,
+        receiver_address: dbTx.receiver_address,
+      }));
+
+      // Create a map to ensure unique transactions by id
+      const uniqueTransactions = new Map<string, Transaction>();
+      transformedData.forEach(tx => {
+        uniqueTransactions.set(tx.tid.toString(), tx); // Overwrite any duplicate transactions by tid
+      });
+
+      // Convert the Map values back into an array and update the state
+      setTransactions(Array.from(uniqueTransactions.values()));
+    } catch (e) {
+      console.error("Error fetching transactions:", e);
+    }
+  };
+
+  useEffect(() => {
+    getAllTransactions();
+  }, []);
+
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
   // Handle filter type change
-  const handleFilterTypeChange = (type: "all" | "credit" | "debit") => {
+  const handleFilterTypeChange = (type: "all" | "incoming" | "outgoing") => {
     setFilterType(type);
   };
 
@@ -135,20 +83,24 @@ const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) =
     setFilterCategory(e.target.value);
   };
 
-  // Filter transactions based on search and filters
-  const filteredTransactions = globalTransactions.filter((tx) => {
-    const matchesSearch =
-      tx.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      tx.user.toLowerCase().includes(searchTerm.toLowerCase());
+  // Filter and sort transactions based on search and filters
+  const filteredTransactions = transactions
+    .filter((tx) => {
+      const matchesSearch =
+        tx.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tx.property_address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tx.sender_address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tx.receiver_address.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesType =
-      filterType === "all" ? true : tx.type === filterType;
+      const matchesType =
+        filterType === "all" ? true : filterType === "incoming" ? tx.receiver_address : tx.sender_address;
 
-    const matchesCategory =
-      filterCategory === "all" ? true : tx.category === filterCategory;
+      const matchesCategory =
+        filterCategory === "all" ? true : tx.property_address === filterCategory;
 
-    return matchesSearch && matchesType && matchesCategory;
-  });
+      return matchesSearch && matchesType && matchesCategory;
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Sorting by date (latest first)
 
   return (
     <div className="flex flex-col p-6">
@@ -164,8 +116,8 @@ const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) =
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Global Transactions (Last 72 Hours)</h2>
-          <span className="text-sm font-medium">FinanceHub</span>
+          <h2 className="text-xl font-semibold">Global Blockchain Transactions (Properties)</h2>
+          <span className="text-sm font-medium">Blockchain Finance Hub</span>
         </div>
 
         {/* Divider */}
@@ -179,20 +131,20 @@ const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) =
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 space-y-2 md:space-y-0">
           {/* Search Input */}
           <input
-            type="text"
-            placeholder="Search by description or user..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className={`
-              px-4 py-2
-              rounded
-              border
-              focus:outline-none
-              focus:ring-2
-              focus:ring-blue-500
-              ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-black"}
-            `}
-          />
+          type="text"
+          placeholder="Sender address..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className={`
+            px-4 py-2
+            rounded
+            border
+            focus:outline-none
+            focus:ring-2
+            focus:ring-blue-500
+            ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-black"}
+          `}
+        />
 
           {/* Filter Options */}
           <div className="flex space-x-2">
@@ -200,46 +152,25 @@ const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) =
             <div className="flex space-x-1">
               <button
                 onClick={() => handleFilterTypeChange("all")}
-                className={`
-                  px-3 py-1 rounded
-                  ${filterType === "all"
-                    ? "bg-blue-500 text-white"
-                    : darkMode
-                    ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
-                `}
+                className={`px-3 py-1 rounded ${filterType === "all" ? "bg-blue-500 text-white" : darkMode ? "bg-gray-700 text-gray-300 hover:bg-gray-600" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}
               >
                 All
               </button>
               <button
-                onClick={() => handleFilterTypeChange("credit")}
-                className={`
-                  px-3 py-1 rounded
-                  ${filterType === "credit"
-                    ? "bg-green-500 text-white"
-                    : darkMode
-                    ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
-                `}
+                onClick={() => handleFilterTypeChange("incoming")}
+                className={`px-3 py-1 rounded ${filterType === "incoming" ? "bg-green-500 text-white" : darkMode ? "bg-gray-700 text-gray-300 hover:bg-gray-600" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}
               >
-                Credit
+                Incoming
               </button>
               <button
-                onClick={() => handleFilterTypeChange("debit")}
-                className={`
-                  px-3 py-1 rounded
-                  ${filterType === "debit"
-                    ? "bg-red-500 text-white"
-                    : darkMode
-                    ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
-                `}
+                onClick={() => handleFilterTypeChange("outgoing")}
+                className={`px-3 py-1 rounded ${filterType === "outgoing" ? "bg-red-500 text-white" : darkMode ? "bg-gray-700 text-gray-300 hover:bg-gray-600" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}
               >
-                Debit
+                Outgoing
               </button>
             </div>
 
-            {/* Filter Category Dropdown */}
+            {/* Filter Property Dropdown */}
             <select
               value={filterCategory}
               onChange={handleFilterCategoryChange}
@@ -253,7 +184,7 @@ const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) =
                 ${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-gray-100 border-gray-300 text-black"}
               `}
             >
-              <option value="all">All Categories</option>
+              <option value="all">All Properties</option>
               {categories.map((category, idx) => (
                 <option key={idx} value={category}>
                   {category}
@@ -269,18 +200,29 @@ const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) =
             <thead>
               <tr>
                 <th className="px-4 py-2 text-left">Date</th>
-                <th className="px-4 py-2 text-left">Description</th>
-                <th className="px-4 py-2 text-right">Amount (£)</th>
-                <th className="px-4 py-2 text-left">Category</th>
-                <th className="px-4 py-2 text-left">User</th>
+                <th className="px-4 py-2 text-left">Property Address</th>
+                <th className="px-4 py-2 text-left">Block Hash</th>
+                <th className="px-4 py-2 text-right text-nowrap">Token (ERC-200)</th>
+                <th className="px-4 py-2 text-left">Sender</th>
+                <th className="px-4 py-2 text-left">Receiver</th>
               </tr>
             </thead>
             <tbody>
               {filteredTransactions.length > 0 ? (
                 filteredTransactions.map((tx) => (
-                  <tr key={tx.id} className="border-t">
+                  <tr key={`${tx.tid}`} className="border-t">
                     <td className="px-4 py-2">{new Date(tx.date).toLocaleString()}</td>
-                    <td className="px-4 py-2">{tx.description}</td>
+                    <td className="px-4 py-2">{tx.property_address}</td>
+                    <td className="px-4 py-2">
+                      <a
+                        href={`https://holesky.etherscan.io/block/${tx.block_hash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline"
+                      >
+                        {tx.block_hash}
+                      </a>
+                    </td>
                     <td
                       className={`px-4 py-2 text-right font-semibold ${
                         tx.amount > 0 ? "text-green-500" : "text-red-500"
@@ -289,13 +231,31 @@ const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) =
                       {tx.amount > 0 ? "+" : ""}
                       {tx.amount.toFixed(2)}
                     </td>
-                    <td className="px-4 py-2">{tx.category}</td>
-                    <td className="px-4 py-2">{tx.user}</td>
+                    <td className="px-4 py-2">
+                      <a
+                        href={`https://holesky.etherscan.io/address/${tx.sender_address}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline"
+                      >
+                        {tx.sender_address}
+                      </a>
+                    </td>
+                    <td className="px-4 py-2">
+                      <a
+                        href={`https://holesky.etherscan.io/address/${tx.receiver_address}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline"
+                      >
+                        {tx.receiver_address}
+                      </a>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td className="px-4 py-2 text-center" colSpan={5}>
+                  <td className="px-4 py-2 text-center" colSpan={6}>
                     No transactions match your search.
                   </td>
                 </tr>
