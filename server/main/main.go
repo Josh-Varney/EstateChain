@@ -146,6 +146,14 @@ func main() {
 		transaction.PostTransaction(db, c)
 	})
 
+	router.GET("/get-transparent-transactions", func(c *gin.Context){
+		transaction.GetAllTransactions(db, c)
+	})
+
+	router.GET("get-transactions/:uuid", func(c *gin.Context){
+		transaction.GetTransactionsUUID(db, c)
+	})
+
 
 	// Start server
 	router.Run(":8080")

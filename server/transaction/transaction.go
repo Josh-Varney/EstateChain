@@ -59,4 +59,88 @@ func PostTransaction(db *sql.DB, c *gin.Context) {
     c.JSON(200, gin.H{"message": "Transaction inserted successfully"})
 }
 
+func GetAllTransactions(db *sql.DB, c *gin.Context) {
+    // Query to select all transactions
+    query := `
+        SELECT block_hash, hash, block_number, gas_price, sender_address, receiver_address, property_address, token_amount, uuid 
+        FROM Transactions
+    `
 
+    // Execute the query
+    rows, err := db.Query(query)
+    if err != nil {
+        c.JSON(500, gin.H{"error": "Failed to fetch transactions", "details": err.Error()})
+        return
+    }
+    defer rows.Close()
+
+    // Slice to store transactions
+    var transactions []Transaction
+
+    // Iterate over the result set
+    for rows.Next() {
+        var transaction Transaction
+        if err := rows.Scan(
+            &transaction.BlockHash, &transaction.Hash, &transaction.BlockNumber, &transaction.GasPrice,
+            &transaction.From, &transaction.To, &transaction.PropertyAddress, &transaction.TokenAmount, &transaction.Uuid,
+        ); err != nil {
+            c.JSON(500, gin.H{"error": "Error scanning row", "details": err.Error()})
+            return
+        }
+        transactions = append(transactions, transaction)
+    }
+
+    // Check for any errors encountered during iteration
+    if err := rows.Err(); err != nil {
+        c.JSON(500, gin.H{"error": "Error iterating over transactions", "details": err.Error()})
+        return
+    }
+
+    // Return the transactions as JSON
+    c.JSON(200, transactions)
+}
+
+func GetTransactionsUUID(db *sql.DB, c *gin.Context) {
+    // Get UUID from the request parameters
+    userUUID := c.Param("uuid")
+
+    // Query to select transactions for the specific UUID
+    query := `
+        SELECT block_hash, hash, block_number, gas_price, sender_address, receiver_address, property_address, token_amount, uuid 
+        FROM Transactions
+        WHERE uuid = @uuid
+    `
+
+    // Execute the query
+    rows, err := db.Query(query, sql.Named("uuid", userUUID))
+    if err != nil {
+        c.JSON(500, gin.H{"error": "Failed to fetch transactions", "details": err.Error()})
+        return
+    }
+    defer rows.Close()
+
+    // Slice to store transactions
+    var transactions []Transaction
+
+    // Iterate over the result set
+    for rows.Next() {
+        var transaction Transaction
+        if err := rows.Scan(
+            &transaction.BlockHash, &transaction.Hash, &transaction.BlockNumber, &transaction.GasPrice,
+            &transaction.From, &transaction.To, &transaction.PropertyAddress, &transaction.TokenAmount, &transaction.Uuid,
+        ); err != nil {
+            c.JSON(500, gin.H{"error": "Error scanning row", "details": err.Error()})
+            return
+        }
+        transactions = append(transactions, transaction)
+    }
+
+    // Check for any errors encountered during iteration
+    if err := rows.Err(); err != nil {
+        c.JSON(500, gin.H{"error": "Error iterating over transactions", "details": err.Error()})
+        return
+    }
+
+    // Return the transactions as JSON
+    c.JSON(200, transactions)
+}

@@ -65,8 +65,8 @@ const DummyTransactions: React.FC = () => {
           darkMode={darkMode}
           onWalletClick={toggleWalletPrompt}
           onProfileClick={toggleProfilePrompt}
-          onNotiicationClick={toggleNotificationPrompt} isBuyer={false}        
-        />
+          onNotiicationClick={toggleNotificationPrompt} isBuyer={false} 
+          titleName={"My Transactions"}        />
 
         <TransactionScreen />
 
@@ -75,8 +75,8 @@ const DummyTransactions: React.FC = () => {
           walletConnectedPrompt={walletConnectedPrompt}
           profilePrompt={profilePrompt}
           notificationPrompt={notificationPrompt}
-          closeWalletConnectPrompt={() => setWalletConnectPrompt(false)}
-          closeWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
+          setWalletConnectPrompt={() => setWalletConnectPrompt(false)}
+          setWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
           closeProfilePrompt={() => setProfilePrompt(false)}
           closeNotificationPrompt={() => setNotificationPrompt(false)}
         />

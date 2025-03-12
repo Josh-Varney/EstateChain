@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import dataNet from "../../net.json"
 import { isWalletConnected } from "../profile/check-wallet";
+import axios from "axios";
 
 export async function getABI(network:string, moduleName:string){
     try {   
@@ -159,7 +160,14 @@ export async function executeTransaction(propertyID, propertyAddress, contract, 
         }
 
 
-
+        const notify = await axios.post("http://localhost:8080/send-notification", {
+            uuid: localStorage.getItem("uuid"),  // Assuming propertyAddedBy is a valid UUID here
+            message: `Your transaction was successful: ${receipt.hash}`,
+            type: "info",
+            related_table: "PropertyTokenised",
+            wasRead: false
+        });
+        
         // Show confirmation and link to etherscan with confirmation over transaction
 
     } catch (receiptError) {
