@@ -458,6 +458,37 @@ app.get("/api/getAbi", async (req: Request, res: Response) => {
   }
 });
 
+app.put("/update-tokens", async (req: Request, res: Response) => {
+  const { pId, tokensLeft } = req.body;
+
+  if (!pId || typeof tokensLeft !== "number") {
+    return res.status(400).json({ error: "Invalid request data" });
+  }
+
+    const filterJSON = {
+      "pId" : pId,
+      "tokensLeft": tokensLeft
+    }
+
+    try {
+     // Call new endpoint
+     const response = await fetch('http://localhost:8080/update-tokens-left', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(filterJSON), 
+    });
+
+    if (!response.ok){
+      console.log("Error in property tokens response: ", response.statusText);
+    }
+
+    } catch (error){
+      console.log("Error updating property tokens: ", error);
+    }
+});
+
 // Start the server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

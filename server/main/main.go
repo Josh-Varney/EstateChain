@@ -8,6 +8,7 @@ import (
 	"estatechain/server/tokenize"
 	"estatechain/server/admin"
 	"estatechain/server/notification"
+	"estatechain/server/transaction"
 	"fmt"
 	"log"
 	"os"
@@ -136,6 +137,14 @@ func main() {
     router.PUT("/property/:propertyID/:pSmartAddress/:bType/:bCurrency/:cName", func(c *gin.Context) {
         admin.AddTokenisedPropertyDetails(db, c)
     })
+
+	router.PUT("/update-tokens-left", func(c *gin.Context) {
+		tokenize.UpdateTokensLeft(db, c)
+	})
+
+	router.POST("/post-transaction", func(c *gin.Context)  {
+		transaction.PostTransaction(db, c)
+	})
 
 
 	// Start server

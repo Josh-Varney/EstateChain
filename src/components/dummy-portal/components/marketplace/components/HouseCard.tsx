@@ -40,7 +40,7 @@ const HouseCard = ({ house }: { house: House }) => {
                     {/* Pricing */}
                     <div className="p-2 bg-gray-100 text-center">
                         <p className="text-lg font-semibold text-green-600">
-                            {house.propertyTokenPrice ? `£${house.propertyTokenPrice}` : "Price not available"}
+                            {house.propertyTokenPrice ? `ETH ${house.propertyTokenPrice}` : "Price not available"}
                         </p>
                     </div>
                 </div>

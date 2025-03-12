@@ -1,7 +1,14 @@
 {
-    "holesky": {
-      "chainId": "chain-17000",
-      "chainJSON": "PropertyName#PropertyERC20.json"
+  "holesky": {
+    "chainId": "chain-17000",
+    "properties": {
+      "PropertyName": "PropertyName#PropertyERC20.json",
+      "QuinceToken": "QuinceToken#PropertyERC20.json",
+      "REGENT_MOD": "REGENT_MOD#PropertyERC20.json",
+      "REGENT_TEST": "REGENT_TEST#PropertyERC20.json"
     }
+  },
+  "sepolia" : {
+    
   }
-  
+}

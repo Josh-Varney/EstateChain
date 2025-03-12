@@ -2,11 +2,11 @@ import { ethers } from "ethers";
 import dataNet from "../../net.json"
 import { isWalletConnected } from "../profile/check-wallet";
 
-export async function getABI(network:string){
+export async function getABI(network:string, moduleName:string){
     try {   
+        console.log(network, moduleName);
         const chainID = dataNet[network]["chainId"];
-        const chainJSON = dataNet[network]["chainJSON"]
-
+        const chainJSON = dataNet[network]["properties"][moduleName]; 
         const encodedJsonFileName = encodeURIComponent(chainJSON);
         
         const response = await fetch(`http://localhost:3001/api/getAbi?chainId=${chainID as string}&jsonFileName=${encodedJsonFileName}`, {
@@ -26,25 +26,151 @@ export async function getABI(network:string){
     }
 }
 
-export async function getSigner () {
+export async function getSigner(addressSelected: string) {
     try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
+      // Initialize the provider using the BrowserProvider (for Ethereum)
+      const provider = new ethers.BrowserProvider(window.ethereum);
+  
+      // Request the list of accounts from the user's Ethereum wallet
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  
+      // Check if the selected address is among the accounts
+      if (!accounts.includes(addressSelected)) {
+        console.log(`Address ${addressSelected} is not in the list of connected accounts.`);
+        return null;  // Return null or handle the error as needed
+      }
+  
+      // If the address is found, set the signer for that account
+      const signer = await provider.getSigner(addressSelected);
 
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
+      console.log("signer", signer)
+      
+      // Log and return the signer for the selected address
+      console.log("My Signer: ", await signer.getAddress());
+      return signer;
+      
+    } catch (error) {
+      console.log("Signer Error: ", error);
+      return null;  // Return null or handle the error as needed
+    }
+  }
 
-        const signer = await provider.getSigner();
+export async function executeTransaction(propertyID, propertyAddress, contract, numberOfTokens, totalCost, setTxHash, setShowPopup, setIsWaitingForReciept, setReceipt){
+    console.log("Execute transaction")
+    // Execute the transaction
+    let tx;
+    try {
+        tx = await contract.buyTokens(numberOfTokens, { value: ethers.parseEther(totalCost) });
+        
+        setShowPopup(true);
+        // Transaction Sent 
+        setTxHash(tx.hash);
 
-        console.log("My Signer: ", await signer.getAddress());
+    } catch (txError) {
+        throw new Error(`Transaction failed: ${txError.message}`);
+    }
 
-        return signer;
-    } catch (error){
-        console.log("Signer Error: ", error);
+    // Wait for transaction confirmation
+    let receipt;
+    let tokensLeftChange;
+    try {
+        setIsWaitingForReciept(true);
+        receipt = await tx.wait();
+        setIsWaitingForReciept(false);
+
+        setReceipt(receipt);
+        if (!receipt || receipt.status !== 1) throw new Error("Transaction failed or was reverted");
+        console.log("Transaction confirmed! Receipt:", receipt);
+
+        try {
+            tokensLeftChange = await contract.getTokenSupply();
+            
+            if (!tokensLeftChange) {
+                console.log("Failed to get tokensLeft updated from contract", tokensLeftChange);
+                return;
+            }
+        } catch (supplyError) {
+            console.log("Failed to get tokensLeft updated from contract");
+            return;
+        }
+
+        // Call my endpoint with the update
+        try {
+            const updatedJsonWithNumber = {
+                "pId": propertyID,
+                "tokensLeft": parseInt(tokensLeftChange.toString())
+            };
+
+            console.log(updatedJsonWithNumber);
+              
+            const response = await fetch('http://localhost:8080/update-tokens-left', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedJsonWithNumber), 
+            });
+
+            // Check if the response status is successful (status code 200-299)
+            if (response.status >= 200 && response.status < 300) {
+                console.log("Tokens updated successfully:", response);
+            } else {
+                console.log("Error updating tokens:", response.status, response.statusText);
+            }
+        } catch (e){
+            console.log("Error Updating Tokens: ", e);
+        }
+
+        // To confirm the user and send notification
+
+
+        // This is correct
+        const transaction_json = {
+            "block_hash": receipt.blockHash,
+            "hash": receipt.hash,
+            "block_number": receipt.blockNumber,
+            "gas_price": receipt.gasPrice.toString(),
+            "sender_address": receipt.from,
+            "receiver_address": receipt.to,
+            "property_address": propertyAddress,
+            "token_amount": numberOfTokens,
+            "uuid": localStorage.getItem("uuid")
+        }
+
+        console.log(transaction_json);
+
+        try {      
+            const response = await fetch('http://localhost:8080/post-transaction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(transaction_json), 
+            });
+
+            // Check if the response status is successful (status code 200-299)
+            if (response.status >= 200 && response.status < 300) {
+                console.log("Transaction stored successfully:", response);
+            } else {
+                console.log("Error upating transaction", response.status, response.statusText);
+            }
+        } catch (e){
+            console.log("Error posting transaction: ", e);
+        }
+
+
+
+        // Show confirmation and link to etherscan with confirmation over transaction
+
+    } catch (receiptError) {
+        throw new Error(`Transaction confirmation failed: ${receiptError.message}`);
     }
 }
 
 // See which wallet address they want to execute the smart contract on 
-export async function queryContract (smartAddress:string, network:string, contractName:string) {
+export async function queryContract (propertyID, propertyAddress: string, smartAddress:string, network:string, contractName:string, tokenPrice:string, numberOfTokens: number, address:string, setShowPopup, setLoading, setTxHash, setErrorMessage, setIsWaitingForReciept, setReceipt) {
 
+    const totalCost = (Number(tokenPrice) * numberOfTokens).toString();
     // New parameters is wallet address wanted, and network of the propertes smart contract.
     const deployedSmartContact = smartAddress as string;
 
@@ -53,42 +179,115 @@ export async function queryContract (smartAddress:string, network:string, contra
 
     if (!boolVal) {
         alert("Please connect a wallet, through the wallet icon at the top of the dash");
+        setErrorMessage("Please connect wallet via the Wallet Icon in the top right of the dash");
+        setLoading(false);
         return;
     } 
 
     try {
-        // Ethers provider from the ethereum network
-        // console.log("Contract Name: ", contractName);
-        // console.log("Smart Address: ", smartAddress);
-        // console.log("Contract Name: ", contractName);
-
-        // Used to communicate over a web server
-        const abi = await getABI(network.toLowerCase());
-        // console.log(abi);
-
-        // Get transaction signer
-        const signer = await getSigner();
-
-        // read-only contract
-        const contract = new ethers.Contract(deployedSmartContact, abi.abi, signer);
-
-        console.log("Confirmed Address: ", await contract.getAddress())
-        // console.log("jello");
-        console.log("Tokens Left: ", await contract.getTokenSupply());
-
-
-        const tx = await contract.buyTokens(1, { value: ethers.parseEther("0.1")});
-
-        console.log("Transaction sent! Tx Hash:", tx.hash);
-        console.log("Waiting for confirmation...");
     
-        const receipt = await tx.wait();
+        // Ensure network is defined
+        if (!network){
+            setErrorMessage("This is a fault due to network issues");
+            setLoading(false);
+            return;
+        } 
+    
+        // Fetch the contract ABI
+        let abi;
+        try {
+            console.log(network, contractName)
+            abi = await getABI(network.toLowerCase(), contractName);
+        
+            if (!abi || !abi.abi){
+                setErrorMessage(`Failed to retrieve ABI`);
+                setLoading(false)
+                return;
+            } 
+        } catch (abiError) {
+            setErrorMessage(`Failed to retrieve ABI: ${abiError.message}`);
+            setLoading(false)
+            return;
+        }
+    
+        // Get the transaction signer
+        let signer;
+        try {
+            signer = await getSigner(address);
+            console.log("SIGNER FROM THIS: ", signer)
+            if (!signer){
+                setErrorMessage(`Could not sign the transaction`);
+                setLoading(false)
+                return;
+            } 
+        } catch (signerError) {
+            setErrorMessage(`Could not sign the transaction`);
+            setLoading(false)
+            return;
+        }
+    
+        // Ensure contract address is defined
+        if (!deployedSmartContact){
+            setErrorMessage(`Could not find deployed smart contract`);
+            setLoading(false)
+            return;
+        } 
+    
+        // Initialize the contract
+        let contract;
+        try {
+            contract = new ethers.Contract(deployedSmartContact, abi.abi, signer);
+        } catch (contractError) {
+            alert("Please connect a wallet, through the wallet icon at the top of the dash");
+            setErrorMessage(`Could not initialize smart contract: ${contractError}`);
+            setLoading(false)
+            return;
+        }
+    
+        // Confirm contract is valid
+        try {
+            console.log("Confirmed Address:", await contract.getAddress());
+        } catch (addressError) {
+            alert("Please connect a wallet, through the wallet icon at the top of the dash");
+            setErrorMessage(`Contract Address Error: ${addressError}`);
+            setLoading(false)
+            return;
+        }
+    
+        // Retrieve token supply
+        try {
+            console.log("Executed Token Supply")
+            console.log("Tokens Left:", await contract.getTokenSupply());
+        } catch (supplyError) {
+            setErrorMessage(`Failed to retireve Tokens from Contract: ${supplyError}`);
+            setLoading(false)
+            return;
+        }
 
-        console.log("Receipt: ", receipt);
+        try {
+            const owner = await contract.ownerOf(); // Retrieve the owner of the property
+            console.log("Get Owner:", owner);
+        
+            if (owner.toLowerCase() === address.toLowerCase()) {
+                setErrorMessage(`Failed to execute due to they are the owner`);
+                setLoading(false)
+                return;
+            } 
+        } catch (ownerError) {
+            setErrorMessage(`Failed to receive owner: ${ownerError}`);
+            return;
+        }
 
-        // GET Private KET 
-    } catch (error){
-        console.log("Error with transaction: ", error);
-    }
-
+        try {
+            await executeTransaction(propertyID, propertyAddress, contract, numberOfTokens, totalCost, setTxHash , setShowPopup, setIsWaitingForReciept, setReceipt);
+            setLoading(false);
+        } catch(error){
+            setErrorMessage(`Failed to excute due to executeTransaction() failure ${error}`);
+            setLoading(false)
+            setShowPopup(false);
+        }
+        
+    } catch (error) {
+        console.error("Error with transaction:", error.message);
+    }    
 }

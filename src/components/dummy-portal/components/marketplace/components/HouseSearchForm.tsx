@@ -104,7 +104,7 @@ const HouseDisplay = ({ darkMode }) => {
                   propertyBedrooms: property.propertyBedrooms,
                   propertyBathrooms: property.propertyBathrooms,
                   propertyTokenPrice: property.propertyTokenPrice,
-                  propertyTokensLeft: property.propertyTokensLeft,
+                  propertyTokensLeft: property.pTokenRemaining,
                   propertyType: property.propertyType,
                   propertyPostcode: property.propertyPostcode,
                   propertyRental: property.propertyRental,
@@ -136,7 +136,7 @@ const HouseDisplay = ({ darkMode }) => {
         
                 if (response.ok) {
                     const data = JSON.parse(responseBody); // Parse the response body
-                    // console.log("Parsed Data:", data); // Check the structure of the parsed data
+                    console.log("Parsed Data:", data); // Check the structure of the parsed data
                     // Ensure the data has the 'properties' field and it's an array
                     if (data) {
                         const houses = convertToHouseList(data);

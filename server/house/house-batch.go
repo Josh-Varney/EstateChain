@@ -57,7 +57,8 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
 		RentalDistributionExpectancy 	string `json:"rentalDistributionExpectancy"`
 		BType						string `json:"bType"`
 		BCurrency					string `json:"bCurrency"`
-		PContractName				string 	`json:"contractName"`		
+		PContractName				string 	`json:"contractName"`	
+		PTokenRemaining				string `json:"pTokenRemaining"`
 	}
 
 	var properties []Property
@@ -75,7 +76,7 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
             p.propertyTenure, p.propertyGarden, p.propertyAccessibility, p.propertyKeyFeatures,
             a.agentName, a.agentContactNumber, a.agentEmail, a.agentIcon, a.agentAddress, a.agentWhyDescription,
 			a.agentSoldRecentlyDescription, pt.pValuation, pt.pTotalTokens, pt.pSmartAddress, pt.rentalDistributionExpectancy,
-			pt.bType, pt.bCurrency, pt.contractName
+			pt.bType, pt.bCurrency, pt.contractName, pt.pTokenRemaining
         FROM 
             Property p
         LEFT JOIN 
@@ -140,6 +141,7 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
 		property.BType = "N/A"
 		property.BCurrency = "N/A"
 		property.PContractName = "N/A"
+		property.PTokenRemaining = "0"
 
 		// Scan values into the property struct
 		if err := rows.Scan(
@@ -189,6 +191,7 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
 			&property.BType,		
 			&property.BCurrency,
 			&property.PContractName,
+			&property.PTokenRemaining,
 		); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error scanning properties: %s", err.Error())})
 			return
