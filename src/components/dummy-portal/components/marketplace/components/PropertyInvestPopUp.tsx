@@ -18,6 +18,7 @@ const PropertyInvestPopup = ({
   blockchainCurrency,
   propertyValuation,
   rentalExpectancy,
+  contractName,
   isProject,
   isRental,
 }) => {
@@ -80,6 +81,12 @@ const PropertyInvestPopup = ({
             <span className="text-gray-600">Gas Fess:</span>
             <span className="font-semibold text-gray-800">
               {blockchainCurrency} {gasFees}
+            </span>
+          </div>
+          <div className="flex justify-between text-sm mb-2">
+            <span className="text-gray-600">Token Type:</span>
+            <span className="font-semibold text-gray-800">
+              ERC-200 {contractName}
             </span>
           </div>
           <div className="w-full bg-gray-300 h-3 rounded-full overflow-hidden">
@@ -153,7 +160,7 @@ const PropertyInvestPopup = ({
             Cancel
           </button>
           <button
-            onClick={async () => await queryContract(smartAddress, blockchain)}
+            onClick={async () => await queryContract(smartAddress, blockchain, contractName)}
             disabled={tokenAmount <= 0 || tokenAmount > tokensLeft}
             className={`px-6 py-3 text-lg rounded-lg text-white transition-all ${
               tokenAmount <= 0 || tokenAmount > tokensLeft

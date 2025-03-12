@@ -56,7 +56,8 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
 		PSmartAddress				string	`json:"pSmartAddress"`
 		RentalDistributionExpectancy 	string `json:"rentalDistributionExpectancy"`
 		BType						string `json:"bType"`
-		BCurrency					string `json:"bCurrency"`		
+		BCurrency					string `json:"bCurrency"`
+		PContractName				string 	`json:"contractName"`		
 	}
 
 	var properties []Property
@@ -74,7 +75,7 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
             p.propertyTenure, p.propertyGarden, p.propertyAccessibility, p.propertyKeyFeatures,
             a.agentName, a.agentContactNumber, a.agentEmail, a.agentIcon, a.agentAddress, a.agentWhyDescription,
 			a.agentSoldRecentlyDescription, pt.pValuation, pt.pTotalTokens, pt.pSmartAddress, pt.rentalDistributionExpectancy,
-			pt.bType, pt.bCurrency
+			pt.bType, pt.bCurrency, pt.contractName
         FROM 
             Property p
         LEFT JOIN 
@@ -82,7 +83,9 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
 		LEFT JOIN 
 			PropertyTokenised pt ON p.propertyID = pt.pId
 		WHERE pApproved = 1
-			  AND pt.pSmartAddress IS NOT NULL;
+			  AND pt.pSmartAddress IS NOT NULL
+			  AND pt.contractName IS NOT NULL;
+			  
     `
 	// Execute the query
 	rows, err := db.Query(query)
@@ -136,6 +139,7 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
 		property.RentalDistributionExpectancy = "N/A"
 		property.BType = "N/A"
 		property.BCurrency = "N/A"
+		property.PContractName = "N/A"
 
 		// Scan values into the property struct
 		if err := rows.Scan(
@@ -184,6 +188,7 @@ func GetAllProperties(db *sql.DB, c *gin.Context) {
 			&property.RentalDistributionExpectancy,
 			&property.BType,		
 			&property.BCurrency,
+			&property.PContractName,
 		); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error scanning properties: %s", err.Error())})
 			return

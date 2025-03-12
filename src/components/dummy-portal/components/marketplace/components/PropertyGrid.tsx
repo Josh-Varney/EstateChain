@@ -44,6 +44,7 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
 
   const openPopup = () => {
     console.log("Invest Popup")
+    console.log(propertyDetails);
     setIsPopupOpen(true)};
   const closePopup = () => setIsPopupOpen(false);
 
@@ -143,8 +144,9 @@ const PropertyGrid: React.FC<PropertyDetailsProps> = ({ darkMode, houseDisplayed
                   blockchainCurrency={propertyDetails.propertyChainCurrency || "N/A"}
                   propertyValuation={propertyDetails.propertyValue || 0}
                   addedBy={propertyDetails.propertyAddedBy || "N/A"}
-                  rentalExpectancy={propertyDetails.rentalExpectancy || "N/A"} 
-                  propertyDescription={propertyDetails.propertyDescription || "N/A"}                />
+                  rentalExpectancy={propertyDetails.rentalExpectancy || "N/A"}
+                  propertyDescription={propertyDetails.propertyDescription || "N/A"} 
+                  contractName={propertyDetails.propertyContractName}                />
               </div>
             </div>
 

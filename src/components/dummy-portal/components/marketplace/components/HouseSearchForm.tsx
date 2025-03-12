@@ -119,7 +119,8 @@ const HouseDisplay = ({ darkMode }) => {
                   propertySmartAddress: property.pSmartAddress,
                   propertyRentalDistributionExpectancy: property.rentalDistributionExpectancy,
                   propertyChainType: property.bType,
-                  propertyChainCurrency: property.bCurrency
+                  propertyChainCurrency: property.bCurrency,
+                  propertyContractName: property.contractName
                 }));
         };
         
@@ -130,6 +131,8 @@ const HouseDisplay = ({ darkMode }) => {
                 // console.log("Response Status:", response.status); // Log status code
                 const responseBody = await response.text(); // Get the raw response body
                 // console.log("Raw Response Body:", responseBody); // Log the raw response
+
+            
         
                 if (response.ok) {
                     const data = JSON.parse(responseBody); // Parse the response body

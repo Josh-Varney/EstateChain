@@ -43,7 +43,7 @@ export async function getSigner () {
 }
 
 // See which wallet address they want to execute the smart contract on 
-export async function queryContract (smartAddress:string, network:string) {
+export async function queryContract (smartAddress:string, network:string, contractName:string) {
 
     // New parameters is wallet address wanted, and network of the propertes smart contract.
     const deployedSmartContact = smartAddress as string;
@@ -58,8 +58,9 @@ export async function queryContract (smartAddress:string, network:string) {
 
     try {
         // Ethers provider from the ethereum network
-
-        console.log("Smart Address: ", smartAddress);
+        // console.log("Contract Name: ", contractName);
+        // console.log("Smart Address: ", smartAddress);
+        // console.log("Contract Name: ", contractName);
 
         // Used to communicate over a web server
         const abi = await getABI(network.toLowerCase());
@@ -84,10 +85,6 @@ export async function queryContract (smartAddress:string, network:string) {
         const receipt = await tx.wait();
 
         console.log("Receipt: ", receipt);
-
-
-    
-
 
         // GET Private KET 
     } catch (error){
