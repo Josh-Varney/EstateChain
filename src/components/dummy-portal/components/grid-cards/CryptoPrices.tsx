@@ -16,50 +16,31 @@ const FakeCryptoListCard: FC<FakeCryptoListCardProps> = ({ darkMode }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterChange, setFilterChange] = useState<"all" | "positive" | "negative">("all");
 
+  // Obtain the live prices of these currencies
+  
   // Sample fakenet coins data
   const fakenetCryptos: FakeCryptoData[] = [
     {
-      name: "TestCoin Alpha",
-      symbol: "TCA",
+      name: "SepoliaETH",
+      symbol: "SETH",
       price: 1.25,
       priceChange24h: 2.5,
       iconUrl: "https://via.placeholder.com/48?text=TCA",
     },
     {
-      name: "BetaToken",
-      symbol: "BTK",
+      name: "HoleskyETH",
+      symbol: "HETH",
       price: 0.75,
       priceChange24h: -1.2,
       iconUrl: "https://via.placeholder.com/48?text=BTK",
     },
     {
-      name: "GammaCash",
-      symbol: "GMC",
-      price: 2.5,
-      priceChange24h: 0.5,
-      iconUrl: "https://via.placeholder.com/48?text=GMC",
-    },
-    {
-      name: "DeltaDollar",
-      symbol: "DDL",
-      price: 3.0,
-      priceChange24h: -0.8,
-      iconUrl: "https://via.placeholder.com/48?text=DDL",
-    },
-    {
-      name: "EpsilonEther",
-      symbol: "EPE",
-      price: 4.75,
-      priceChange24h: 1.5,
-      iconUrl: "https://via.placeholder.com/48?text=EPE",
-    },
-    {
-      name: "ZetaZero",
-      symbol: "ZTZ",
-      price: 0.95,
-      priceChange24h: -2.0,
-      iconUrl: "https://via.placeholder.com/48?text=ZTZ",
-    },
+      name: "BNBChain",
+      symbol: "BNB",
+      price: 0.75,
+      priceChange24h: -1.2,
+      iconUrl: "https://via.placeholder.com/48?text=BTK",
+    }
     // Add more fakenet coins as needed
   ];
 

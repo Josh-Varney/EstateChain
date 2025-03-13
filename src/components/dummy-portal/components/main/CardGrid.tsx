@@ -20,9 +20,6 @@ const accounts = [
 const cryptocurrencies = [
   { id: "SETH", name: "SepoliaEth", icon: <FaBitcoin /> },
   { id: "HETH", name: "HoleskyEth", icon: <FaEthereum /> },
-  { id: "POLY", name: "PolygonAmoy", icon: <FaBitcoin /> },
-  { id: "BSCT", name: "bscTestnet", icon: <FaEthereum /> },
-  { id: "FUJI", name: "avalancheFuji" , icon: <FaBitcoin />}
 ];
 
 const revenueSources = [
@@ -50,6 +47,13 @@ const housingAssets = [
 ];
 
 const CardGrid: React.FC<CardGridProps> = ({ darkMode, mode }) => {
+
+  // Get Test Network Balances for all addresses linked to their account 
+
+  // Get the newest housing asset and change the housingAsserts
+
+  //
+
   return (
     <div
       className={`

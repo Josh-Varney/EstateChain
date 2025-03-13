@@ -17,6 +17,12 @@ interface LatestAssetCardProps {
 }
 
 const LatestAssetCard: React.FC<LatestAssetCardProps> = ({ darkMode }) => {
+
+  // Get two assets from the database
+  ///
+
+  ///
+
   // Sample assets data
   const assets: Asset[] = [
     {

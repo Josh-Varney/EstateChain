@@ -9,7 +9,7 @@ interface NetworkBalance {
 
 
 export async function getTestNetworkBalances(address: string): Promise<void> {
-    const networkNames = ["polygonAmoy", "sepoliaETH", "holeskyETH", "bscTestnet", "avalancheFuji"];
+    const networkNames = ["sepoliaETH", "holeskyETH"];
   
     // Initialize the wallet balance structure
     const jsonWalletBalances: { [key: string]: { [key: string]: { balance: string; symbol: string } | null } } = {};
