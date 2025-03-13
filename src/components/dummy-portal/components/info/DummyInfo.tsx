@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../main/Sidebar";
 import HeaderBar from "../main/HeaderBar";
 import Prompts from "../prompts/Prompts";
-import EmbeddedFAQPage from "./components/EmbeddedFAQ";
+import EmbeddedInfoPage from "./components/Info";
 
 const DummyInformation: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -66,7 +66,7 @@ const DummyInformation: React.FC = () => {
           titleName={"Compliance Information"}        
         />
 
-        <EmbeddedFAQPage />
+        <EmbeddedInfoPage />
 
         <Prompts
           walletConnectPrompt={walletConnectPrompt}

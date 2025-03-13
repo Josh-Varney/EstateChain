@@ -42,7 +42,7 @@ const EmbeddedInfoPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-gray-100 flex flex-col p-6">
+    <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-gray-100 flex flex-col p-6 pb-24 overflow-auto">
 
       {/* Search Inputs */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">

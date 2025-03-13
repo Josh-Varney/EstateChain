@@ -14,9 +14,10 @@ const WalletGridCard: FC<WalletGridCardProps> = ({
   cryptocurrencies,
   revenueSources,
 }) => {
-  const [selectedAccount, setSelectedAccount] = useState(accounts[0]);
-  const [selectedCrypto, setSelectedCrypto] = useState(cryptocurrencies[0]);
-  const [selectedRevenue, setSelectedRevenue] = useState(revenueSources[0]);
+  const [selectedAccount, setSelectedAccount] = useState(accounts?.[0] || { id: "", name: "", balance: 0 });
+  const [selectedCrypto, setSelectedCrypto] = useState(cryptocurrencies?.[0] || { id: "", name: "", icon: <></> });
+  const [selectedRevenue, setSelectedRevenue] = useState(revenueSources?.[0] || { id: "", name: "", value: 0 });
+
 
   const handleAccountChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const account = accounts.find((acc) => acc.id === event.target.value);

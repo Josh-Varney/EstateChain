@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import WalletGridCard from "../grid-cards/Wallet-Card";
 import CalendarCard from "../grid-cards/Calendar-Card";
 import HousingAssetCard from "../grid-cards/Assets-Card";
@@ -11,11 +11,6 @@ interface CardGridProps {
   darkMode: boolean;
   mode: "buyer" | "seller";
 }
-
-const accounts = [
-  { id: "1", name: "Account 1", balance: 13918401 },
-  { id: "2", name: "Account 2", balance: 7328910 },
-];
 
 const cryptocurrencies = [
   { id: "SETH", name: "SepoliaEth", icon: <FaBitcoin /> },
@@ -47,6 +42,42 @@ const housingAssets = [
 ];
 
 const CardGrid: React.FC<CardGridProps> = ({ darkMode, mode }) => {
+
+  const [accounts, setAccounts] = useState([]);
+
+  useEffect(() => {
+    async function fetchAccounts() {
+      if (window.ethereum) {
+        try {
+          const userAccounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+
+          // Format accounts with id, name (set as address), and balance
+          const formattedAccounts = userAccounts.map((address, index) => ({
+            id: (index + 1).toString(), // Convert index to string for id
+            name: `${address.slice(0, 5)}...${address.slice(-4)}`, // Trim address (first 5 and last 4 characters)
+            balance: 0, // Balance set to 0
+          }));  
+
+
+          console.log(formattedAccounts);
+          setAccounts(formattedAccounts);
+          console.log("Connected accounts:", formattedAccounts);
+        } catch (error) {
+          console.error("Error fetching accounts:", error);
+        }
+      } else {
+        console.error("Ethereum provider not found. Install MetaMask!");
+      }
+    }
+
+    fetchAccounts();
+  }, []);
+
+ 
+
+  
+  // Call the function to fetch accounts
+  
 
   // Get Test Network Balances for all addresses linked to their account 
 

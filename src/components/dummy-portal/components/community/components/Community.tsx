@@ -72,7 +72,7 @@ const CommunityPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-gray-100 p-6 overflow-y-auto">
+    <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-gray-100 p-6 overflow-y-auto pb-24">
 
       {/* Search Filters - Align in a single row */}
       <div className="mb-6 flex gap-4 justify-start items-center">
