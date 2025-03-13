@@ -59,7 +59,11 @@ const DummyInformation: React.FC = () => {
           darkMode={darkMode}
           onWalletClick={toggleWalletPrompt}
           onProfileClick={toggleProfilePrompt}
-          onNotiicationClick={toggleNotificationPrompt}
+          onNotiicationClick={toggleNotificationPrompt} isBuyer={false} 
+          onToggleBuyerSeller={function (): void {
+            throw new Error("Function not implemented.");
+          } } 
+          titleName={"Compliance Information"}        
         />
 
         <EmbeddedFAQPage />
@@ -69,8 +73,8 @@ const DummyInformation: React.FC = () => {
           walletConnectedPrompt={walletConnectedPrompt}
           profilePrompt={profilePrompt}
           notificationPrompt={notificationPrompt}
-          closeWalletConnectPrompt={() => setWalletConnectPrompt(false)}
-          closeWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
+          setWalletConnectPrompt={() => setWalletConnectPrompt(false)}
+          setWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
           closeProfilePrompt={() => setProfilePrompt(false)}
           closeNotificationPrompt={() => setNotificationPrompt(false)}
         />
