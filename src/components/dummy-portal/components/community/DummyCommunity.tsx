@@ -58,8 +58,11 @@ const DummyCommunity: React.FC = () => {
           darkMode={darkMode}
           onWalletClick={toggleWalletPrompt}
           onProfileClick={toggleProfilePrompt}
-          onNotiicationClick={toggleNotificationPrompt}
-        />
+          onNotiicationClick={toggleNotificationPrompt} isBuyer={false} onToggleBuyerSeller={function (): void {
+            throw new Error("Function not implemented.");
+          } } 
+          titleName={"Community Portal"}       
+          />
 
         <CommunityPage />
 
@@ -68,8 +71,8 @@ const DummyCommunity: React.FC = () => {
           walletConnectedPrompt={walletConnectedPrompt}
           profilePrompt={profilePrompt}
           notificationPrompt={notificationPrompt}
-          closeWalletConnectPrompt={() => setWalletConnectPrompt(false)}
-          closeWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
+          setWalletConnectPrompt={() => setWalletConnectPrompt(false)}
+          setWalletConnectedPrompt={() => setWalletConnectedPrompt(false)}
           closeProfilePrompt={() => setProfilePrompt(false)}
           closeNotificationPrompt={() => setNotificationPrompt(false)}
         />

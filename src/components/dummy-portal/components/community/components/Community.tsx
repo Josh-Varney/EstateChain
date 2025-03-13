@@ -1,122 +1,179 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { ClipboardCopy } from "lucide-react";
+
+interface Professional {
+  id: number;
+  first_name: string;
+  last_name: string;
+  profession: string;
+  location: string;
+  email: string;
+  phone_number: string;
+  linkedin_profile: string;
+}
 
 const CommunityPage: React.FC = () => {
-  const [view, setView] = useState<'professionals' | 'contact'>('professionals');
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [professionals, setProfessionals] = useState<Professional[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchName, setSearchName] = useState('');
+  const [searchProfession, setSearchProfession] = useState('');
+  const [searchLocation, setSearchLocation] = useState('');
+  const [copiedPhone, setCopiedPhone] = useState<string | null>(null);
+  const [contactMessage, setContactMessage] = useState('');
+  const [contactStatus, setContactStatus] = useState('');
 
-  const professionals = [
-    { id: 1, name: 'Dr. Jane Smith', expertise: 'Psychologist', location: 'Downtown' },
-    { id: 2, name: 'Mr. John Doe', expertise: 'Career Coach', location: 'Midtown' },
-    { id: 3, name: 'Ms. Lisa Ray', expertise: 'Nutritionist', location: 'Uptown' },
-  ];
-
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Fetch professionals from the backend
+  const fetchCommunityProfessionals = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/get-professionals");
+      if (!response.ok) {
+        throw new Error("Failed to fetch professionals");
+      }
+      const data = await response.json();
+      setProfessionals(data);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  // Fetch data when the component mounts
+  useEffect(() => {
+    fetchCommunityProfessionals();
+  }, []);
+
+  // Filter professionals based on search inputs
+  const filteredProfessionals = professionals.filter((professional) => {
+    return (
+      (professional.first_name ? professional.first_name.toLowerCase().includes(searchName.toLowerCase()) : true) &&
+      (professional.profession ? professional.profession.toLowerCase().includes(searchProfession.toLowerCase()) : true) &&
+      (professional.location ? professional.location.toLowerCase().includes(searchLocation.toLowerCase()) : true)
+    );
+  });
+
+  // Function to copy phone number
+  const handleCopyPhone = (phone: string) => {
+    navigator.clipboard.writeText(phone);
+    setCopiedPhone(phone);
+    setTimeout(() => setCopiedPhone(null), 2000); // Reset after 2 seconds
+  };
+
+  // Handle the submission of the contact form
+  const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Thank you for reaching out! Your message has been sent.');
-    setFormData({ name: '', email: '', message: '' });
+    if (contactMessage.trim()) {
+      setContactStatus('Thank you for reaching out! We will get back to you soon.');
+      setContactMessage('');
+    } else {
+      setContactStatus('Please enter a message before submitting.');
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-6">
-        <div className="container mx-auto px-6 flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Community Portal</h1>
-          <nav className="flex space-x-6">
-            <button
-              className={`hover:underline ${
-                view === 'professionals' ? 'underline font-bold' : ''
-              }`}
-              onClick={() => setView('professionals')}
-            >
-              Professionals
-            </button>
-            <button
-              className={`hover:underline ${
-                view === 'contact' ? 'underline font-bold' : ''
-              }`}
-              onClick={() => setView('contact')}
-            >
-              Contact Us
-            </button>
-          </nav>
-        </div>
-      </header>
+    <div className="relative min-h-screen bg-gradient-to-r from-gray-800 to-gray-900 text-gray-100 p-6 overflow-y-auto">
 
-      {/* Main Content */}
-      <main className="container mx-auto px-6 py-10">
-        {view === 'professionals' && (
-          <div>
-            <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
-              Meet Our Professionals
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {professionals.map((prof) => (
-                <div
-                  key={prof.id}
-                  className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl"
+      {/* Search Filters - Align in a single row */}
+      <div className="mb-6 flex gap-4 justify-start items-center">
+        <input
+          type="text"
+          placeholder="Search by Name"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+          className="p-3 rounded-lg border border-gray-500 bg-gray-700 text-white placeholder-gray-500 w-full sm:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <input
+          type="text"
+          placeholder="Search by Profession"
+          value={searchProfession}
+          onChange={(e) => setSearchProfession(e.target.value)}
+          className="p-3 rounded-lg border border-gray-500 bg-gray-700 text-white placeholder-gray-500 w-full sm:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <input
+          type="text"
+          placeholder="Search by Location"
+          value={searchLocation}
+          onChange={(e) => setSearchLocation(e.target.value)}
+          className="p-3 rounded-lg border border-gray-500 bg-gray-700 text-white placeholder-gray-500 w-full sm:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      {/* Loading or Error message */}
+      {loading && <p className="text-center text-gray-400">Loading professionals...</p>}
+      {error && <p className="text-center text-red-600">{error}</p>}
+
+      {/* Professionals List */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredProfessionals.length > 0 ? (
+          filteredProfessionals.map((professional) => (
+            <div
+              key={professional.id}
+              className="bg-gray-700 p-6 rounded-lg shadow-md hover:scale-105 transition-transform duration-300 relative flex flex-col"
+            >
+              {/* Professional's Info */}
+              <h3 className="text-lg font-semibold text-white mb-3">{professional.first_name} {professional.last_name}</h3>
+              <p className="text-gray-400 mb-1"><strong>Profession:</strong> {professional.profession}</p>
+              <p className="text-gray-400 mb-1"><strong>Location:</strong> {professional.location}</p>
+              <p className="text-gray-400 mb-1"><strong>Email:</strong> <a href={`mailto:${professional.email}`} className="text-blue-400">{professional.email}</a></p>
+
+              {/* Phone Number with Copy Functionality */}
+              <div className="flex items-center">
+                <p className="text-gray-400 mb-1"><strong>Phone:</strong> {professional.phone_number}</p>
+                <button
+                  onClick={() => handleCopyPhone(professional.phone_number)}
+                  className="ml-3 text-gray-400 hover:text-white"
+                  title="Copy Phone Number"
                 >
-                  <h3 className="text-xl font-bold text-gray-700">{prof.name}</h3>
-                  <p className="text-gray-600">{prof.expertise}</p>
-                  <p className="text-gray-500 text-sm">{prof.location}</p>
-                  <button className="mt-4 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">
-                    View Profile
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+                  <ClipboardCopy size={18} />
+                </button>
+              </div>
 
-        {view === 'contact' && (
-          <div className="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-            <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
-              Contact Us
-            </h2>
-            <form onSubmit={handleFormSubmit}>
-              <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleFormChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleFormChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2">Message</label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleFormChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                ></textarea>
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+              {/* LinkedIn Profile */}
+              <a
+                href={professional.linkedin_profile}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:underline mt-3"
               >
-                Send Message
-              </button>
-            </form>
-          </div>
+                LinkedIn Profile
+              </a>
+
+              {/* Copied Phone Notification */}
+              {copiedPhone === professional.phone_number && (
+                <div className="absolute top-12 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded shadow-lg">
+                  Copied!
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p className="col-span-full text-center text-gray-400">No results found.</p>
         )}
-      </main>
+      </div>
+
+      {/* Contact Us Module */}
+      <div className="bg-gray-700 p-6 rounded-lg shadow-md mt-12">
+        <h2 className="text-2xl font-semibold text-white mb-4">Contact Us</h2>
+        <form onSubmit={handleContactSubmit}>
+          <textarea
+            placeholder="Enter your message here..."
+            value={contactMessage}
+            onChange={(e) => setContactMessage(e.target.value)}
+            rows={4}
+            className="w-full p-3 rounded-lg bg-gray-600 text-white placeholder-gray-500 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <button
+            type="submit"
+            className="w-full py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-500 transition duration-300"
+          >
+            Send Message
+          </button>
+        </form>
+        {contactStatus && (
+          <p className="mt-4 text-center text-green-500">{contactStatus}</p>
+        )}
+      </div>
     </div>
   );
 };
