@@ -2,13 +2,15 @@ package main
 
 import (
 	"database/sql"
-	"estatechain/server/agent"
-	"estatechain/server/house"
-	"estatechain/server/user_package"
-	"estatechain/server/tokenize"
 	"estatechain/server/admin"
+	"estatechain/server/agent"
+	"estatechain/server/compliance"
+	"estatechain/server/house"
 	"estatechain/server/notification"
+	"estatechain/server/professional"
+	"estatechain/server/tokenize"
 	"estatechain/server/transaction"
+	"estatechain/server/user_package"
 	"fmt"
 	"log"
 	"os"
@@ -152,6 +154,14 @@ func main() {
 
 	router.GET("get-transactions/:uuid", func(c *gin.Context){
 		transaction.GetTransactionsUUID(db, c)
+	})
+
+	router.GET("/get-professionals", func(c *gin.Context) {
+		professional.GetProfessionals(db, c)
+	})
+
+	router.GET("/get-compliance-info", func(c *gin.Context) {
+		compliance.GetAllCompliance(db, c)
 	})
 
 

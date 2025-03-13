@@ -2,8 +2,6 @@ package transaction
 
 import (
 	"database/sql"
-
-
 	"github.com/gin-gonic/gin"
 )
 
