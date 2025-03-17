@@ -1,5 +1,5 @@
 import { doCreateUserWithEmailAndPassword, doSignInWithEmailAndPassword, doPasswordReset, doSignInWithGoogle, doSignOut, doPasswordChange, doSendEmailVerification } from "../src/firebase/auth"; // Adjust path to your actual file
-import { GoogleAuthProvider, User, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut, sendPasswordResetEmail, updatePassword, sendEmailVerification } from 'firebase/auth';
+import { User, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut, sendPasswordResetEmail, updatePassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from "../src/firebase/firebase";
 
 // Tell Jest to use the mock Firebase functions we created in __mocks__
