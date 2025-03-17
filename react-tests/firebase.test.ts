@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { app, auth, provider, db } from '../src/firebase/firebase';
+import { app } from '../src/firebase/firebase';
 
 jest.mock('firebase/app', () => ({
     initializeApp: jest.fn(),

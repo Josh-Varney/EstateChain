@@ -3,6 +3,8 @@ import { FaUser, FaLock } from "react-icons/fa";
 import { doCreateUserWithEmailAndPassword, doSendEmailVerification } from "../../../../firebase/auth";
 import FormInput from "./create-account-form-input";
 import Notification from "./create-account-notification";
+import { validateEmail } from "../../../../managers/register/register";
+import { validatePassword } from "../../../../managers/register/register";
 
 const CreateAccountForm: React.FC = () => {
     const [email, setEmail] = useState<string>("");
@@ -22,6 +24,18 @@ const CreateAccountForm: React.FC = () => {
 
         if (password !== confirmPassword) {
             setError("Passwords do not match");
+            return;
+        }
+
+        // Validate email
+        if (!validateEmail(email)) {
+            setError("Invalid email address. Too long or wrong format.");
+            return;
+        }
+
+        // Validate password
+        if (!validatePassword(password)) {
+            setError("Password must be at least 9 characters, contain at least one uppercase letter, one number, and be less than 128 characters.");
             return;
         }
 
@@ -53,6 +67,7 @@ const CreateAccountForm: React.FC = () => {
             {success && <Notification message={success} type="success" onClose={clearSuccess} />}
 
             <FormInput
+                id="email-input"
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -62,6 +77,7 @@ const CreateAccountForm: React.FC = () => {
             />
 
             <FormInput
+                id="password-input"
                 type="password"
                 placeholder="Password"
                 value={password}
@@ -71,6 +87,7 @@ const CreateAccountForm: React.FC = () => {
             />
 
             <FormInput
+                id="password-confirm-input"
                 type="password"
                 placeholder="Confirm Password"
                 value={confirmPassword}
