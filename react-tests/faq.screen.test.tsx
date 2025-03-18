@@ -10,14 +10,12 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import FAQForm from "../src/components/landing/faq-page/components/faq-form";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { submitQuestion } from "../src/firebase/faq/faq-submit";
 import { getApprovedQuestions } from "../src/firebase/faq/faq-grab";
-import { collection, getDoc, getDocs, QuerySnapshot, doc } from "firebase/firestore";
+import { collection, getDocs, QuerySnapshot } from "firebase/firestore";
 import { db } from "../src/firebase/firebase";
 import FAQPage from "../src/components/landing/faq-page/faq"
 import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom"; 
-import { mockOffset } from "firestore-jest-mock/mocks/firestore";
 
 jest.mock("firebase/firestore", () => ({
     getFirestore: jest.fn(() => ({})), // Mock Firestore instance
