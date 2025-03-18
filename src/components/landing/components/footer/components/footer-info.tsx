@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
                         aria-label={alt}
                         className="text-gray-400 hover:text-teal-500 transition"
                     >
-                        <Icon className="w-6 h-6" title={alt} />
+                        {/* <Icon className="w-6 h-6" title={alt} /> */}
                     </a>
                 ))}
             </div>

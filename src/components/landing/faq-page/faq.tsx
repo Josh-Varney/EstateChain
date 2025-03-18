@@ -10,8 +10,11 @@ import FAQForm from "./components/faq-form";
 import { submitQuestion } from "../../../firebase/faq/faq-submit";
 import { getApprovedQuestions } from "../../../firebase/faq/faq-grab";
 import RiseLoader from "react-spinners/RiseLoader";
+interface FAQPageProps {
+  filteredFAQs?: { message: string; answer: string }[]; // Optional prop for testing
+}
 
-const FAQPage: React.FC = () => {
+const FAQPage: React.FC<FAQPageProps> = ({filteredFAQs: externalFilteredFAQs}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [openItem, setOpenItem] = useState<number | null>(null);
   const [faqData, setFaqData] = useState<{ message: string; answer: string }[]>([]);
@@ -46,8 +49,12 @@ const FAQPage: React.FC = () => {
     fetchFAQs();
   }, []);
 
-  const filteredFAQs = faqData.filter((faq) =>
-    faq.message.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredFAQs = externalFilteredFAQs || (
+    Array.isArray(faqData)
+      ? faqData.filter((faq) =>
+          faq.message.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : []
   );
   const visibleFAQs = searchQuery ? filteredFAQs : filteredFAQs.slice(0, 8);
 
@@ -79,7 +86,15 @@ const FAQPage: React.FC = () => {
 
     try {
       console.log("executes with ", newEmail)
-      await submitQuestion(newEmail, newQuestion.trim());
+      const res = await submitQuestion(newEmail, newQuestion.trim());
+
+      console.log(res)
+
+      if (res == "Error: Message should be at least 10 characters long."){
+        setError(res);
+        return;
+      }
+
       const updatedFAQs = await getApprovedQuestions();
       setFaqData(updatedFAQs);
       setNewQuestion("");
