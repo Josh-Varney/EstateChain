@@ -29,6 +29,7 @@ export const getApprovedQuestions = async (): Promise<Question[]> => {
 
         // Retrieve the "questions" array with proper type assertion
         const data = faqDocSnap.data();
+
         const questionsArray: Question[] = (data?.questions as Question[]) || [];
 
         // Filter for approved questions

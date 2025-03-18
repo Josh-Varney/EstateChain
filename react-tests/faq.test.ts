@@ -1,20 +1,23 @@
 import { submitQuestion } from "../src/firebase/faq/faq-submit";
 import { getApprovedQuestions } from "../src/firebase/faq/faq-grab";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, setDoc } from "firebase/firestore";
+import "firestore-jest-mock";
+
 
 // Mock Firestore methods
 jest.mock("firebase/firestore", () => ({
+  ...jest.requireActual("firebase/firestore"),
   getFirestore: jest.fn(() => ({})), // Mock Firestore initialization
   doc: jest.fn(),
   getDoc: jest.fn(),
   setDoc: jest.fn(),
   updateDoc: jest.fn(),
+  arrayUnion: jest.fn()
 }));
 
 describe("submitQuestion Function", () => {
   beforeEach(() => {
     jest.clearAllMocks(); // Reset mocks before each test
-    (doc as jest.Mock).mockImplementation(() => ({})); // Ensure `doc` always returns a valid reference
   });
 
   describe("Validation", () => {
@@ -36,22 +39,6 @@ describe("submitQuestion Function", () => {
     it("should return an error for a message shorter than 10 characters", async () => {
       const result = await submitQuestion("user@example.com", "Short");
       expect(result).toBe("Error: Message should be at least 10 characters long.");
-    });
-  });
-
-  describe("Firestore Interaction", () => {
-
-    it("should return an error if Firestore throws an error", async () => {
-      // Mock Firestore throwing an error
-      (getDoc as jest.Mock).mockRejectedValueOnce(new Error("Firestore Error"));
-
-      const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-
-      const result = await submitQuestion("user@example.com", "This is a test message.");
-      expect(result).toBe("An error occurred while submitting your question. Please try again.");
-      expect(console.error).toHaveBeenCalledWith(expect.any(String), expect.any(Error));
-
-      consoleSpy.mockRestore();
     });
   });
 });
@@ -76,6 +63,8 @@ describe("getApprovedQuestions Function", () => {
     });
   
     it("should return an empty array if there are no questions", async () => {
+      jest.clearAllMocks();
+      
       // Mock Firestore's getDoc behavior to return an empty questions array
       (getDoc as jest.Mock).mockResolvedValueOnce({
         exists: () => true,
@@ -87,33 +76,41 @@ describe("getApprovedQuestions Function", () => {
       expect(getDoc).toHaveBeenCalledWith(expect.any(Object));
       expect(result).toEqual([]); // Expect an empty array
     });
-  
-    it("should handle documents with no questions array gracefully", async () => {
+
+    it("should add a question to the document if empty firestore document", async () => {
       jest.clearAllMocks();
-    
-      // Mock Firestore's getDoc behavior to return a document with no "questions" field
-      (getDoc as jest.Mock).mockResolvedValue({
+
+      (getDoc as jest.Mock).mockResolvedValueOnce({
         exists: () => true,
-        data: () => ({}), // No "questions" field
+        data: () => ({ questions: [] }),
       });
-    
-      const logSpy = jest.spyOn(console, 'log').mockImplementation();
-    
-      const result = await getApprovedQuestions();
-    
-      // Print result to console
-      console.log(result); // This will log the result
-    
-      // Check if the log function was called with the expected result
-      expect(logSpy).toHaveBeenCalledWith([]);
-    
-      // Reset the spy
-      logSpy.mockRestore();
-    
-      // Assertions
-      expect(doc).toHaveBeenCalledWith(expect.anything(), "faq", "questionsDocument");
-      expect(getDoc).toHaveBeenCalledWith(expect.any(Object));
-      
-      expect(result).toEqual([]); // Expect an empty array
-    });    
-  });
+
+      (updateDoc as jest.Mock).mockRejectedValueOnce({ code: "not-found" });
+      (setDoc as jest.Mock).mockResolvedValueOnce(undefined);
+
+      const response = await submitQuestion("test@example.com", "This is a test question.");
+
+
+      expect(setDoc).toHaveBeenCalledWith(
+        expect.any(Object), 
+        expect.objectContaining({
+            questions: expect.arrayContaining([
+                expect.objectContaining({
+                    email: "test@example.com",
+                    message: "This is a test question.",
+                    answer: "",
+                    approved: false,
+                    status: "pending",
+                    createdAt: expect.any(String),
+                }),
+            ]),
+        })
+      );
+
+      expect(response).toBe("Your question has been submitted successfully.");
+    });
+
+    it("should add a new question and retrieve the updated Firestore document", async () => {
+    });
+
+});

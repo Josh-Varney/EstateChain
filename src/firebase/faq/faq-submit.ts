@@ -54,7 +54,7 @@ export const submitQuestion = async (email: string, message: string): Promise<st
                 return "Your question has been submitted successfully.";
             } catch (err) {
                 console.error("Firestore Error:", err);
-                return "An error occurred while submitting your question. Please try again.";
+                return "An error occurred while submitting your question here. Please try again.";
             }
         }
         console.error("Firestore Error:", error);

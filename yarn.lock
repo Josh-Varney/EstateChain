@@ -13678,6 +13678,11 @@ firebase@^11.0.2:
     "@firebase/util" "1.11.0"
     "@firebase/vertexai" "1.1.0"
 
+firestore-jest-mock@^0.25.0:
+  version "0.25.0"
+  resolved "https://registry.npmjs.org/firestore-jest-mock/-/firestore-jest-mock-0.25.0.tgz"
+  integrity sha512-y1WtauwQTfKMzx84mCoL6HR8y42XB7NRs07kKXGXbH98nlYk1geVDdeshm4LgHRqb7URqpy6ShwR5b9QGHxHAQ==
+
 flat-cache@^3.0.4:
   version "3.2.0"
   resolved "https://registry.npmjs.org/flat-cache/-/flat-cache-3.2.0.tgz"
