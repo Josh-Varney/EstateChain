@@ -28,6 +28,42 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Basic validation
+    if (!username || typeof username !== "string" || username.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)) {
+      setError(
+        !username ? "Email is required." : 
+        username.length > 254 ? "Email must be 254 characters or less." : 
+        "Invalid email format."
+      );
+      return;
+    }    
+
+    if (!password || typeof password !== "string" || password.length > 128) {
+      setError(!password ? "Password is required." : "Password must be 128 characters or less.");
+      return;
+    }
+
+    const passwordErrors = [];
+
+    if (password.length < 9) {
+      passwordErrors.push("at least 9 characters");
+    }
+    if (!/[A-Z]/.test(password)) {
+      passwordErrors.push("one uppercase letter");
+    }
+    if (!/\d/.test(password)) {
+      passwordErrors.push("one number");
+    }
+    if (password.length > 128) {
+      console.log("Password length:", password.length); // Debugging
+      passwordErrors.push("128 characters or less"); // Reworded for clarity
+    }
+
+    if (passwordErrors.length > 0) {
+      setError(`Password must contain ${passwordErrors.join(", ")}.`);
+      return;
+    }
+
     try {
       setError("");
       setSuccess("");
