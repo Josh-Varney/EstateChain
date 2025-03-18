@@ -1,10 +1,12 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import LoginForm from "../src/components/form/login-account/components/login-form"
 import userEvent from "@testing-library/user-event";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, useNavigate } from "react-router-dom";
 import React from "react";
 import { doSignInWithEmailAndPassword, doSendEmailVerification} from "../src/firebase/auth";
+import * as router from 'react-router'
 import "@testing-library/jest-dom"; 
+import axios from 'axios';
 
 jest.mock("axios");
 
@@ -14,6 +16,13 @@ jest.mock("../src/firebase/auth", () => ({
     doSignInWithEmailAndPassword: jest.fn(),
     doSendEmailVerification: jest.fn(),
 }));
+
+jest.mock("react-router-dom", () => ({
+    ...jest.requireActual("react-router-dom"),
+    useNavigate: jest.fn(),
+}));
+
+jest.mock('axios');
 
 describe("LoginForm", () => {
     beforeEach(() => {
@@ -109,17 +118,17 @@ describe("LoginForm", () => {
             });
           });   
           
-          test("should successfully login with a valid email and password 3.0", async () => {
+          test("should show 'Please verify your email.' message when the email is not verified", async () => {
             jest.clearAllMocks();
             const { doSignInWithEmailAndPassword } = require("../src/firebase/auth");
           
-            // Mock Firebase sign-in with valid credentials (successful login)
+            // Mock Firebase sign-in with valid credentials (but email not verified)
             doSignInWithEmailAndPassword.mockResolvedValueOnce({
-              emailVerified: true,
+              emailVerified: false, // Email is not verified
               uid: "user-123",
             });
           
-            // Render the LoginForm inside a Router (you may need to mock the navigate function)
+            // Render the LoginForm inside a Router 
             render(
               <Router>
                 <LoginForm />
@@ -133,20 +142,19 @@ describe("LoginForm", () => {
             // Valid email 
             const validEmail = "john1.doe@example.com";
           
-            // Simulate entering a valid email and the 128-character password
+            // Simulate entering a valid email and password
             await userEvent.type(usernameInput, validEmail);
             await userEvent.type(passwordInput, "passwordA12hdfsjfdhgfsdjasfd");
           
             // Simulate clicking the login button
             fireEvent.click(submitButton);
           
-            // Wait for successful login (simulate redirection after successful login)
+            // Wait for the error message indicating the email needs to be verified
             await waitFor(() => {
-              // Check if the user is redirected or the success message appears
-              expect(localStorage.getItem("uuid")).toBe("user-123"); // Check if the user UUID is stored
-              expect(screen.getByText("Login successful. Redirecting...")).toBeInTheDocument();
+              // Check if the 'Please verify your email' message appears
+              expect(screen.getByText("Please verify your email.")).toBeInTheDocument();
             });
-          }); 
+          });          
 
           test("should successfully login with a 128-character valid password", async () => {
             jest.clearAllMocks();
@@ -188,6 +196,7 @@ describe("LoginForm", () => {
               expect(screen.getByText("Login successful. Redirecting...")).toBeInTheDocument();
             });
           });    
+
           test("should successfully login with a 254-character email", async () => {
             jest.clearAllMocks();
             const { doSignInWithEmailAndPassword } = require("../src/firebase/auth");
