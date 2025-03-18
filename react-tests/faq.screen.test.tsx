@@ -1,3 +1,11 @@
+jest.mock('aos', () => ({
+    init: jest.fn(), // Mock the init function
+    refresh: jest.fn(), // Mock the refresh function if used
+    refreshHard: jest.fn(), // Mock the refreshHard function if used
+    duration: jest.fn(),
+    mockOffset: jest.fn()
+}));
+
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import FAQForm from "../src/components/landing/faq-page/components/faq-form";
 import userEvent from "@testing-library/user-event";
@@ -8,6 +16,8 @@ import { collection, getDoc, getDocs, QuerySnapshot, doc } from "firebase/firest
 import { db } from "../src/firebase/firebase";
 import FAQPage from "../src/components/landing/faq-page/faq"
 import { MemoryRouter } from "react-router-dom";
+import "@testing-library/jest-dom"; 
+import { mockOffset } from "firestore-jest-mock/mocks/firestore";
 
 jest.mock("firebase/firestore", () => ({
     getFirestore: jest.fn(() => ({})), // Mock Firestore instance
@@ -15,8 +25,8 @@ jest.mock("firebase/firestore", () => ({
     getDocs: jest.fn(), // Mock Firestore `getDocs`
     getDoc: jest.fn(),
     doc: jest.fn()
-  }));
-  
+}));
+
 
 jest.mock("../src/firebase/faq/faq-grab", () => ({
     getApprovedQuestions: jest.fn()
@@ -178,36 +188,70 @@ describe("FAQ Validation", () => {
 });
 
 
-// describe("Test FAQ System Search", () => {
-//     beforeEach(() => {
-//         jest.clearAllMocks();
-//         // Wrap the component in a MemoryRouter or BrowserRouter for routing context
-//         render(
-//             <MemoryRouter>
-//                 <FAQPage />
-//             </MemoryRouter>
-//         );
-//     });
+describe("FAQPage component", () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      // Mock the console.warn function to suppress React Router warnings
+      jest.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+  
+    test("renders FAQ questions passed in filteredFAQs prop", () => {
+      // Render the FAQPage component with the mock data
+      render(
+        <MemoryRouter>
+          <FAQPage filteredFAQs={[]} />
+        </MemoryRouter>
+      );
+  
+      // Check that the questions are rendered correctly
+      expect(screen.getByText("Frequently Asked Questions")).toBeInTheDocument();
+    });
 
-//     it("should display FAQs and filter them based on the search query", async () => {
-//         // Simulate FAQ data
-//         const faqData = [
-//           { message: 'How to use React?', answer: 'React is a JavaScript library for building user interfaces.' },
-//           { message: 'What is a state in React?', answer: 'State is an object that stores dynamic data in React.' },
-//           { message: 'How to install React?', answer: 'You can install React using npm or yarn.' },
-//         ];
-      
-//         // Instead of using a real fetch or async call, mock the filtered FAQs directly
-//         const filteredFAQs = faqData.filter(faq => faq.message.toLowerCase().includes('react'));
-      
-//         render(<FAQPage filteredFAQs={filteredFAQs} />);  // If your component accepts filteredFAQs as props
-        
-//         // Wait for the filtered FAQs to be rendered
-//         await waitFor(() => screen.getByText("How to use React?"));
-//         expect(screen.getByText("How to use React?")).toBeInTheDocument();
-        
-//         // Additional assertions based on the filtered FAQs
-//         expect(screen.queryByText("What is a state in React?")).not.toBeInTheDocument();  // This should be hidden since it doesn't match the search
-//         expect(screen.queryByText("How to install React?")).not.toBeInTheDocument();  // This should be hidden
-//       });
-// });
+    test("renders FAQ questions passed in filteredFAQs prop", async () => {
+        const mockFilteredFAQs = [
+            { message: "What is React?", answer: "A JavaScript library" },
+            { message: "What is Node.js?", answer: "A runtime environment" },
+        ];
+
+        getApprovedQuestions.mockResolvedValue(mockFilteredFAQs);
+
+        // Render the FAQPage component with the mock data
+        render(
+          <MemoryRouter>
+            <FAQPage filteredFAQs={mockFilteredFAQs} />
+          </MemoryRouter>
+        );
+
+        // Check that the questions are rendered correctly
+        await waitFor(() => {
+            expect(screen.getByTestId("faq-question-0")).toBeInTheDocument();
+            expect(screen.getByTestId("faq-question-1")).toBeInTheDocument();
+        }, { timeout: 3000 });
+    });
+
+    test("renders FAQ questions passed in filteredFAQs prop and Search Term", async () => {
+        const mockFilteredFAQs = [
+            { message: "What is React?", answer: "A JavaScript library" },
+            { message: "What is Node.js?", answer: "A runtime environment" },
+        ];
+
+        getApprovedQuestions.mockResolvedValue(mockFilteredFAQs);
+
+        // Render the FAQPage component with the mock data
+        render(
+          <MemoryRouter>
+            <FAQPage />
+          </MemoryRouter>
+        );
+
+        const searchInput = screen.getByPlaceholderText("Search for a question...");
+
+        // Simulate typing a search query
+        await userEvent.type(searchInput, "fdhsjjfhjdafhejwdsins");
+
+        // Wait for the component to re-render and reflect the updated state
+        await waitFor(() => {
+            expect(screen.getByText("No results found.")).toBeInTheDocument();
+        });
+    });
+  });

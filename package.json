@@ -86,7 +86,7 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
-        "test": "jest",
+        "test": "DEBUG_PRINT_LIMIT=100000 jest",
         "server": "concurrently \"npm run goserver\" \"npm run tsserver\"",
         "goserver": "go run server/main/main.go",
         "tsserver": "ts-node server/server.ts",

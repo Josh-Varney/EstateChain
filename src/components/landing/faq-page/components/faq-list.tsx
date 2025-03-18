@@ -17,6 +17,7 @@ const FAQList: React.FC<FAQListProps> = ({ faqs, openItem, setOpenItem }) => {
           aria-labelledby={`faq-question-${index}`}
         >
           <button
+            data-testid={`faq-question-${index}`}
             id={`faq-question-${index}`}
             className="flex justify-between w-full text-left text-xl font-semibold text-white"
             onClick={() => setOpenItem(openItem === index ? null : index)}
