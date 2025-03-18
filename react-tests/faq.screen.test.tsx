@@ -343,5 +343,31 @@ describe("FAQPage Valid Searches", () => {
             expect(screen.queryByText("What is React.js?")).not.toBeInTheDocument();
         });
     });
-      
+
+    test("renders FAQ questions with valid search query 2.0", async () => {
+        const mockFilteredFAQs = [
+            { message: "What is React?", answer: "A JavaScript library" },
+            { message: "What is Node.js?", answer: "A runtime environment" },
+        ];
+
+        getApprovedQuestions.mockResolvedValue(mockFilteredFAQs);
+
+        // Render the FAQPage component with the mock data
+        render(
+          <MemoryRouter>
+            <FAQPage />
+          </MemoryRouter>
+        );
+
+        const searchInput = screen.getByPlaceholderText("Search for a question...");
+
+        // Simulate typing a search query
+        await userEvent.type(searchInput, "What is");
+
+        // Wait for the component to re-render and reflect the updated state
+        await waitFor(() => {
+            expect(screen.getByText("What is Node.js?")).toBeInTheDocument();
+            expect(screen.getByText("What is React?")).toBeInTheDocument();
+        });
+    });
 });
