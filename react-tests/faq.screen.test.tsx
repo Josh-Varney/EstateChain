@@ -344,7 +344,7 @@ describe("FAQPage Valid Searches", () => {
         });
     });
 
-    test("renders FAQ questions with valid search query 2.0", async () => {
+    test("renders FAQ questions with valid search query 3.0", async () => {
         const mockFilteredFAQs = [
             { message: "What is React?", answer: "A JavaScript library" },
             { message: "What is Node.js?", answer: "A runtime environment" },
