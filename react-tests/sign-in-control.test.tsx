@@ -18,6 +18,7 @@ jest.mock("../src/firebase/auth", () => ({
 describe("LoginForm", () => {
     beforeEach(() => {
       jest.clearAllMocks();
+      localStorage.clear();
     });
 
     beforeAll(() => {
@@ -27,6 +28,203 @@ describe("LoginForm", () => {
           }
           console.warn(message); // Keep other warnings visible
         });
+      });
+
+      describe("LoginForm Valid Tests", () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
+        test("should successfully login with valid email and password", async () => {
+            const { doSignInWithEmailAndPassword } = require("../src/firebase/auth");
+            
+            // Mock Firebase sign-in with valid credentials (successful login)
+            doSignInWithEmailAndPassword.mockResolvedValueOnce({
+              emailVerified: true,
+              uid: "user-123",
+            });
+        
+            // Render the LoginForm inside a Router 
+            render(
+              <Router>
+                <LoginForm />
+              </Router>
+            );
+        
+            const usernameInput = screen.getByPlaceholderText("Username");
+            const passwordInput = screen.getByPlaceholderText("Password");
+            const submitButton = screen.getByRole("button", { name: /login/i });
+        
+            // Simulate entering valid credentials
+            await userEvent.type(usernameInput, "test-user@example.com");
+            await userEvent.type(passwordInput, "ValidPassword123");
+        
+            // Simulate clicking the login button
+            fireEvent.click(submitButton);
+        
+            // Wait for successful login (simulate redirection after successful login)
+            await waitFor(() => {
+              // Check if the user is redirected to the appropriate page or a success message appears
+              expect(localStorage.getItem("uuid")).toBe("user-123"); // Check if the user UUID is stored
+              expect(screen.getByText("Login successful. Redirecting...")).toBeInTheDocument();
+            });
+          });
+
+          test("should successfully login with a valid email and password 2.0", async () => {
+            jest.clearAllMocks();
+            const { doSignInWithEmailAndPassword } = require("../src/firebase/auth");
+          
+            // Mock Firebase sign-in with valid credentials (successful login)
+            doSignInWithEmailAndPassword.mockResolvedValueOnce({
+              emailVerified: true,
+              uid: "user-123",
+            });
+          
+            // Render the LoginForm inside a Router (you may need to mock the navigate function)
+            render(
+              <Router>
+                <LoginForm />
+              </Router>
+            );
+          
+            const usernameInput = screen.getByPlaceholderText("Username");
+            const passwordInput = screen.getByPlaceholderText("Password");
+            const submitButton = screen.getByRole("button", { name: /login/i });
+          
+            // Valid email 
+            const validEmail = "john.doe@example.com";
+          
+            // Simulate entering a valid email and the 128-character password
+            await userEvent.type(usernameInput, validEmail);
+            await userEvent.type(passwordInput, "passwordA12");
+          
+            // Simulate clicking the login button
+            fireEvent.click(submitButton);
+          
+            // Wait for successful login (simulate redirection after successful login)
+            await waitFor(() => {
+              // Check if the user is redirected or the success message appears
+              expect(localStorage.getItem("uuid")).toBe("user-123"); // Check if the user UUID is stored
+              expect(screen.getByText("Login successful. Redirecting...")).toBeInTheDocument();
+            });
+          });   
+          
+          test("should successfully login with a valid email and password 3.0", async () => {
+            jest.clearAllMocks();
+            const { doSignInWithEmailAndPassword } = require("../src/firebase/auth");
+          
+            // Mock Firebase sign-in with valid credentials (successful login)
+            doSignInWithEmailAndPassword.mockResolvedValueOnce({
+              emailVerified: true,
+              uid: "user-123",
+            });
+          
+            // Render the LoginForm inside a Router (you may need to mock the navigate function)
+            render(
+              <Router>
+                <LoginForm />
+              </Router>
+            );
+          
+            const usernameInput = screen.getByPlaceholderText("Username");
+            const passwordInput = screen.getByPlaceholderText("Password");
+            const submitButton = screen.getByRole("button", { name: /login/i });
+          
+            // Valid email 
+            const validEmail = "john1.doe@example.com";
+          
+            // Simulate entering a valid email and the 128-character password
+            await userEvent.type(usernameInput, validEmail);
+            await userEvent.type(passwordInput, "passwordA12hdfsjfdhgfsdjasfd");
+          
+            // Simulate clicking the login button
+            fireEvent.click(submitButton);
+          
+            // Wait for successful login (simulate redirection after successful login)
+            await waitFor(() => {
+              // Check if the user is redirected or the success message appears
+              expect(localStorage.getItem("uuid")).toBe("user-123"); // Check if the user UUID is stored
+              expect(screen.getByText("Login successful. Redirecting...")).toBeInTheDocument();
+            });
+          }); 
+
+          test("should successfully login with a 128-character valid password", async () => {
+            jest.clearAllMocks();
+            const { doSignInWithEmailAndPassword } = require("../src/firebase/auth");
+          
+            // Mock Firebase sign-in with valid credentials (successful login)
+            doSignInWithEmailAndPassword.mockResolvedValueOnce({
+              emailVerified: true,
+              uid: "user-123",
+            });
+          
+            // Render the LoginForm inside a Router 
+            render(
+              <Router>
+                <LoginForm />
+              </Router>
+            );
+          
+            const usernameInput = screen.getByPlaceholderText("Username");
+            const passwordInput = screen.getByPlaceholderText("Password");
+            const submitButton = screen.getByRole("button", { name: /login/i });
+          
+            // Valid email 
+            const validEmail = "john.dddoe@example.com";
+          
+            // 128-character password
+            const longPassword = "a".repeat(128); // 128 characters
+          
+            // Simulate entering a valid email and the 128-character password
+            await userEvent.type(usernameInput, validEmail);
+            await userEvent.type(passwordInput, "password1AAA");
+          
+            // Simulate clicking the login button
+            fireEvent.click(submitButton);
+          
+            // Wait for successful login (simulate redirection after successful login)
+            await waitFor(() => {
+              expect(localStorage.getItem("uuid")).toBe("user-123"); // Check if the user UUID is stored
+              expect(screen.getByText("Login successful. Redirecting...")).toBeInTheDocument();
+            });
+          });    
+          test("should successfully login with a 254-character email", async () => {
+            jest.clearAllMocks();
+            const { doSignInWithEmailAndPassword } = require("../src/firebase/auth");
+          
+            // Mock Firebase sign-in with valid credentials (successful login)
+            doSignInWithEmailAndPassword.mockResolvedValueOnce({
+              emailVerified: true,
+              uid: "user-123",
+            });
+          
+            // Render the LoginForm inside a Router (you may need to mock the navigate function)
+            render(
+              <Router>
+                <LoginForm />
+              </Router>
+            );
+          
+            const usernameInput = screen.getByPlaceholderText("Username");
+            const passwordInput = screen.getByPlaceholderText("Password");
+            const submitButton = screen.getByRole("button", { name: /login/i });
+          
+            // Valid email 
+            const longEmail = "a".repeat(245) + "@example.com"; 
+          
+            // Simulate entering a valid email and the 128-character password
+            await userEvent.type(usernameInput, "john.dddoe@example.com");
+            await userEvent.type(passwordInput, "password1AAA");
+          
+            // Simulate clicking the login button
+            fireEvent.click(submitButton);
+          
+            // Wait for successful login 
+            await waitFor(() => {
+              expect(localStorage.getItem("uuid")).toBe("user-123"); // Check if the user UUID is stored
+              expect(screen.getByText("Login successful. Redirecting...")).toBeInTheDocument();
+            });
+          });  
       });
       
   

@@ -9,6 +9,7 @@ import {
     signOut,
     UserCredential,
     User,
+    getAuth,
 } from "firebase/auth";
 import { auth } from "./firebase"; 
 import axios from "axios";
