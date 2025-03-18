@@ -25,6 +25,8 @@ jest.mock("firebase/firestore", () => ({
     doc: jest.fn()
 }));
 
+jest.mock("../src/firebase/faq/faq-grab");
+
 
 jest.mock("../src/firebase/faq/faq-grab", () => ({
     getApprovedQuestions: jest.fn()
@@ -186,14 +188,14 @@ describe("FAQ Validation", () => {
 });
 
 
-describe("FAQPage component", () => {
+describe("FAQPage Invalid and Initial Searches", () => {
     beforeEach(() => {
       jest.clearAllMocks();
       // Mock the console.warn function to suppress React Router warnings
       jest.spyOn(console, 'warn').mockImplementation(() => {});
     });
   
-    test("renders FAQ questions passed in filteredFAQs prop", () => {
+    test("renders FAQ questions with empty list, returns 'No results found.'", () => {
       // Render the FAQPage component with the mock data
       render(
         <MemoryRouter>
@@ -205,7 +207,7 @@ describe("FAQPage component", () => {
       expect(screen.getByText("Frequently Asked Questions")).toBeInTheDocument();
     });
 
-    test("renders FAQ questions passed in filteredFAQs prop", async () => {
+    test("renders FAQ questions passed in filteredFAQs prop, returns FAQ questions", async () => {
         const mockFilteredFAQs = [
             { message: "What is React?", answer: "A JavaScript library" },
             { message: "What is Node.js?", answer: "A runtime environment" },
@@ -227,7 +229,7 @@ describe("FAQPage component", () => {
         }, { timeout: 3000 });
     });
 
-    test("renders FAQ questions passed in filteredFAQs prop and Search Term", async () => {
+    test("renders FAQ questions even when search query does not match, returns 'No results found.' ", async () => {
         const mockFilteredFAQs = [
             { message: "What is React?", answer: "A JavaScript library" },
             { message: "What is Node.js?", answer: "A runtime environment" },
@@ -245,7 +247,33 @@ describe("FAQPage component", () => {
         const searchInput = screen.getByPlaceholderText("Search for a question...");
 
         // Simulate typing a search query
-        await userEvent.type(searchInput, "fdhsjjfhjdafhejwdsins");
+        await userEvent.type(searchInput, "useless search");
+
+        // Wait for the component to re-render and reflect the updated state
+        await waitFor(() => {
+            expect(screen.getByText("No results found.")).toBeInTheDocument();
+        });
+    });
+
+    test("renders FAQ questions even when search query does not match the 128 characters length, returns 'No results found.' ", async () => {
+        const mockFilteredFAQs = [
+            { message: "What is React?", answer: "A JavaScript library" },
+            { message: "What is Node.js?", answer: "A runtime environment" },
+        ];
+
+        getApprovedQuestions.mockResolvedValue(mockFilteredFAQs);
+
+        // Render the FAQPage component with the mock data
+        render(
+          <MemoryRouter>
+            <FAQPage />
+          </MemoryRouter>
+        );
+
+        const searchInput = screen.getByPlaceholderText("Search for a question...");
+
+        // Simulate typing a search query
+        await userEvent.type(searchInput, "This is a very long search query meant to test how the search functionality handles inputs that are excessively long and not found in the data.");
 
         // Wait for the component to re-render and reflect the updated state
         await waitFor(() => {
@@ -253,3 +281,67 @@ describe("FAQPage component", () => {
         });
     });
   });
+
+describe("FAQPage Valid Searches", () => {
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        // Mock the console.warn function to suppress React Router warnings
+        jest.spyOn(console, 'warn').mockImplementation(() => {});
+      });
+      
+    test("renders FAQ questions with valid search query", async () => {
+        const mockFilteredFAQs = [
+            { message: "What is React?", answer: "A JavaScript library" },
+            { message: "What is Node.js?", answer: "A runtime environment" },
+        ];
+
+        getApprovedQuestions.mockResolvedValue(mockFilteredFAQs);
+
+        // Render the FAQPage component with the mock data
+        render(
+          <MemoryRouter>
+            <FAQPage />
+          </MemoryRouter>
+        );
+
+        const searchInput = screen.getByPlaceholderText("Search for a question...");
+
+        // Simulate typing a search query
+        await userEvent.type(searchInput, "React?");
+
+        // Wait for the component to re-render and reflect the updated state
+        await waitFor(() => {
+            expect(screen.getByText("What is React?")).toBeInTheDocument();
+            expect(screen.queryByText("What is Node.js?")).not.toBeInTheDocument();
+        });
+    });
+
+    test("renders FAQ questions with valid search query 2.0", async () => {
+        const mockFilteredFAQs = [
+            { message: "What is React?", answer: "A JavaScript library" },
+            { message: "What is Node.js?", answer: "A runtime environment" },
+        ];
+
+        getApprovedQuestions.mockResolvedValue(mockFilteredFAQs);
+
+        // Render the FAQPage component with the mock data
+        render(
+          <MemoryRouter>
+            <FAQPage />
+          </MemoryRouter>
+        );
+
+        const searchInput = screen.getByPlaceholderText("Search for a question...");
+
+        // Simulate typing a search query
+        await userEvent.type(searchInput, "Node.js?");
+
+        // Wait for the component to re-render and reflect the updated state
+        await waitFor(() => {
+            expect(screen.getByText("What is Node.js?")).toBeInTheDocument();
+            expect(screen.queryByText("What is React.js?")).not.toBeInTheDocument();
+        });
+    });
+      
+});
