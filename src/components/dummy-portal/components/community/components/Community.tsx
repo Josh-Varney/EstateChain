@@ -77,6 +77,7 @@ const CommunityPage: React.FC = () => {
       {/* Search Filters - Align in a single row */}
       <div className="mb-6 flex gap-4 justify-start items-center">
         <input
+          data-testid="search-field"
           type="text"
           placeholder="Search by Name"
           value={searchName}
@@ -84,6 +85,7 @@ const CommunityPage: React.FC = () => {
           className="p-3 rounded-lg border border-gray-500 bg-gray-700 text-white placeholder-gray-500 w-full sm:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <input
+          data-testid="profession-field"
           type="text"
           placeholder="Search by Profession"
           value={searchProfession}
@@ -91,6 +93,7 @@ const CommunityPage: React.FC = () => {
           className="p-3 rounded-lg border border-gray-500 bg-gray-700 text-white placeholder-gray-500 w-full sm:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <input
+          data-testid="location-field"
           type="text"
           placeholder="Search by Location"
           value={searchLocation}
