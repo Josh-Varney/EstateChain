@@ -10,7 +10,7 @@ export const validatePropertyName = (value: string, setErrors: Function) => {
     }
 
     // Update the errors state
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
         ...prevErrors,
         propertyName: errorMessage,
     }));
@@ -25,7 +25,7 @@ export const validatePropertyAddress = (value: string, setErrors: Function) => {
       errorMessage = "Must be at least 10 characters long.";
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       propertyAddress: errorMessage,
     }));
@@ -38,7 +38,7 @@ export  const validatePropertyTenure = (value: string, setErrors: Function) => {
       errorMessage = "Please select the property tenure.";
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       propertyTenure: errorMessage,
     }));
@@ -54,7 +54,7 @@ export const validatePropertyPrice = (value: string, setErrors: Function) => {
         errorMessage = "Price must greater than 0.";
     }
 
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
         ...prevErrors,
         propertyPrice: errorMessage,
     }));
@@ -70,7 +70,7 @@ export const validatePropertyTokensLeft = (value: string, setErrors: Function) =
       errorMessage = "Token number must be greater than 0";
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       propertyTokensLeft: errorMessage,
     }));
@@ -83,7 +83,7 @@ export const validatePropertyType = (value: string, setErrors: Function) => {
         errorMessage = "Please select a property type.";
     }
 
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
         ...prevErrors,
         propertyType: errorMessage,
     }));
@@ -96,7 +96,7 @@ export const validatePropertyRental = (value: string, setErrors: Function) => {
       errorMessage = "Please select a tokenization type.";
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       propertyRental: errorMessage,
     }));
@@ -109,7 +109,7 @@ export const validatePropertySettlement = (value: string, setErrors: Function) =
       errorMessage = "Please select a property situation.";
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       propertySettlement: errorMessage,
     }));
@@ -127,7 +127,7 @@ export const validatePropertyPostcode = (value: string, setErrors: Function) => 
       errorMessage = "Please enter a valid postcode (e.g., CV7 7LA).";
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       propertyPostcode: errorMessage,
     }));
@@ -140,7 +140,7 @@ export const validatePropertyCountry = (value: string, setErrors: Function) => {
       errorMessage = "Country is required.";
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       propertyCountry: errorMessage,
     }));
@@ -153,7 +153,7 @@ export const validatePropertyCity = (value: string, setErrors: Function) => {
       errorMessage = "City is required.";
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       propertyCity: errorMessage,
     }));
@@ -166,7 +166,7 @@ export const validatePropertyStreet = (value: string, setErrors: Function) => {
       errorMessage = "Street is required.";
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       propertyStreet: errorMessage,
     }));
@@ -179,7 +179,7 @@ export const validatePropertyStreetNum = (value: string, setErrors: Function) =>
       errorMessage = "Street Number is required.";
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       propertyStreetNum: errorMessage,
     }));
@@ -269,7 +269,7 @@ export const validateRentalDistribution = (value: string, setErrors: React.Dispa
     } else if (isNaN(Number(value)) || Number(value) <= 0) {
       errorMessage = "Please enter a valid positive number for rental income expectancy.";
     }
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       rentalDistributionExpectancy: errorMessage,
     }));
@@ -280,7 +280,7 @@ export const validateAgentName = (value: string, setErrors: React.Dispatch<React
     if (!value) {
       errorMessage = 'Agent Name is required.';
     }
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       agentName: errorMessage,
     }));
@@ -294,7 +294,7 @@ export const validateAgentEmail = (value: string, setErrors: React.Dispatch<Reac
     } else if (!emailRegex.test(value)) {
       errorMessage = 'Please enter a valid email address.';
     }
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       agentEmail: errorMessage,
     }));
@@ -310,7 +310,7 @@ export const validateAgentContactNumber = (value: string, setErrors: React.Dispa
       errorMessage = 'Please enter a valid contact number.';
     }
     
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       agentContactNumber: errorMessage,
     }));
@@ -322,7 +322,7 @@ export const validateAgentAddress = (value: string, setErrors: React.Dispatch<Re
       errorMessage = 'Agent Address is required.';
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       agentAddress: errorMessage,
     }));
@@ -336,7 +336,7 @@ export const validateAgentWhyDescription = (value: string, setErrors: React.Disp
       errorMessage = 'Description must be at least 10 characters long.';
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       agentWhyDescription: errorMessage,
     }));
@@ -350,7 +350,7 @@ export const validateAgentSoldDescription = (value: string, setErrors: React.Dis
       errorMessage = 'Description must be at least 10 characters long.';
     }
   
-    setErrors((prevErrors) => ({
+    setErrors((prevErrors: any) => ({
       ...prevErrors,
       agentSoldDescription: errorMessage,
     }));
