@@ -13,12 +13,13 @@ const AboutCTA: React.FC = () => (
     <p className="mt-4 max-w-2xl mx-auto text-lg leading-relaxed">
       Ready to explore the possibilities with Webtrix? Contact us today and let’s create something extraordinary.
     </p>
-    <button
+    <a
+      href="mailto:test@example.com?subject=Inquiry from Webtrix"
       className="mt-6 px-8 py-3 bg-gray-800 text-teal-400 font-semibold rounded-lg hover:bg-gray-700 shadow-lg hover:shadow-xl focus:ring-2 focus:ring-teal-300 focus:outline-none transition-all duration-200 ease-in-out"
       aria-label="Get in touch with Webtrix"
     >
       Get in Touch
-    </button>
+    </a>
   </section>
 );
 
