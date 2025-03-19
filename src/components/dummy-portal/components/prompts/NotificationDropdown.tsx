@@ -76,11 +76,11 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ close, noti
               }`}
               role="menuitem"
             >
-              {notification.type === 'info' ? (
+              {/* {notification.type === 'info' ? (
                 <FaCheckCircle className="text-blue-500 dark:text-blue-400" />
               ) : (
                 <FaTimesCircle className="text-red-500 dark:text-red-400" />
-              )}
+              )} */}
               <span>{notification.message}</span> {/* Display message */}
             </div>
           ))

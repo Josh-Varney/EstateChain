@@ -1,4 +1,5 @@
 import React, { FC, useState, ChangeEvent, useEffect } from "react";
+import { getAllTransactions } from "./transaction-manager/transaction";
 
 // Define the structure of a Transaction
 interface Transaction {
@@ -28,45 +29,8 @@ const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) =
   // Extract unique categories for filter dropdown (you can decide based on transaction data)
   const categories = Array.from(new Set(transactions.map(tx => tx.property_address)));
 
-  const getAllTransactions = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/get-transparent-transactions");
-      if (!response.ok) {
-        throw new Error("Failed to fetch transactions");
-      }
-
-      const data = await response.json();
-
-      // Map the DB data to match the Transaction format
-      const transformedData = data.map((dbTx: any) => ({
-        tid:  dbTx.tid,
-        id: dbTx.id,
-        date: new Date().toISOString(), // Adjust the date based on your DB (for example, from a timestamp)
-        description: `Blockchain Transaction ${dbTx.hash}`, // You can customize this if needed
-        amount: dbTx.token_amount,
-        property_address: dbTx.property_address,
-        block_hash: dbTx.block_hash,
-        block_number: dbTx.block_number,
-        gas_price: dbTx.gas_price,
-        sender_address: dbTx.sender_address,
-        receiver_address: dbTx.receiver_address,
-      }));
-
-      // Create a map to ensure unique transactions by id
-      const uniqueTransactions = new Map<string, Transaction>();
-      transformedData.forEach(tx => {
-        uniqueTransactions.set(tx.tid.toString(), tx); // Overwrite any duplicate transactions by tid
-      });
-
-      // Convert the Map values back into an array and update the state
-      setTransactions(Array.from(uniqueTransactions.values()));
-    } catch (e) {
-      console.error("Error fetching transactions:", e);
-    }
-  };
-
   useEffect(() => {
-    getAllTransactions();
+    getAllTransactions(setTransactions);
   }, []);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -210,7 +174,7 @@ const GlobalTransactionsCard: FC<GlobalTransactionsCardProps> = ({ darkMode }) =
             <tbody>
               {filteredTransactions.length > 0 ? (
                 filteredTransactions.map((tx) => (
-                  <tr key={`${tx.tid}`} className="border-t">
+                  <tr data-testid={`transaction-${tx.tid}`} key={`${tx.tid}`} className="border-t">
                     <td className="px-4 py-2">{new Date(tx.date).toLocaleString()}</td>
                     <td className="px-4 py-2">{tx.property_address}</td>
                     <td className="px-4 py-2">
