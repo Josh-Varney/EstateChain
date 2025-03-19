@@ -286,10 +286,12 @@ describe("PropertyERC20 Contract", function () {
         let hardhatToken;
         let owner;
         let addr1;
+        let addr2;
+        let addr3;
     
         beforeEach(async function () {
             // Get buyer and seller simulation
-            [owner, addr1] = await ethers.getSigners();
+            [owner, addr1, addr2, addr3] = await ethers.getSigners();
     
             // Deploy the contract before each test
             hardhatToken = await ethers.deployContract("PropertyERC20", [
@@ -332,6 +334,87 @@ describe("PropertyERC20 Contract", function () {
                 expect(buyerBalance).to.be.equal(tokenAmount);
                 expect(totalSupply).to.be.equal(BigInt(8));
             });
+
+            it("Should allow user to buy five tokens", async function () {
+                const tokenAmount = 5;
+                const buyerAddr = addr1.address;
+
+                // Buyer sends ETH to purchase tokens
+                await hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("0.5")});
+
+
+                const buyers = await hardhatToken.getBuyers();
+
+                const buyerBalance = await hardhatToken.balanceOf(buyerAddr);
+
+                const totalSupply = await hardhatToken.getTokenSupply();
+
+                expect(buyers[0]).to.be.equal(buyerAddr);
+                expect(buyerBalance).to.be.equal(tokenAmount);
+                expect(totalSupply).to.be.equal(BigInt(5));
+            });
+
+            it("Should allow users to buy all 10 tokens", async function () {
+                const tokenAmount = 5;
+                const tokenAmountTwo = 5;
+                const buyerAddr = addr1.address;
+                const buyerAddr2 = addr2.address;
+
+                // Buyer sends ETH to purchase tokens
+                await hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("0.5")});
+                await hardhatToken.connect(addr2).buyTokens(tokenAmountTwo, {value: ethers.parseEther("0.5")});
+
+                const buyers = await hardhatToken.getBuyers();
+
+                const buyerBalance = await hardhatToken.balanceOf(buyerAddr);
+
+                const totalSupply = await hardhatToken.getTokenSupply();
+
+                expect(buyers[0]).to.be.equal(buyerAddr);
+                expect(buyers[1]).to.be.equal(buyerAddr2);
+                expect(buyerBalance).to.be.equal(tokenAmount);
+                expect(totalSupply).to.be.equal(BigInt(0));
+            });
+
+            it("Should allow users to buy all 10 tokens but next buyer is rejected", async function () {
+                const tokenAmount = 5;
+                const tokenAmountTwo = 5;
+                const buyerAddr = addr1.address;
+                const buyerAddr2 = addr2.address;
+
+                // Buyer sends ETH to purchase tokens
+                await hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("0.5")});
+                await hardhatToken.connect(addr2).buyTokens(tokenAmountTwo, {value: ethers.parseEther("0.5")});
+
+                const buyers = await hardhatToken.getBuyers();
+
+                const buyerBalance = await hardhatToken.balanceOf(buyerAddr);
+
+                const totalSupply = await hardhatToken.getTokenSupply();
+
+                expect(buyers[0]).to.be.equal(buyerAddr);
+                expect(buyers[1]).to.be.equal(buyerAddr2);
+                expect(buyerBalance).to.be.equal(tokenAmount);
+                expect(totalSupply).to.be.equal(BigInt(0));
+
+                // Attempt to buy tokens when supply is zero (should be rejected)
+                await expect(
+                    hardhatToken.connect(addr3).buyTokens(1, { value: ethers.parseEther("0.1") })
+                ).to.be.revertedWith("Insufficient Tokens Left");
+            });
+
+            it("Should not allow one user to buy more than 10 tokens", async function () {
+                const tokenAmount = 11; // Attempting to buy more than the available tokens
+                // Ensure total supply is 10 before the purchase attempt
+                const totalSupply = await hardhatToken.getTokenSupply();
+                expect(totalSupply).to.be.equal(BigInt(10));
+            
+                // Expect transaction to fail due to insufficient tokens
+                await expect(
+                    hardhatToken.connect(addr1).buyTokens(tokenAmount, { value: ethers.parseEther("1.1") })
+                ).to.be.revertedWith("Not enough tokens available");
+            });
+            
         });
 
         describe("Extreme Error Suite on BuyTokens", async function () {
@@ -457,7 +540,99 @@ describe("PropertyERC20 Contract", function () {
 
             await expect(hardhatTokenTest.connect(owner).distributeIncome()).to.be.rejectedWith("This is not a rental property");
         });
-    });
-    
 
+        it("Should distribute rental income correctly 2.0", async function () {
+            // Get initial balances
+            const balance_owner_1 = await ethers.provider.getBalance(owner);
+            // Set and Check Timestamp to one to distribute rental income
+            await hardhatToken.setLastIncomeDistribution(0);
+            const timestampBigInt = await hardhatToken.getLastIncomeDistribution();
+            const timestamp = Number(timestampBigInt); // Convert to a regular number
+            const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
+
+            // Buyers need to purchase tokens 
+            await hardhatToken.connect(buyer1).buyTokens(4, { value: ethers.parseEther("4") });
+            await hardhatToken.connect(buyer2).buyTokens(6, { value: ethers.parseEther("6") });
+
+            // Buyers after token transaction
+            const balance_buyer_1_a = await ethers.provider.getBalance(buyer1);
+            const balance_buyer_2_a = await ethers.provider.getBalance(buyer2);
+            console.log("Buyer 1 before Transaction: ", balance_buyer_1_a);
+            console.log("Buyer 2 before Transaction: ", balance_buyer_2_a);
+
+
+            // Call the distributeIncome function
+            await hardhatToken.connect(owner).distributeIncome( { value: ethers.parseEther("10") });
+    
+            // Get new balances
+            const finalBalance1 = await ethers.provider.getBalance(buyer1.address);
+            const finalBalance2 = await ethers.provider.getBalance(buyer2.address); 
+
+            // // Check if the correct amount was received
+            console.log("Buyer 1 after Transaction: ", finalBalance1);
+            console.log("Buyer 2 after Transaction: ", finalBalance2);
+        });
+
+        it("Should distribute rental income correctly 3.0", async function () {
+            // Get initial balances
+            const balance_owner_1 = await ethers.provider.getBalance(owner);
+            // Set and Check Timestamp to one to distribute rental income
+            await hardhatToken.setLastIncomeDistribution(0);
+            const timestampBigInt = await hardhatToken.getLastIncomeDistribution();
+            const timestamp = Number(timestampBigInt); // Convert to a regular number
+            const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
+
+            // Buyers need to purchase tokens 
+            await hardhatToken.connect(buyer1).buyTokens(2, { value: ethers.parseEther("2") });
+            await hardhatToken.connect(buyer2).buyTokens(2, { value: ethers.parseEther("2") });
+
+            // Buyers after token transaction
+            const balance_buyer_1_a = await ethers.provider.getBalance(buyer1);
+            const balance_buyer_2_a = await ethers.provider.getBalance(buyer2);
+            console.log("Buyer 1 before Transaction: ", balance_buyer_1_a);
+            console.log("Buyer 2 before Transaction: ", balance_buyer_2_a);
+
+
+            // Call the distributeIncome function
+            await hardhatToken.connect(owner).distributeIncome( { value: ethers.parseEther("10") });
+    
+            // Get new balances
+            const finalBalance1 = await ethers.provider.getBalance(buyer1.address);
+            const finalBalance2 = await ethers.provider.getBalance(buyer2.address); 
+
+            // // Check if the correct amount was received
+            console.log("Buyer 1 after Transaction: ", finalBalance1);
+            console.log("Buyer 2 after Transaction: ", finalBalance2);
+        });
+
+        it("Should not allow rental income distribution with zero ETH", async function () {
+            await hardhatToken.setLastIncomeDistribution(0);
+            await expect(
+                hardhatToken.connect(owner).distributeIncome({ value: ethers.parseEther("0") })
+            ).to.be.revertedWith("Not enough ETH sent for distribution");
+        });
+
+        it("Should not distribute rental income to a random address with no tokens", async function () {
+            // Random user (addr3) has not purchased any tokens
+            const randomUser = buyer2;
+        
+            // Buyer1 buys 5 tokens, Buyer2 buys 5 tokens
+            await hardhatToken.connect(buyer1).buyTokens(10, { value: ethers.parseEther("10") });
+        
+            // Get balance of randomUser before rental distribution
+            const balanceBefore = await ethers.provider.getBalance(randomUser.address);
+
+            await hardhatToken.setLastIncomeDistribution(0);
+        
+            // Distribute rental income (10 ETH)
+            await hardhatToken.connect(owner).distributeIncome({ value: ethers.parseEther("10") });
+        
+            // Get balance of randomUser after rental distribution
+            const balanceAfter = await ethers.provider.getBalance(randomUser.address);
+        
+            // Expect random user’s balance to remain unchanged
+            expect(balanceAfter).to.equal(balanceBefore);
+        });
+        
+    });
 });
