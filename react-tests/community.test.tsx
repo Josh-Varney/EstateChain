@@ -17,7 +17,7 @@ Object.assign(navigator, {
     },
 });
 
-  describe('CommunityPage Render and API Tests', () => {
+describe('CommunityPage Render and API Tests', () => {
     beforeEach(() => {
       // Reset the fetch mock before each test
       jest.clearAllMocks();

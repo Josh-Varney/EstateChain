@@ -124,6 +124,15 @@ export default function ManageProperties() {
       alert("Feedback is required to reject the property.");
       return;
     }
+
+    // Check if feedback exceeds 65 words
+    const wordCount = feedback.trim().split(/\s+/).length;
+    if (wordCount > 65) {
+      alert("Feedback cannot exceed 65 words.");
+      return;
+    }
+
+
     if (feedback && propertyID && propertyAddedBy){
       const boolVal = await rejectAndSubmitFeedback(propertyID, propertyAddedBy, feedback);
 
