@@ -86,8 +86,9 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
-        "test": "DEBUG_PRINT_LIMIT=100000 jest",
-        "hardhat": "npx hardhat test",
+        "react-test": "DEBUG_PRINT_LIMIT=100000 jest",
+        "hardhat-test": "npx hardhat test",
+        "test": " npm run hardhat-test && sleep 5 && npm run react-test",
         "server": "concurrently \"npm run goserver\" \"npm run tsserver\"",
         "goserver": "go run server/main/main.go",
         "tsserver": "ts-node server/server.ts",
