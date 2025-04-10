@@ -56,7 +56,7 @@ export async function getSigner(addressSelected: string) {
     }
   }
 
-export async function executeTransaction(propertyID, propertyAddress, contract, numberOfTokens, totalCost, setTxHash, setShowPopup, setIsWaitingForReciept, setReceipt){
+export async function executeTransaction(propertyID: any, propertyAddress: any, contract: any, numberOfTokens: any, totalCost: any, setTxHash: any, setShowPopup: any, setIsWaitingForReciept: any, setReceipt: any){
     console.log("Execute transaction")
     // Execute the transaction
     let tx;
@@ -67,7 +67,7 @@ export async function executeTransaction(propertyID, propertyAddress, contract, 
         // Transaction Sent 
         setTxHash(tx.hash);
 
-    } catch (txError) {
+    } catch (txError: any) {
         throw new Error(`Transaction failed: ${txError.message}`);
     }
 
@@ -170,13 +170,13 @@ export async function executeTransaction(propertyID, propertyAddress, contract, 
         
         // Show confirmation and link to etherscan with confirmation over transaction
 
-    } catch (receiptError) {
+    } catch (receiptError: any) {
         throw new Error(`Transaction confirmation failed: ${receiptError.message}`);
     }
 }
 
 // See which wallet address they want to execute the smart contract on 
-export async function queryContract (propertyID, propertyAddress: string, smartAddress:string, network:string, contractName:string, tokenPrice:string, numberOfTokens: number, address:string, setShowPopup, setLoading, setTxHash, setErrorMessage, setIsWaitingForReciept, setReceipt) {
+export async function queryContract (propertyID: any, propertyAddress: string, smartAddress:string, network:string, contractName:string, tokenPrice:string, numberOfTokens: number, address:string, setShowPopup: any, setLoading: any, setTxHash: any, setErrorMessage: any, setIsWaitingForReciept: any, setReceipt: any) {
 
     const totalCost = (Number(tokenPrice) * numberOfTokens).toString();
     // New parameters is wallet address wanted, and network of the propertes smart contract.
@@ -212,7 +212,7 @@ export async function queryContract (propertyID, propertyAddress: string, smartA
                 setLoading(false)
                 return;
             } 
-        } catch (abiError) {
+        } catch (abiError: any) {
             setErrorMessage(`Failed to retrieve ABI: ${abiError.message}`);
             setLoading(false)
             return;
@@ -295,7 +295,7 @@ export async function queryContract (propertyID, propertyAddress: string, smartA
             setShowPopup(false);
         }
         
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error with transaction:", error.message);
     }    
 }

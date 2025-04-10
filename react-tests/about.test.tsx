@@ -46,7 +46,7 @@ describe("Render Test on CTA", () => {
       
         // Simulate the click event
         fireEvent.click(link);
-    });
+    }, 200);
 });
 
 describe("Tests on Pricing", () => {
@@ -123,4 +123,39 @@ describe("Tests on Pricing", () => {
         // Check that the toggle function was called (i.e., the billing cycle was toggled)
         expect(toggleBillingCycle).toHaveBeenCalled();
       }, 2000);
+});
+
+describe("Invalid Tests on Pricing", () => {
+  
+  test("throws error when invalid billingCycle is passed", () => {
+    const toggleBillingCycle = jest.fn();
+  
+    expect(() =>
+      render(<PricingStickyHeader billingCycle="weekly" toggleBillingCycle={toggleBillingCycle} />)
+    ).toThrow();
+  });
+  
+  test("throws if required internal structure is broken", () => {
+    const BrokenAboutCTA = () => {
+      // AboutCTA but removing or breaking child nodes
+      return <div />;
+    };
+  
+    expect(() => render(<BrokenAboutCTA />)).toThrow();
+  });
+  
+  test("fails gracefully if toggleBillingCycle is not a function", () => {
+    // @ts-ignore
+    render(<PricingStickyHeader billingCycle="monthly" toggleBillingCycle="notAFunction" />);
+  
+    const button = screen.getByRole("button");
+    expect(() => fireEvent.click(button)).toThrow();
+  });
+  
+  test("throws TypeError when prop is missing", () => {
+    expect(() => 
+      render(<PricingPlan />)  // Missing 'price' prop
+    ).toThrowError(TypeError);
+  });
+  
 });
