@@ -196,8 +196,6 @@ describe('Compliance Render and Searches', () => {
       expect(screen.getByText('No results found.')).toBeInTheDocument();
     });
   });
-  
-  
 
   test('no results found when filtering does not match', async () => {
     render(<EmbeddedInfoPage />);
@@ -292,7 +290,6 @@ describe('Compliance Render and Searches', () => {
   });
   
   });
-  
 });
 
 describe('Compliance Timed Test', () => {
@@ -352,6 +349,4 @@ describe('Compliance Timed Test', () => {
           expect(screen.getByText('token-1')).toBeInTheDocument();
         }, { timeout: 5000 });
       });
-
   });
-
