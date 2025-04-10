@@ -1,12 +1,10 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import LoginForm from "../src/components/form/login-account/components/login-form"
 import userEvent from "@testing-library/user-event";
-import { BrowserRouter as Router, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import React from "react";
-import { doSignInWithEmailAndPassword, doSendEmailVerification} from "../src/firebase/auth";
-import * as router from 'react-router'
 import "@testing-library/jest-dom"; 
-import axios from 'axios';
+
 
 jest.mock("axios");
 
@@ -77,7 +75,7 @@ describe("LoginForm", () => {
               expect(localStorage.getItem("uuid")).toBe("user-123"); // Check if the user UUID is stored
               expect(screen.getByText("Login successful. Redirecting...")).toBeInTheDocument();
             });
-          });
+          }, 500);
 
           test("should successfully login with a valid email and password 2.0", async () => {
             jest.clearAllMocks();
@@ -116,7 +114,7 @@ describe("LoginForm", () => {
               expect(localStorage.getItem("uuid")).toBe("user-123"); // Check if the user UUID is stored
               expect(screen.getByText("Login successful. Redirecting...")).toBeInTheDocument();
             });
-          });   
+          }, 200);   
           
           test("should show 'Please verify your email.' message when the email is not verified", async () => {
             jest.clearAllMocks();

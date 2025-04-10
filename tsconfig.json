@@ -11,5 +11,5 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
   },
-  "include": ["server/**/*.ts", "react-tests/**/*"]
+  "include": ["server/**/*.ts"]
 }

@@ -78,7 +78,7 @@ describe('CreateAccountForm', () => {
             // Expect the success message after submission
             const successMessage = await screen.findByText("Account created successfully");
             expect(successMessage).toBeInTheDocument();
-        });
+        }, 500);
         
         it("successfully submits when terms are agreed and passwords match 2.0", async () => {
             const emailInput = screen.getByTestId("email-input");
@@ -97,7 +97,7 @@ describe('CreateAccountForm', () => {
             // Expect the success message after submission
             const successMessage = await screen.findByText("Account created successfully");
             expect(successMessage).toBeInTheDocument();
-        });
+        }, 500);
 
         it("successfully submits when terms are agreed and passwords match 3.0", async () => {
             const emailInput = screen.getByTestId("email-input");
@@ -107,8 +107,8 @@ describe('CreateAccountForm', () => {
             const termsCheckbox = screen.getByLabelText(/i agree to terms & conditions/i);
         
             fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
-            fireEvent.change(passwordInput, { target: { value: "Secure@123" } });
-            fireEvent.change(confirmPasswordInput, { target: { value: "Secure@123" } });
+            fireEvent.change(passwordInput, { target: { value: "StrongPas#123" } });
+            fireEvent.change(confirmPasswordInput, { target: { value: "StrongPas#123" } });
             fireEvent.click(termsCheckbox);
         
             fireEvent.click(submitButton);
@@ -116,7 +116,7 @@ describe('CreateAccountForm', () => {
             // Expect the success message after submission
             const successMessage = await screen.findByText("Account created successfully");
             expect(successMessage).toBeInTheDocument();
-        });
+        }, 500);
 
         it("successfully submits when terms are agreed and passwords match, even with a 254-character email", async () => {
             const emailInput = screen.getByTestId("email-input");
@@ -126,8 +126,8 @@ describe('CreateAccountForm', () => {
             const termsCheckbox = screen.getByLabelText(/i agree to terms & conditions/i);
         
             fireEvent.change(emailInput, { target: { value: "thisisaverylongemailaddressjustfortestingpurposesthatexceedstwentycharactersandcanbeusedfortestsinsoftwareapplications@longdomainexample.com" } });
-            fireEvent.change(passwordInput, { target: { value: "StrongPass123" } });
-            fireEvent.change(confirmPasswordInput, { target: { value: "StrongPass123" } });
+            fireEvent.change(passwordInput, { target: { value: "Secure@123" } });
+            fireEvent.change(confirmPasswordInput, { target: { value: "Secure@123" } });
             fireEvent.click(termsCheckbox);
         
             fireEvent.click(submitButton);
@@ -135,7 +135,7 @@ describe('CreateAccountForm', () => {
             // Expect the success message after submission
             const successMessage = await screen.findByText("Account created successfully");
             expect(successMessage).toBeInTheDocument();
-        });
+        }, 500);
         it("successfully submits when terms are agreed and passwords match, even with a 128-character password", async () => {
             const emailInput = screen.getByTestId("email-input");
             const passwordInput = screen.getByTestId("password-input");

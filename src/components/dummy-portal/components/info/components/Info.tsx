@@ -99,6 +99,7 @@ const EmbeddedInfoPage: React.FC = () => {
                   onClick={() => handleCopy(item.fireURL)}
                   className="bg-gray-600 hover:bg-gray-500 p-2 rounded-full"
                   title="Copy Token"
+                  data-testid={`copy-button-${item.cID}`}
                 >
                   <ClipboardCopy size={16} className="text-white" />
                 </button>

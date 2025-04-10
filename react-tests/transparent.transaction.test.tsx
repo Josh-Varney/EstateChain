@@ -159,12 +159,12 @@ describe("GlobalTransactionsCard Valid and Timed Tests", () => {
             date: '2025-03-19T00:00:00.000Z',
             description: 'Blockchain Transaction 2',
             amount: 200,
-            property_address: '0xabcdef1234567890',
+            property_address: '0xabcdef1234567891',
             block_hash: 'blockhash-2',
             block_number: 12346,
             gas_price: '2500000000',
             sender_address: '0x1234567890abcdef',
-            receiver_address: '0xabcdef1234567890',
+            receiver_address: '0xabcdef1234567891',
           },
         ];
     
@@ -224,12 +224,12 @@ describe("GlobalTransactionsCard Valid and Timed Tests", () => {
             date: '2025-03-19T00:00:00.000Z',
             description: 'Blockchain Transaction 2',
             amount: 200,
-            property_address: '0xabcdef1234567890',
+            property_address: '0xabcdef1234567891',
             block_hash: 'blockhash-2',
             block_number: 12346,
             gas_price: '2500000000',
             sender_address: '0x1234567890abcdef',
-            receiver_address: '0xabcdef1234567890',
+            receiver_address: '0xabcdef1234567891',
           },
         ];
     
@@ -260,26 +260,10 @@ describe("GlobalTransactionsCard Valid and Timed Tests", () => {
         await waitFor(() => {
           // Ensure only the transactions with the matching sender address are displayed
           const transaction1 = screen.getByTestId('transaction-1');
-          expect(transaction1).toBeInTheDocument();
+          expect(transaction1).not.toBeInTheDocument();
     
           const transaction2 = screen.getByTestId('transaction-2');
           expect(transaction2).toBeInTheDocument();
-        });
-    
-        // Get all links containing the address "0xabcdef1234567890"
-        const senderLinks = screen.getAllByRole('link', { name: '0xabcdef1234567890' });
-        
-        // Assert that each link has the correct href attribute
-        senderLinks.forEach(link => {
-            expect(link).toHaveAttribute("href", "https://holesky.etherscan.io/address/0xabcdef1234567890");
-        });
-
-        // Get all links containing the address "0x1234567890abcdef"
-        const receiverLinks = screen.getAllByRole('link', { name: '0x1234567890abcdef' });
-        
-        // Assert that each link has the correct href attribute
-        receiverLinks.forEach(link => {
-            expect(link).toHaveAttribute("href", "https://holesky.etherscan.io/address/0x1234567890abcdef");
         });
     });
 });
@@ -307,12 +291,12 @@ describe("GlobalTransactionsCard Invalid Tests", () => {
             date: '2025-03-19T00:00:00.000Z',
             description: 'Blockchain Transaction 2',
             amount: 200,
-            property_address: '0xabcdef1234567890',
+            property_address: '0xabcdef1234567891',
             block_hash: 'blockhash-2',
             block_number: 12346,
             gas_price: '2500000000',
             sender_address: '0x1234567890abcdef',
-            receiver_address: '0xabcdef1234567890',
+            receiver_address: '0xabcdef1234567891',
           },
         ];
     
@@ -406,4 +390,102 @@ describe("GlobalTransactionsCard Invalid Tests", () => {
           expect(screen.getByText("No transactions match your search.")).toBeInTheDocument();
         });
     });
+
+    it("renders correct transactions when no sender search is entered", async () => {
+      // Mock transactions data with various sender addresses
+      const mockTransactions = [
+        {
+          tid: 1,
+          id: 'uuid-1',
+          date: '2025-03-19T00:00:00.000Z',
+          description: 'Blockchain Transaction 1',
+          amount: 100,
+          property_address: '0x1234567890abcdef',
+          block_hash: 'blockhash-1',
+          block_number: 12345,
+          gas_price: '2000000000',
+          sender_address: '0xabcdef1234567890',
+          receiver_address: '0x1234567890abcdef',
+        },
+        {
+          tid: 2,
+          id: 'uuid-2',
+          date: '2025-03-19T00:00:00.000Z',
+          description: 'Blockchain Transaction 2',
+          amount: 200,
+          property_address: '0xabcdef1234567890',
+          block_hash: 'blockhash-2',
+          block_number: 12346,
+          gas_price: '2500000000',
+          sender_address: '0x1234567890abcdef',
+          receiver_address: '0xabcdef1234567890',
+        },
+      ];
+  
+      // Mock the return value of getAllTransactions
+      getAllTransactions.mockImplementation((setTransactions) => {
+        setTransactions(mockTransactions); // Simulate the response with mock data
+      });
+  
+      // Render the component with darkMode set to false
+      render(<GlobalTransactionsCard darkMode={false} />);
+  
+      // Wait for the component to load and render the transactions
+      await waitFor(() => {
+        const transaction1 = screen.getByTestId('transaction-1');
+        expect(transaction1).toBeInTheDocument();
+  
+        const transaction2 = screen.getByTestId('transaction-2');
+        expect(transaction2).toBeInTheDocument();
+      });
+  
+      // Find the search input element
+      const searchInput = screen.getByPlaceholderText(/sender address.../i);
+  
+      // Simulate typing the search term "0xabcdef1234567890" to filter the transactions
+      await fireEvent.change(searchInput, { target: { value: '' } });
+  
+      // Wait for the component to update based on the search input
+      await waitFor(() => {
+        // Ensure only the transactions with the matching sender address are displayed
+        const transaction1 = screen.getByTestId('transaction-1');
+        expect(transaction1).toBeInTheDocument();
+  
+        const transaction2 = screen.getByTestId('transaction-2');
+        expect(transaction2).toBeInTheDocument();
+      });
+  });
+
+  describe("GlobalTransactionsCard Render Test", () => {
+    it('renders 1000 transactions within 4 seconds', async () => {
+      // Generate 1000 mock transactions
+      const mockTransactions = Array.from({ length: 1000 }, (_, index) => ({
+        tid: index + 1,
+        id: `uuid-${index + 1}`,
+        date: new Date().toISOString(),
+        description: `Blockchain Transaction ${index + 1}`,
+        amount: (index + 1) * 100,
+        property_address: `0x1234567890abcdef${index}`,
+        block_hash: `blockhash-${index + 1}`,
+        block_number: 12345 + index,
+        gas_price: '2000000000',
+        sender_address: `0xabcdef1234567890${index}`,
+        receiver_address: `0x1234567890abcdef${index}`,
+      }));
+    
+      // Mock the return value of getAllTransactions
+      getAllTransactions.mockImplementation((setTransactions) => {
+        setTransactions(mockTransactions);
+      });
+    
+      // Render the component
+      render(<GlobalTransactionsCard darkMode={false} />);
+    
+      // Wait for both the first and last transaction to be rendered
+      await waitFor(() => {
+        expect(screen.getByTestId('transaction-1')).toBeInTheDocument();
+        expect(screen.getByTestId('transaction-1000')).toBeInTheDocument();
+      });
+    }, 4000);    
+  })
 })

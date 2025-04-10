@@ -129,3 +129,49 @@ describe('NotificationDropdown - Accuracy Tests', () => {
       expect(notificationItems).toHaveLength(notifications.length); // Should render the same number as the mock data
     });
   });
+
+describe('NotificationDropdown - Invalid Cases', () => {
+  it('renders gracefully when notifications is null or undefined', () => {
+    render(<NotificationDropdown close={() => {}} notifications={null} isOpen={true} />);
+    expect(screen.getByText(/No Notifications/)).toBeInTheDocument();
+    // Should not throw or render any items
+    expect(screen.queryAllByRole('menuitem')).toHaveLength(0);
+  });
+  
+  it('handles notifications with missing fields', () => {
+    const brokenNotifications = [
+      { nid: 1 }, // Missing message, type, etc.
+    ];
+    render(<NotificationDropdown close={() => {}} notifications={brokenNotifications} isOpen={true} />);
+    // Should still render without crashing
+    expect(screen.getByText(/Notifications/)).toBeInTheDocument();
+  });
+
+  it('displays appropriate message when there are no notifications', () => {
+    render(<NotificationDropdown close={() => {}} notifications={[]} isOpen={true} />);
+    expect(screen.getByText(/No notifications/)).toBeInTheDocument(); // if such fallback exists
+  });
+  
+  
+  it('handles extremely long notification messages', () => {
+    const longNotification = [
+      {
+        nid: 1,
+        uuid: 'long-uuid',
+        message: 'A'.repeat(1000), // long string
+        type: 'info',
+        related_table: 'table1',
+        related_id: 1,
+        wasRead: false,
+      }
+    ];
+    render(<NotificationDropdown close={() => {}} notifications={longNotification} isOpen={true} />);
+    expect(screen.getByText(/A{10}/)).toBeInTheDocument(); // partial match
+  });
+  
+  it('throws error when required props are missing', () => {
+    expect(() => render(<NotificationDropdown />)).toThrow();
+  });
+  
+  
+})

@@ -169,7 +169,7 @@ useEffect(() => {
   
   if (!isOpen) return null;
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setSelectedAccount(e.target.value);  // Update state when input value changes
   };
 

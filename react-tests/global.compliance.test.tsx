@@ -29,7 +29,7 @@ global.fetch = jest.fn(() =>
 );
 
 describe('Compliance Render and Searches', () => {
-  test('renders without crashing and displays compliance data', async () => {
+  test('renders without crashing and displays compliance data in 2s', async () => {
     render(<EmbeddedInfoPage />);
 
     // Wait for the component to fetch and display data
@@ -39,7 +39,7 @@ describe('Compliance Render and Searches', () => {
     });
   });
 
-  test('filters by token name', async () => {
+  test('filters by token name and displays only token-1', async () => {
     render(<EmbeddedInfoPage />);
 
     // Wait for the component to fetch and display data
@@ -172,7 +172,30 @@ describe('Compliance Render and Searches', () => {
       expect(screen.getByText('No results found.')).toBeInTheDocument();
     });
   });
+
+  test('filters by GovBody with input over 255 characters and shows no results', async () => {
+    render(<EmbeddedInfoPage />);
   
+    // Wait for initial tokens to be displayed
+    await waitFor(() => {
+      expect(screen.getByText('token-1')).toBeInTheDocument();
+      expect(screen.getByText('token-2')).toBeInTheDocument();
+    });
+  
+    // Create a long non-matching GovBody search string (256 characters)
+    const longGovBodyInput = 'GovX'.repeat(64); 
+  
+    // Find and update the GovBody search input
+    const searchInput = screen.getByPlaceholderText(/Search by GovBody.../i);
+    fireEvent.change(searchInput, { target: { value: longGovBodyInput } });
+  
+    // Wait for the component to re-render and display "No results found"
+    await waitFor(() => {
+      expect(screen.queryByText('token-1')).not.toBeInTheDocument();
+      expect(screen.queryByText('token-2')).not.toBeInTheDocument();
+      expect(screen.getByText('No results found.')).toBeInTheDocument();
+    });
+  });
 
   test('no results found when filtering does not match', async () => {
     render(<EmbeddedInfoPage />);
@@ -191,6 +214,81 @@ describe('Compliance Render and Searches', () => {
     await waitFor(() => {
       expect(screen.getByText('No results found.')).toBeInTheDocument();
     });
+  });
+
+  test('no results found when filtering with token name over 255 characters', async () => {
+    render(<EmbeddedInfoPage />);
+  
+    // Wait for the component to fetch and display initial data
+    await waitFor(() => {
+      expect(screen.getByText('token-1')).toBeInTheDocument();
+      expect(screen.getByText('token-2')).toBeInTheDocument();
+    });
+  
+    // Create a long token name string (256 characters)
+    const longTokenName = 'x'.repeat(256);
+  
+    // Simulate typing the long token name into the search input
+    const searchInput = screen.getByPlaceholderText(/Search by Token Name.../i);
+    fireEvent.change(searchInput, { target: { value: longTokenName } });
+  
+    // Check for "No results found"
+    await waitFor(() => {
+      expect(screen.getByText('No results found.')).toBeInTheDocument();
+    });
+  });  
+
+  describe("Stress Test Timed", () => {
+    beforeAll(() => {
+      const mockData = Array.from({ length: 1000 }, (_, i) => ({
+        cID: `${i + 1}`,
+        fireURL: `token-${i + 1}`,
+        regionCode: `US-${i}`,
+        govBody: `GovBody-${i}`,
+        lawCode: `LAW-${String(i).padStart(3, '0')}`,
+      }));
+    
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockData),
+        })
+      );
+    });
+  
+  beforeEach(() => {
+    global.fetch.mockClear();
+  });
+  
+  test('renders EmbeddedInfoPage with 1000 items without crashing', async () => {
+    render(<EmbeddedInfoPage />);
+  
+    // Pick a few sample tokens to verify
+    await waitFor(() => {
+      expect(screen.getByText('token-1')).toBeInTheDocument();
+      expect(screen.getByText('token-500')).toBeInTheDocument();
+      expect(screen.getByText('token-1000')).toBeInTheDocument();
+    });
+  });
+  
+  test('measures render time of EmbeddedInfoPage with 1000 items', async () => {
+    const start = performance.now();
+  
+    render(<EmbeddedInfoPage />);
+  
+    await waitFor(() => {
+      expect(screen.getByText('token-1000')).toBeInTheDocument();
+    });
+  
+    const end = performance.now();
+    const renderTime = end - start;
+  
+    console.log(`Render time with 1000 items: ${renderTime.toFixed(2)}ms`);
+  
+    // Optional performance threshold
+    expect(renderTime).toBeLessThan(1000);
+  });
+  
   });
 });
 
@@ -251,6 +349,4 @@ describe('Compliance Timed Test', () => {
           expect(screen.getByText('token-1')).toBeInTheDocument();
         }, { timeout: 5000 });
       });
-      
   });
-  

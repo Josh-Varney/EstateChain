@@ -323,7 +323,6 @@ describe("PropertyERC20 Contract", function () {
                 // Buyer sends ETH to purchase tokens
                 await hardhatToken.connect(addr1).buyTokens(tokenAmount, {value: ethers.parseEther("0.2")});
 
-
                 const buyers = await hardhatToken.getBuyers();
 
                 const buyerBalance = await hardhatToken.balanceOf(buyerAddr);
@@ -456,10 +455,10 @@ describe("PropertyERC20 Contract", function () {
     });    
 
     describe("Test Distibution of Rental Income", function () {
-        let hardhatToken, hardhatTokenTest, owner, buyer1, buyer2;
+        let hardhatToken, hardhatTokenTest, owner, buyer1, buyer2, buyer3;
         
         beforeEach(async function () {
-            [owner, buyer1, buyer2] = await ethers.getSigners();
+            [owner, buyer1, buyer2, buyer3] = await ethers.getSigners();
 
             hardhatToken = await ethers.deployContract("PropertyERC20", [
                 "MockProp", "MPT"
@@ -475,7 +474,7 @@ describe("PropertyERC20 Contract", function () {
             );
         });
     
-        it("Should distribute rental income correctly", async function () {
+        it("Should distribute rental income correctly 1.0", async function () {
             // Get initial balances
             const balance_owner_1 = await ethers.provider.getBalance(owner);
             // Set and Check Timestamp to one to distribute rental income
@@ -505,6 +504,107 @@ describe("PropertyERC20 Contract", function () {
             // // Check if the correct amount was received
             console.log("Buyer 1 after Transaction: ", finalBalance1);
             console.log("Buyer 2 after Transaction: ", finalBalance2);
+
+            await expect(parseFloat(ethers.formatEther(finalBalance1))).to.be.greaterThan(parseFloat(ethers.formatEther(balance_buyer_1_a)));
+            await expect(parseFloat(ethers.formatEther(finalBalance2))).to.be.greaterThan(parseFloat(ethers.formatEther(balance_buyer_2_a)));
+        });
+
+        it("Should distribute rental income correctly 2.0", async function () {
+            // Get initial balances
+            const balance_owner_1 = await ethers.provider.getBalance(owner);
+            // Set and Check Timestamp to one to distribute rental income
+            await hardhatToken.setLastIncomeDistribution(0);
+            const timestampBigInt = await hardhatToken.getLastIncomeDistribution();
+            const timestamp = Number(timestampBigInt); // Convert to a regular number
+            const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
+
+            // Buyers need to purchase tokens 
+            await hardhatToken.connect(buyer1).buyTokens(3, { value: ethers.parseEther("3") });
+            await hardhatToken.connect(buyer2).buyTokens(7, { value: ethers.parseEther("7") });
+
+            // Buyers after token transaction
+            const balance_buyer_1_a = await ethers.provider.getBalance(buyer1);
+            const balance_buyer_2_a = await ethers.provider.getBalance(buyer2);
+            console.log("Buyer 1 before Transaction: ", balance_buyer_1_a);
+            console.log("Buyer 2 before Transaction: ", balance_buyer_2_a);
+
+
+            // Call the distributeIncome function
+            await hardhatToken.connect(owner).distributeIncome( { value: ethers.parseEther("10") });
+    
+            // Get new balances
+            const finalBalance1 = await ethers.provider.getBalance(buyer1.address);
+            const finalBalance2 = await ethers.provider.getBalance(buyer2.address); 
+
+            // // Check if the correct amount was received
+            console.log("Buyer 1 after Transaction: ", finalBalance1);
+            console.log("Buyer 2 after Transaction: ", finalBalance2);
+
+            await expect(parseFloat(ethers.formatEther(finalBalance1))).to.be.greaterThan(parseFloat(ethers.formatEther(balance_buyer_1_a)));
+            await expect(parseFloat(ethers.formatEther(finalBalance2))).to.be.greaterThan(parseFloat(ethers.formatEther(balance_buyer_2_a)));
+        });
+
+        it("Should distribute rental income correctly 3.0", async function () {
+            // Get initial balances
+            const balance_owner_1 = await ethers.provider.getBalance(owner);
+            // Set and Check Timestamp to one to distribute rental income
+            await hardhatToken.setLastIncomeDistribution(0);
+            const timestampBigInt = await hardhatToken.getLastIncomeDistribution();
+            const timestamp = Number(timestampBigInt); // Convert to a regular number
+            const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
+
+            // Buyers need to purchase tokens 
+            await hardhatToken.connect(buyer1).buyTokens(1, { value: ethers.parseEther("1") });
+            await hardhatToken.connect(buyer2).buyTokens(3, { value: ethers.parseEther("3") });
+            await hardhatToken.connect(buyer2).buyTokens(6, { value: ethers.parseEther("6") });
+
+            // Buyers after token transaction
+            const balance_buyer_1_a = await ethers.provider.getBalance(buyer1);
+            const balance_buyer_2_a = await ethers.provider.getBalance(buyer2);
+            const balance_buyer_3_a = await ethers.provider.getBalance(buyer3);
+
+            // Call the distributeIncome function
+            await hardhatToken.connect(owner).distributeIncome( { value: ethers.parseEther("10") });
+    
+            // Get new balances
+            const finalBalance1 = await ethers.provider.getBalance(buyer1.address);
+            const finalBalance2 = await ethers.provider.getBalance(buyer2.address); 
+            const finalBalance3 = await ethers.provider.getBalance(buyer3.address);
+
+            // // Check if the correct amount was received
+            console.log("Buyer 1 after Transaction: ", finalBalance1);
+            console.log("Buyer 2 after Transaction: ", finalBalance2);
+
+            await expect(parseFloat(ethers.formatEther(finalBalance1))).to.be.greaterThan(parseFloat(ethers.formatEther(balance_buyer_1_a)));
+            await expect(parseFloat(ethers.formatEther(finalBalance2))).to.be.greaterThan(parseFloat(ethers.formatEther(balance_buyer_2_a)));
+            await expect(parseFloat(ethers.formatEther(finalBalance3))).to.be.greaterThan(parseFloat(ethers.formatEther(balance_buyer_3_a)));
+        });
+
+        it("Should distribute rental income correctly 4.0", async function () {
+            // Get initial balances
+            const balance_owner_1 = await ethers.provider.getBalance(owner);
+            // Set and Check Timestamp to one to distribute rental income
+            await hardhatToken.setLastIncomeDistribution(0);
+            const timestampBigInt = await hardhatToken.getLastIncomeDistribution();
+            const timestamp = Number(timestampBigInt); // Convert to a regular number
+            const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
+
+            // Buyers need to purchase tokens 
+            await hardhatToken.connect(buyer1).buyTokens(10, { value: ethers.parseEther("10") });
+
+            // Buyers after token transaction
+            const balance_buyer_1_a = await ethers.provider.getBalance(buyer1);
+
+            // Call the distributeIncome function
+            await hardhatToken.connect(owner).distributeIncome( { value: ethers.parseEther("10") });
+    
+            // Get new balances
+            const finalBalance1 = await ethers.provider.getBalance(buyer1.address);
+
+            // // Check if the correct amount was received
+            console.log("Buyer 1 after Transaction: ", finalBalance1);
+
+            await expect(parseFloat(ethers.formatEther(finalBalance1))).to.be.greaterThan(parseFloat(ethers.formatEther(balance_buyer_1_a)));
         });
     
         it("Should not allow non-owners to distribute income", async function () {
