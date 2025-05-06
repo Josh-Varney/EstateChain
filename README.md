@@ -1,85 +1,99 @@
-# EstateChain
 
-- Frontend User Interface 
-    - User Sign In and Create Account 
-    - Property Management Dashboard
-    - Property Search (Filters)
+# Project Name
 
- - Frontend Framework 
-    - React
-    - Web3.js or Ether.js for connecting the frontend to ETH smart contracts and wallets
-    - Next.js: Server-side rendering and static site generation (SEO friendly frontends)
+## Description
 
-- Backend Infrastructure
-    - Node Providers 
-        - Infura (Ethereum and IPFS node provider)
-        - Alchemy (Ethereum and multiple Layer 2 Solutions)
-    - Node.js with Express or Python with Flask Django for API development and server-side logic.
-    - IPFS: Decentralised storage of documents and metadata related to properties 
-    - AWS or Google Cloud 
+Brief description of your project and what it does.
 
-- Monitoring Software
-    - The Graph: Decentralised protocol for querying blockchain data, for real-time analytics on token trading, ownership distributions and transactional history
-    - Dune Analytics
+## Prerequisites
 
-- Payment Gateway
-    - Stripe: Regular payments:  Support stablecoin transactions to reduce volatility in dividend distributions and token trades.
+Before you begin, ensure you have met the following requirements:
 
-- Smart Contract Development
-    - Divedend and Yield Structure
-        - Automatic Distribution 
-            - Yield per month on a rental property
-        - On-Demand Claiming (Withdraw a Share)
-    - Liquidity Provision (DeFi protocols, DEXs)
+- [Node.js](https://nodejs.org/) (for front-end and smart contract tests)
+- [Go](https://golang.org/) (for server-side functionality)
+- [Hardhat](https://hardhat.org/) (for Ethereum development and deploying smart contracts)
 
-    - Oracle Integration (Chainlink: Decentralised to integrate external data, property caluations, rent payments and compliance data into Smart Contacts)
+---
 
-    - Solidity (Writing Ethereum contracts)
-    - Remix IDE (Web-based IDE for writing, testing and deploying smart contracts)
-    - Hardhat or Truffle (Local development environments)
+## Getting Started
 
-    - OpenZepplin Libraries (Pre-audited libraries for standard token types), including security and compliance modules
-        - OpenZepplin Defender (Automated contract monitoring)
-        - Auditing Tools (CertiK, ConsenSys Diligence to verify smart contract security)
-        - Multisig Wallets (Gnosis Safe). For securely managing funds and access to critical platform functions.
+Follow these steps to set up and run the project locally:
 
-- Liquidity Tools and Defi
-    - Uniswap or SushiSwap: Decentralised exchanges for creating liquidity pools and all for token trading.
-    - Compound (Collateralised lending) 
+### 1. Install Dependencies
 
-- Define User 
-    - Wallet Setup (Compatible with ERC-20 or ERC-721/1155 tokens)
-    - Multi-chain support, cross-chain wallets (e.g., Trust Wallet, Exodus) that handle multiple blockchain assets (like ETH, BNB, BTC, and stablecoins)
-    - Stablecoins (like USDT, USDC) may be more practical, allowing users to purchase real estate tokens, receive dividends, or exit positions without the price volatility associated with Bitcoin or Ethereum.
-    - MetaMask, WalletConnect
+Install both Node.js and Go dependencies:
 
-    - Notifications (Divident Payment Notification)
+```bash
+npm install       # Installs Node.js dependencies
+go install        # Installs Go modules
+```
 
-- Laws to Abide:
-    - KYC and AML (Civic or Jumio) to identify verfication solutions that integrate with blockchain platforms
-    - Persona or Sumsub
+### 2. Configure Environment
 
-    - SEC and MiFID II
-    - Property Ownership Laws
-    - Tenant and Landlord Regulations
+Ensure that you have a `.env` file in the root directory. This file is required for configuration and should contain the necessary environment variables for both the Go server and the front-end development.
 
-    - Taxation:
-        - Income Tax and Capital Gains (Pay income tax on rental income or capital gains on token sales)
-        - Sales Tax (VAT)
-        - Withholding Tax for International Investors
+### 3. Start Development Server
 
-    - GDPR and Internation Data Transfers
-    - Consumer Protection Laws
-    - Custody of Assets, Stablecoin and Fiat Conversions
-    - Intellectual Property Rights and Licensing for Software# EstateChain
+To run both the Go server and front-end development server concurrently, use the following command:
 
+```bash
+npm run dev
+```
 
-(base) josh-v@joshuas-mbp EstateChain % MODULE_NAME="PropertyName" \
-PROPERTY_TOKEN_SUPPLY=1000 \
-PROPERTY_TOKEN_PRICE=10 \
-PROPERTY_OWNER="0x12345" \
-PROPERTY_IS_RENTAL=true \
-PROPERTY_MONTHLY_INCOME=500 \
-PROPERTY_NAME="Property Name" \
-PROPERTY_ABR="PNM" \
-npx hardhat ignition deploy ./ignition/modules/TokenOwnership.js --network holesky
+This will start the Go server and the front-end (e.g., React or similar framework) development server.
+
+---
+
+## Running Automated Tests
+
+To run automated tests for both the smart contract and the front-end, execute:
+
+```bash
+npm test
+```
+
+> **Note:** Some tests may intermittently fail due to concurrency and timing issues, particularly those involving asynchronous operations. This is a known limitation and does not necessarily indicate a problem with the underlying code.
+
+---
+
+## Deploying a Smart Contract via Admin Portal
+
+To deploy a smart contract through the admin portal, use the following command:
+
+```bash
+MODULE_NAME="PropertyName" PROPERTY_TOKEN_SUPPLY=1000 PROPERTY_TOKEN_PRICE=10 PROPERTY_OWNER="0x12345" PROPERTY_IS_RENTAL=true PROPERTY_MONTHLY_INCOME=500 PROPERTY_NAME="Property Name" PROPERTY_ABR="PNM" npx hardhat ignition deploy ./ignition/modules/TokenOwnership.js --network holesky
+```
+
+Make sure to replace the values with the specific property details:
+
+- `MODULE_NAME`: The name of the property module.
+- `PROPERTY_TOKEN_SUPPLY`: The total supply of property tokens.
+- `PROPERTY_TOKEN_PRICE`: The price of each property token.
+- `PROPERTY_OWNER`: The address of the property owner.
+- `PROPERTY_IS_RENTAL`: Whether the property is rental (true/false).
+- `PROPERTY_MONTHLY_INCOME`: Monthly rental income for the property.
+- `PROPERTY_NAME`: The full name of the property.
+- `PROPERTY_ABR`: An abbreviation for the property name.
+
+This command will deploy the smart contract to the specified network (`holesky` in this case).
+
+---
+
+## .env File Example
+
+Here’s an example of how your `.env` file might look:
+
+```
+GO_SERVER_PORT=8080
+DB_HOST=localhost
+DB_PORT=5432
+NODE_ENV=development
+```
+
+> Adjust the values based on your environment and project requirements.
+
+---
+
+## Additional Information
+
+If you need help with setting up the development environment or troubleshooting, feel free to reach out to the team or refer to our documentation.
