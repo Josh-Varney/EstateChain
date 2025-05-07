@@ -110,4 +110,4 @@ NODE_ENV=development
 
 ## Additional Information
 
-If you need help with setting up the development environment or troubleshooting, feel free to reach out to the team or refer to our documentation.
+If you need help with setting up the development environment or troubleshooting, feel free to reach out out to up2138017@myport.ac.uk.
