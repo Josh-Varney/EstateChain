@@ -91,23 +91,6 @@ Make sure to replace the values with the specific property details:
 
 This command will deploy the smart contract to the specified network (`holesky` in this case).
 
----
-
-## .env File Example
-
-Here’s an example of how your `.env` file might look:
-
-```
-GO_SERVER_PORT=8080
-DB_HOST=localhost
-DB_PORT=5432
-NODE_ENV=development
-```
-
-> Adjust the values based on your environment and project requirements.
-
----
-
 ## Additional Information
 
 If you need help with setting up the development environment or troubleshooting, feel free to reach out out to up2138017@myport.ac.uk.
