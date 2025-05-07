@@ -24,8 +24,7 @@ Follow these steps to set up and run the project locally:
 Install both Node.js and Go dependencies:
 
 ```bash
-npm install       # Installs Node.js dependencies
-go install        # Installs Go modules
+npm install --legacy-peer-deps       # Installs Node.js dependencies
 ```
 
 ### 2. Configure Environment
@@ -54,6 +53,21 @@ npm test
 
 > **Note:** Some tests may intermittently fail due to concurrency and timing issues, particularly those involving asynchronous operations. This is a known limitation and does not necessarily indicate a problem with the underlying code.
 
+### Running Independent Jest Test Files
+
+You can also run individual test files with `npx jest` by specifying the test file name:
+
+```bash
+npx jest test-file-name
+```
+
+Make sure to replace `test-file-name` with the actual name of the test file you want to run.
+
+### Running Independent Hardhat Test Files
+
+```bash
+npx hardhat test
+```
 ---
 
 ## Deploying a Smart Contract via Admin Portal
