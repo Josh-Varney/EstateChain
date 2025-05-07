@@ -51,7 +51,7 @@ To run automated tests for both the smart contract and the front-end, execute:
 npm test
 ```
 
-> **Note:** Some tests may intermittently fail due to concurrency and timing issues, particularly those involving asynchronous operations. This is a known limitation and does not necessarily indicate a problem with the underlying code.
+> **Note:** Some tests may intermittently fail due to concurrency and timing issues, particularly those involving asynchronous operations. This is a known limitation and does not necessarily indicate a problem with the underlying code. Either try again or run the tests independently.
 
 ### Running Independent Jest Test Files
 
