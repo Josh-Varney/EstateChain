@@ -3,7 +3,7 @@
 
 ## Description
 
-Brief description of your project and what it does.
+To democratise access to real estate investment through a simulation-based platform that educates, builds trust, and enhances the accessibility of blockchain-based fractional property ownership—laying the groundwork for global adoption.
 
 ## Prerequisites
 
