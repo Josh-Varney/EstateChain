@@ -58,9 +58,9 @@ npm test
 You can also run individual test files with `npx jest` by specifying the test file name:
 
 ```bash
-npx jest test-file-name
+DEBUG_PRINT_LIMIT=100000 npx jest test-file-name
 ```
-
+Make sure to run the tests within `react-tests` as these consist of the jest tests.
 Make sure to replace `test-file-name` with the actual name of the test file you want to run.
 
 ### Running Independent Hardhat Test Files
@@ -69,6 +69,8 @@ Make sure to replace `test-file-name` with the actual name of the test file you 
 npx hardhat test
 ```
 ---
+
+The tests are run from the `Test` folder.
 
 ## Deploying a Smart Contract via Admin Portal
 
